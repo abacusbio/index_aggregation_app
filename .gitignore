@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+*.dcf
+simulation/sire_bv.csv
+SimulatedTraits.R
+SimulatedPrice.R
