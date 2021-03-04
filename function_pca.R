@@ -32,14 +32,20 @@
 #'        the PC score plot.
 #'        
 #'        
-runPCA <- function(dat, cor_mat = NULL, cov_mat = NULL, center = T, scaling = F,
+runPCA <- function(dat, cor_mat = NULL, center = T, scaling = F,
                    bi_plot = F, n_pc = 2, obs = NULL) {
   
-  # initialize
+  # test
+  # test <- princomp(t(dat), cor = T) # centered and scaled. Otherwise using covariance and eigen decomposition
+  # plotPCscore(dat, test$scores)
+  # plotPCloadings(test$loadings[]) # this is different from using prcomp with center=T scale=T...
+  # # pc 2, 4 probably all even number pc loadings are -1*loadings in the other method. Why? Does it
+  # # matter?
+  # # when explaining it, the absolute values are used, so probably doesn't matter
   
   # prcomp uses SVD, default is centred but not scaled
   pc_new <- prcomp(t(dat), center = center, scale. = scaling) # observation x feature (to reduce) # x observation
-  pc_scores <- pc_new$x
+  pc_scores <- pc_new$x # ncol = n orig features
   
   # variance explained
   # screeplot(pc_new)
@@ -50,11 +56,11 @@ runPCA <- function(dat, cor_mat = NULL, cov_mat = NULL, center = T, scaling = F,
   cvarex <- cumsum(varex) # cumsum(varex[1:ncol(dat)])
   p_pc_cumvar <- plotPCvar(cvarex, cumulative = T)
   
-  if(bi_plot) {     # default R plots with princomp/prcomp
-    p_biplot <- biplot(pc_new, cex = -.7) # both feature and observation
-  } else {
-    p_biplot <- NULL
-  }
+  # if(bi_plot) {     # default R plots with princomp/prcomp
+  #   p_biplot <- biplot(pc_new, cex = -.7) # both feature and observation # can't save to an object
+  # } else {
+  #   p_biplot <- NULL
+  # }
   
   # scatter plots - patterns among observations. Not as good as codes on line 228 if more than 2 pcs
   p_score_scatter <- plotPCscore(dat, pc_scores, n_pc = n_pc, obs = obs) # single ggplot object
@@ -62,7 +68,7 @@ runPCA <- function(dat, cor_mat = NULL, cov_mat = NULL, center = T, scaling = F,
   
   # PC loadings - variables that contribute to these patterns
   pc_loading <- data.frame(pc_new$rotation, check.names = T)  # 64x64
-  p_loading <- plotPCloadings(pc_new$rotation) # takes long time if too many features
+  p_loading <- plotPCloadings(pc_new$rotation, n_pc = n_pc) # takes long time if too many features
   
   return(pc_scores = pc_scores, pc_var = varex, pc_cumvar = cvarex, pc_loading = pc_loading,
          plot_pc_var = p_pc_var, plot_pc_cumvar = p_pc_cumvar, plot_biplot = p_biplot,
@@ -82,7 +88,7 @@ plotPCvar <- function(varex, cumulative = F, sparse = F) {
   return(ggplot(data.frame(varex = varex, n = seq(varex)), aes(n, varex)) +
     geom_point() +
     geom_line() +
-    labs(title = "% Variance Explained", xlab = "Principle Component", ylab = "%") +
+    labs(title = "% Variance Explained", x = xlab, y = "%") +
     theme_minimal())
 }
 
