@@ -14,7 +14,7 @@
 #      takes the largest variance no matter what correlation there is
 # Sparse PCA: use if p>>n to give penalty to V
 #             how to determin p? For uncorrelated features, the optimal feature size is N−1 (where N
-#             is sample size). As feature correlation increases, and the optimal feature size
+#             is the sample size). As feature correlation increases, and the optimal feature size
 #             becomes proportional to sqrt(N) for highly correlated features.
 # kernel PCA: if PC(s) is a non-linear combination of raw variables, use kernel PCA
 # ICA: use if variables are independent and non-Gaussian, e.g. cocktail party noise reduction.
@@ -99,7 +99,7 @@ plot(varex,type="b",lty = 1,
      title = "% Variance Explained",xlab="Principle Component", ylab = "%")
 
 #cumulative variance explained
-cvarex <- cumsum(varex[1:ncol(ncidat)])
+cvarex <- cumsum(varex[1:nrow(ncidat)])
 plot(cvarex,type="b", lty = 1,
      title = "Cumulative Variance Explained",xlab = "Component", ylab = "%")
 
@@ -262,6 +262,7 @@ j = 2 # feature is the col
 ord <- order(abs(pc_new$rotation[, j]), decreasing = T) # feature ordering
 x = as.matrix(X[ord[1:250],]) #take 250 largest PCs, look at the melanoma pattern
 h <- heatmap(x, scale = "none", col=gcol2)
+heatmap.2(x, scale = "none", col = gcol2, trace = "none")
 
 ### example begin ### 
 # https://stackoverflow.com/questions/17924828/differences-in-heatmap-clustering-defaults-in-r-heatplot-versus-heatmap-2
@@ -305,6 +306,7 @@ heatmap.2(z$data, trace='none', col=rev(cols), Rowv=z$Rowv, Colv=z$Colv)
 
 # retrive dendrogram info 2March2021
 h2 <- heatmap.2(x, scale = "none", col = gcol2, trace = "none")
+# col clusters, the observations. If want to cluster original features, use rowDendrogram
 col.clusters2 <- as.hclust(h2$colDendrogram ) # or col.clusters2 <- hclust(dist(t(x)))
 cutree(col.clusters2, k = 3) # break into k=3 clusters
 # to choose the best cutoff: https://uc-r.github.io/hc_clustering
