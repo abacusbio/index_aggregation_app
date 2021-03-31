@@ -2,12 +2,15 @@ clusteringSidebarUI <- function(id) {
   ns <- NS(id)
   tagList(
     # data selection ?
-    checkboxInput(ns("find_k_agg"), "Calculate optimal # of clusters and agglomeration method", 
-                  value = F),
     actionButton(ns("run_cluster"), "Run clustering"),
     tags$table(
       tags$td(checkboxInput(ns("center"), "Center columns (features)", T)),
       tags$td(checkboxInput(ns("scale"), "Scale columns (features)", T))
+    ),
+    h4("Parameter tuning"),
+    wellPanel(
+      checkboxInput(ns("find_k_agg"), "Calculate optimal # of clusters and agglomeration method", 
+                    value = F),  
     ),
     sliderInput(ns("k_slider"), "Choose # of clusters:", 2, 10, 2, step = 1),
     selectInput(ns("agg_method"), "Choose an agglomeration method:",
@@ -42,9 +45,11 @@ clusteringUI <- function(id) {
           )
           )),
     h2("Final Clustering"),
-    plotOutput(ns("plot_dendro"), width = "100%", height = "800px")
+    plotOutput(ns("plot_dendro"), width = "100%", height = "800px"),
+    downloadModuleUI(ns("download_clusters"), "Download the clusters")
   )
 }
+
 #'
 #'@param dat a reactive function with data.frame of index by animal in it
 clusteringMod <- function(id, val = reactive(NULL),
@@ -75,6 +80,7 @@ cat(" observe run_cluster");print(dim(dat()))
         
         output$method <- renderText({paste0("(", input$agg_method, ")")})
         
+        # Tune parameters K and agglomerative coefficient
         if(input$find_k_agg) { # Maybe change to warning message
          
           # Find optimal agglomeriative method
@@ -110,17 +116,22 @@ cat(" observe run_cluster");print(dim(dat()))
           
          # cutree(cl$cluster_obj, k = op_cut)
            
-        } else {
+        } else { # run with known k and ac
           # list(cluster_obj, clusters)
           cl <- runFinalCluster(dat(), cor_mat = F, cluster_object = NULL,
                                 scale = input$scale, center = input$center, k = input$k_slider,
                                 best_method = input$agg_method)
-        }
-        
-        # dendrograph
-        output$plot_dendro <- renderPlot({
-          drawDendro(as.hclust(cl$cluster_obj), cl$clusters, circle = input$circle)
-        })
+          
+          # dendrograph
+          output$plot_dendro <- renderPlot({
+            drawDendro(as.hclust(cl$cluster_obj), cl$clusters, circle = input$circle)
+          })
+          
+          downloadModuleServer("download_clusters", downloadName = "clusters", 
+                               data.frame(index = names(cl$clusters), cluster = cl$clusters),
+                               type = "csv")
+          
+        } # if find k agg
         
       }) # observe run_cluster
       
