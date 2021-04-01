@@ -1,3 +1,95 @@
+#'Clean the description file input
+#'@param df_description data.frame, == dt_description()
+#'@return \item{df_description} a data.frame
+cleanDescData <- function(df_description) {
+  
+  if("order" %in% colnames(df_description)) {
+    df_description$order <- as.integer(df_description$order)
+  }
+  
+  return(df_description)
+}
+
+#' Clean EBV input
+#' @description Change the column class of EBV input file according to description file
+#' and rescale accuracy columns.
+#' 
+#' @param df_description data.frame, the description input file
+#' @param df_ebv data.frame, the EBV input file
+#' @return a cleaned EBV data.frame
+cleanEbvData <- function(df_description, df_ebv) {
+  
+  # change column classes
+  idx <- grep(pattern = "ACC", x = df_description$classifier)
+  if(length(idx)>0){                             # check accuracy columns exist
+    acc_cols <- df_description$column_labelling[idx]
+    
+    # temp <- mutate_at(df_ebv, vars(acc_cols), list(~ifelse(is.na(.), -10, .))) # 5june2020
+    temp <- df_ebv
+    
+    if(class(temp[,acc_cols[ 1 ]])=="character") { # why does this happen?
+      for(i in acc_cols) {
+        #  set(temp, j=i, value=as.numeric(temp[[ i ]])) # data.table syntax
+        temp[,i] <- as.numeric(temp[, i])
+        # print("character to numerical") # debug
+        
+        if(max(temp[[ i ]], na.rm = T) < 1) {       # change rel scaling
+          # set(temp, j=i, value = temp[[ i ]]*100) # data.table syntax
+          temp[,i] <- temp[, i]*100
+        }
+      }
+    }
+  } else { temp <- df_ebv } 
+  
+  idx <- grep("ClassVar|ID", df_description$classifier)
+  
+  if(length(idx)>0) {                          # check if classifier columns exists
+    fixed_var_cols <- df_description$column_labelling[idx]
+    
+    for (k in fixed_var_cols) {
+      # set(temp, j=k, value=as.character(temp[[k]]))
+      temp[,k] <- as.character(temp[,k])
+      # print("numerical to character") # debug
+    }
+  }
+  
+  # change order
+  # if df_ebv colnames does not match column_labelling in df_description
+  # it's likely someone concatenated "EBV" to df_ebv colnames
+  if(sum(is.na(match(df_description$column_labelling, colnames(temp)))) > 0) {
+    colnames(temp) <- unlist(gsub("EBV", "", colnames(temp), ignore.case = T))
+  }
+  temp <- select_at(temp, vars(df_description$column_labelling))
+  
+  return(temp)
+}
+
+#' Clean Economic value input
+#' @description Reorder to match description file. And convert empty input
+#' into 0s. If the trait names and index names overlap then change index
+#' names to avoid bugs.
+#' @param df_description the description input file
+#' @param df_econval the economic weight input file
+#' @return a cleaned data.frame
+cleanEVData <- function(df_description, df_econval) {
+  
+  m <- na.omit(match(
+    df_description$column_labelling[which(df_description$classifier=="EBV")], 
+    df_econval$Trait))
+  df_econval <- df_econval[m, ]
+  
+  for(i in 2:ncol(df_econval)) {
+    df_econval[, i][which(is.na(df_econval[, i]))] <- 0
+  }
+  
+  if(sum(!is.na(match(df_econval$Trait, colnames(df_econval)[-1]))) > 0) {
+    idx <- which(colnames(df_econval) %in% df_econval$Trait)
+    colnames(df_econval)[idx] <- paste0(colnames(df_econval)[idx], "_index")
+  }
+  
+  return(df_econval)
+}
+
 #'@param cl a hclust() output
 #'@param clcut a vector of grouping categories, with names as the trait names
 #'@param circle a logical value indicating if the dendrogram need to be circluar (fan shape)

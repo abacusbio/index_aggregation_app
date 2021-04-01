@@ -79,6 +79,8 @@ cat(" txt:", txt, "\n")
 cat(" is.null txt")
           val$desc_ebv <- desc_ebv()
           output$demo_message <- renderText({ "You are using uploaded data now" })
+        } else {
+          delay(30000, stopApp())
         }
       })
       
@@ -96,7 +98,11 @@ cat(" is.null txt")
         #cat("preprocessMod\n observe desc_ebv ");cat(length(desc_ebv()), "\n")
         txt <- sanityCheckEVdesc(desc_ev(), desc_ebv())
         output$sanity_message <- renderText({ txt })
-        if(is.null(txt)) val$desc_ev <- desc_ev()
+        if(is.null(txt)) {
+          val$desc_ev <- desc_ev()
+        } else {
+          delay(30000, stopApp())
+        }
       })
       
       ## EBV file
@@ -115,7 +121,11 @@ cat(" is.null txt")
         })
         txt <- sanityCheckEBV(dat_ebv(), desc_ebv())
         output$sanity_message <- renderText({ txt })
-        if(is.null(txt)) val$dat_ebv <- dat_ebv()
+        if(is.null(txt)) {
+          val$dat_ebv <- dat_ebv()
+        } else {
+          delay(30000, stopApp())
+        }
       })
       
       ## EV file
@@ -134,7 +144,11 @@ cat(" is.null txt")
         })
         txt <- sanityCheckEV(dat_ev(), desc_ev())
         output$sanity_message <- renderText({ txt })
-        if(is.null(txt)) val$dat_ev <- dat_ev()
+        if(is.null(txt)) {
+          val$dat_ev <- dat_ev()
+        } else {
+          delay(30000, stopApp())
+        }
       })
       
       ## EV weight file
@@ -157,7 +171,23 @@ cat(" is.null txt")
         })
         txt <- sanityCheckWt(dat_wt(), dat_ev(), desc_ev()) 
         output$sanity_message <- renderText({ txt })
-        if(is.null(txt)) val$dat_wt <- dat_wt()
+        if(is.null(txt)) {
+          val$dat_wt <- dat_wt()
+        } else {
+          delay(30000, stopApp())
+        }
+      })
+      
+      observeEvent(length(desc_ebv()) > 0 && length(desc_ev()) > 0 && 
+                   length(dat_ebv()) > 0 && length(dat_ev()) > 0, {
+        
+        req(#length(desc_ebv()) > 0, length(desc_ev()) > 0, 
+            #length(dat_ebv()) > 0, length(dat_ev()) > 0,
+            is.null(input$sanity_message))
+        
+        output$sanity_message <- renderText({
+        "All good. Now you can move to Results, or Filter if you want to subset your inputs."
+        })
       })
       
       # # if flag is True, change demo text message and replace val[[data_name]] to the uploaded file

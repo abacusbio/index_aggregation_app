@@ -193,12 +193,12 @@ sanityCheckEBV <- function(df_ebv, df_description = NULL) {
   m <- match(df_description$column_labelling,
              unlist(gsub("EBV", "", colnames(df_ebv), ignore.case = T)))
   if(sum(is.na(m)) > 0) {
-    output <- paste0("Breeding value column header do not match file description:\n",
-             "'Breeding values: file description' column_labelling is:\n",
-             paste0(df_description$column_labelling, collapse = ", "),
-             "\n'Breeding values: data' column headers are:\n",
-             paste0(colnames(df_ebv), collapse = ", "),
-             "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+    out <- paste0("Breeding value column header do not match file description:\n",
+                     "'Breeding values: file description' column_labelling is:\n",
+                     paste0(df_description$column_labelling, collapse = ", "),
+                     "\n'Breeding values: data' column headers are:\n",
+                     paste0(colnames(df_ebv), collapse = ", "),
+                     "\n The app will sleep in 30,000 seconds. Please reload and try again.")
     return(out)
     }
   
