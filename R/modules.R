@@ -238,7 +238,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
         )
 
         if(length(columns) > 0) { # 25nov2020
-         dt_output <- formatRound(dt_output, columns = columns, digits = digits())
+         dt_output <- DT::formatRound(dt_output, columns = columns, digits = digits())
         }
 
         if(colourcode()) { # heatmap color coding

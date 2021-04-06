@@ -2,7 +2,6 @@
 #'@param df_description data.frame, == dt_description()
 #'@return \item{df_description} a data.frame
 cleanDescData <- function(df_description) {
-  
   if("order" %in% colnames(df_description)) {
     df_description$order <- as.integer(df_description$order)
   }
@@ -62,32 +61,6 @@ cleanEbvData <- function(df_description, df_ebv) {
   temp <- select_at(temp, vars(df_description$column_labelling))
   
   return(temp)
-}
-
-#' Clean Economic value input
-#' @description Reorder to match description file. And convert empty input
-#' into 0s. If the trait names and index names overlap then change index
-#' names to avoid bugs.
-#' @param df_description the description input file
-#' @param df_econval the economic weight input file
-#' @return a cleaned data.frame
-cleanEVData <- function(df_description, df_econval) {
-  
-  m <- na.omit(match(
-    df_description$column_labelling[which(df_description$classifier=="EBV")], 
-    df_econval$Trait))
-  df_econval <- df_econval[m, ]
-  
-  for(i in 2:ncol(df_econval)) {
-    df_econval[, i][which(is.na(df_econval[, i]))] <- 0
-  }
-  
-  if(sum(!is.na(match(df_econval$Trait, colnames(df_econval)[-1]))) > 0) {
-    idx <- which(colnames(df_econval) %in% df_econval$Trait)
-    colnames(df_econval)[idx] <- paste0(colnames(df_econval)[idx], "_index")
-  }
-  
-  return(df_econval)
 }
 
 #'@param cl a hclust() output

@@ -16,7 +16,7 @@ dataViewerModuleSidebarUI <- function(id, defaultName = "") {
       tags$table(
         tags$td(textInput(ns("view_name"), "Rename filtered data as:", defaultName,
                           placeholder = "Provide data name")),
-        tags$td(actionButton(ns("view_store"), "Rename and save", icon = icon("pen"),
+        tags$td(actionButton(ns("view_store"), "Apply filter", icon = icon("pen"),
                              class = "btn-success"), style = "padding-top:30px;")
       ),
       downloadModuleUI(ns("download_1")),
@@ -58,7 +58,8 @@ dataViewerModuleTabUI <- function(id) {
 dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
                                    filter_dat_name = "test_filtered",
                                    filter_cols = reactive(NULL),
-                                   filter_levels = reactive(NULL) #,
+                                   filter_levels = reactive(NULL),
+                                   na_include = reactive(F), na_to_0 = reactive(F) # 6april2021
                                    # vars = reactive(NULL), download = T
 ) {
   moduleServer(
@@ -255,14 +256,26 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
         }
         
         # data_filter <- if (input$show_filter) input$data_filter else ""
-        val[[filter_dat_name]] <- dat[input$dataviewer_rows_all, input$view_vars]
+        out <- dat[input$dataviewer_rows_all, input$view_vars]
+        
+        if(na_include()) { # 6april2020
+          tmp$na <- dat[,sapply(dat, class) %in% c("numeric", "double", "float", "integer")]
+          idx <- which(rowSums(is.na(tmp$na)) > 0)
+          na_rows <- dat[idx,]
+          
+          if(na_to_0()) { na_rows[is.na(na_rows)] <- 0 }
+          
+          out <- rbind(na_rows, out)
+        }
+        
+        val[[filter_dat_name]] <- out
         # cat(" val[[filter_dat_name]] dim "); # debug
         # print(dim(val[[filter_dat_name]]));
         # print(table(sapply(val[[filter_dat_name]], class)))
         # if(download) {
         downloadName <- gsub(" ", "_", input$view_name)
         downloadModuleServer("download_1", downloadName = downloadName,
-                             df = val[[filter_dat_name]], type = "rdata")
+                             df = val[[filter_dat_name]], type = "csv")
         # }
         
         # user input filters

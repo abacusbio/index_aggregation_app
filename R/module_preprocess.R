@@ -39,17 +39,9 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
   moduleServer(
     id,
     function(input, output, session) {
+# cat("preprocessMod\n");
+      flag <- F
       
-      # # get variable classes # 15dec2020
-      # classes <- reactive({
-      #   req(table1_name %in% names(val))
-      #
-      #   # sanity check
-      #   idx <- match(val[[table1_name]]$question
-      
-      # return(val[[table1_name]]$type)
-      # })
-cat("preprocessMod\n");
       output$demo_message <- renderText({
        req("desc_ebv" %in% names(val))
           "You are using demo data now"
@@ -71,15 +63,16 @@ cat("preprocessMod\n");
       
       # detect if user uploaded a file
       observeEvent(length(desc_ebv()) > 0, { 
-cat(" observe desc_ebv "); cat(length(desc_ebv()), "\n")
+# cat(" observe desc_ebv "); cat(length(desc_ebv()), "\n")
         txt <- sanityCheckEBVdesc(desc_ebv())
         output$sanity_message <- renderText({ txt })
-cat(" txt:", txt, "\n")        
+# cat(" txt:", txt, "\n")        
         if(is.null(txt)) {
-cat(" is.null txt")
+# cat(" is.null txt")
           val$desc_ebv <- desc_ebv()
           output$demo_message <- renderText({ "You are using uploaded data now" })
         } else {
+          flag <- T
           delay(30000, stopApp())
         }
       })
@@ -101,6 +94,7 @@ cat(" is.null txt")
         if(is.null(txt)) {
           val$desc_ev <- desc_ev()
         } else {
+          flag <- T
           delay(30000, stopApp())
         }
       })
@@ -124,6 +118,7 @@ cat(" is.null txt")
         if(is.null(txt)) {
           val$dat_ebv <- dat_ebv()
         } else {
+          flag <- T
           delay(30000, stopApp())
         }
       })
@@ -147,6 +142,7 @@ cat(" is.null txt")
         if(is.null(txt)) {
           val$dat_ev <- dat_ev()
         } else {
+          flag <- T
           delay(30000, stopApp())
         }
       })
@@ -174,6 +170,7 @@ cat(" is.null txt")
         if(is.null(txt)) {
           val$dat_wt <- dat_wt()
         } else {
+          flag <- T
           delay(30000, stopApp())
         }
       })
@@ -189,30 +186,6 @@ cat(" is.null txt")
         "All good. Now you can move to Results, or Filter if you want to subset your inputs."
         })
       })
-      
-      # # if flag is True, change demo text message and replace val[[data_name]] to the uploaded file
-      # observeEvent(flag(), {
-      #   if(flag() == T) {
-      #     output$demo_message <- renderText({ "You are using uploaded data now" })
-      #     print("val upload")
-      #     print(dt_upload()[1:3,1:3]); print(dim(dt_upload()))
-      #     if(clean) { # some initial cleaning
-      #       if(type == "survey") {
-      #         val[[data_name]] <- trimIrregularSymbolsData(dt_upload())
-      #         colnames(val[[data_name]]) <- trimDupSuffix(colnames(val[[data_name]]))
-      #         
-      #       } else if (type == "1000minds"){
-      #         val[[data_name]] <- preprocessWeight(dt_upload())
-      #         
-      #       } else if (type == "rank") {
-      #         val[[data_name]] <- preprocessRank(dt_upload())
-      #       }
-      #       
-      #       
-      #     } else { # no cleaning
-      #       val[[data_name]] <- dt_upload()
-      #     }
-      #     print(data_name);print(val[[data_name]][1:3,1:3])
-      #   }
-      # })
+# cat("preprocessMod\n flag", flag, "\n")  
+     # return(flag)
     })}
