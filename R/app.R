@@ -17,6 +17,8 @@ options(repos = c("CRAN" = "https://mran.microsoft.com/snapshot/2019-04-15",
 
 # options(shiny.reactlog = T) # lzhang April172020
 # reactlogReset()
+
+# library(parallel)
 library(shiny)
 library(DT)
 library(shinyjs)
@@ -25,8 +27,10 @@ library(shinyWidgets)
 library(dplyr)
 library(purrr)
 
+library(RColorBrewer)
 library(ggplot2)
-library(gplots) # heatmap.2
+library(pheatmap)
+# library(gplots) # heatmap.2
 library(ggrepel) # geom_text_repel
 library(ggdendro)
 
@@ -39,11 +43,13 @@ source("module_preprocess.R", echo = F)
 source("module_clustering.R", echo = F)
 source("module_data_filter.R")
 source("module_dt_viewer.R")
+source("module_cl_diagnosis.R")
 source("function_preprocess.R")
 source("function_copied_selindexrevamp.R")
 source("function_clean.R")
 source("function_calculate_index.R")
 source("function_clustering.R")
+source("function_cl_diagnosis.R")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -154,17 +160,26 @@ ui <- fluidPage(
     sidebarLayout(
       sidebarPanel(
         conditionalPanel(
-          condition = "input.run_cluster == 'tab.stepn' && input.plant_app == 'tab.cluster'",
-          clusteringSidebarUI("find_cl")
+          condition = "input.run_cluster == 'tab.cl.1' && input.plant_app == 'tab.cluster'",
+          clusteringModSidebarUI("find_cl")
+        ),
+        
+        conditionalPanel(
+          condition = "input.run_cluster == 'tab.cl.2' && input.plant_app == 'tab.cluster'",
+          clusterDxModSidebarUI("Dx")
         ),
         width = 3), # sidebarPanel
       
       # Show a plot of the generated distribution
       mainPanel(
         tabsetPanel(id = "run_cluster", # id can't have .
-                    tabPanel("Step n: run cluster", value = "tab.stepn",
-                             clusteringUI("find_cl")     
-                    )
+          tabPanel("Step 1: run cluster", value = "tab.cl.1",
+            clusteringModUI("find_cl")     
+            ),
+          
+          tabPanel("Step 2: Cluster diagnosis", value = "tab.cl.2",
+            clusterDxModUI("Dx")
+          )
                     
         ) # tabsetPanel run_cluster
         
@@ -305,10 +320,12 @@ server <- function(input, output, session) {
   )
   
   ## CALCULATE INDEX ##
-  observeEvent(input$plant_app == 'tab.index', { # re-calculate everytime conditions are met
+  
+  observeEvent(input$plant_app, { # react when change to other tabs as well
 # cat("dt_sub_index_ids\n");print(names(val))
-    req(input$view_index == "tab.index1")
-#    req(length(reactiveValuesToList(val)) <= 8 && length(reactiveValuesToList(val)) >=10)
+    req(input$plant_app == 'tab.index' && input$view_index == "tab.index1")
+    req(length(reactiveValuesToList(val)) <= 10 && 
+          length(reactiveValuesToList(val)) >=8) # avoid re-calculate when downstream analysis is aready triggered
     req(val$dt_ev_filtered, val$dt_ev_filtered, val$dt_description_clean, val$dt_desc_ev_clean)
 # cat(" req satisified\n")
     # ID, sex, ..., trait1, trait2, ... index1, index2, ...
@@ -321,16 +338,47 @@ server <- function(input, output, session) {
       val$dt_sub_ebv_index_ids[,!names(val$dt_sub_ebv_index_ids) 
                                %in% val$dt_description_clean$column_labelling[
                                  val$dt_description_clean$classifier=="EBV"] ]
+    
+    # animal ID x Index
+    val$dt_index <- dplyr::select(val$dt_sub_index_ids, matches(val$dt_ev_filtered$Index)) 
+    # %>% t() %>% data.frame()
+    # names(val$dt_index) <- val$dt_sub_index_ids$ID # rownames auto get from original colnames
   })
   
   # takes long time to load
-  renderDtTableModuleServer("index1", reactive(val$dt_sub_index_ids), T, downloadName = "index")
+  # renderDtTableModuleServer("index1", reactive(val$dt_sub_index_ids), T, downloadName = "index")
   
   ## INDEX STATISTICS ##
   
   ## CLUSTER ##
-  votes.repub <- cluster::votes.repub
-  clusteringMod("find_cl", val = reactive(NULL), dat = reactive(t(votes.repub)), cor_mat = F)
+  # # a smaller data
+  # votes.repub <- cluster::votes.repub[
+  #   which(apply(cluster::votes.repub, 1, is.na) %>% apply(2, sum) ==0),] # states by features
+  # 
+  # observeEvent(votes.repub,{
+  #   req(length(votes.repub) > 0)
+  #   val$dt_index <- data.frame(t(votes.repub)) # feature x states
+  #   print(dim(val$dt_index))
+  #   })
+  # 
+  # cl <- clusteringMod("find_cl", val, dat = reactive(val$dt_index), transpose = F)
+
+  # return list(cluster_obj, clusters). Create val$clusters.
+  # if didn't run finalCluster will return list(cluster_obj, best_method, agg_coefs)
+  # with the simulation it takes 6 min to find an agglomerative method, 6.5 min to run wss for k, 
+  # and 6 min to run silhouette for k
+  cl <- clusteringMod("find_cl", val,
+                dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
+                cor_mat = F, transpose = F)
+  
+  ## DIAGNOSIS ##
+  clusterDxMod("Dx", val, reactive(val$dt_index), cl()$cluster_obj, cl()$clusters,
+               transpose = T, reactive(input$`find_cl-center`), reactive(input$`find_cl-scale`))
+  
+  ## CREATE INDEX WEIGHT GIVEN CLUSTERING RESULTS ##
+  
+  ## Aggregation ##
+  
   
 } # server
 

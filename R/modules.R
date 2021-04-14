@@ -293,5 +293,33 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
 
   })} # renderDtTableModuleServer
 
+#'Download button UI function
+downloadPlotModuleUI <- function(id) {
+  ns <- NS(id)
+  downloadButton(ns("downloadPlot1"), "Download the plot")
+}
+
+#'Download plot server function
+#'@param name reactive function, name to save the plot file as
+#'@return \item{downloadPlot1} a downloadHandler UI
+downloadPlotModuleServer <- function(name = "test_plot", plots = reactive(NULL),
+                                     width = "100%", height = "800px") {
+  moduleServer(
+    id,
+    function(input, output, session){
+      
+      output$downloadPlot1 <- downloadHandler(
+        filename = paste0(name, "_", Sys.Date(), ".png"), # function() {paste0(name(), "_", Sys.Date(), ".png")},
+        content = function(file) {
+          png(file, width, height, pointsize = 14) # 908, 550
+          if(class(plots())=="list" && "call" %in% names(plots())) {
+            eval(plots()$call)
+          } else {
+            print(plots())
+          }
+          dev.off()
+        }, contentType = "image/png"
+      )
+    })}
 
 

@@ -1,34 +1,41 @@
-clusteringSidebarUI <- function(id) {
+clusteringModSidebarUI <- function(id) {
   ns <- NS(id)
   tagList(
     # data selection ?
-    actionButton(ns("run_cluster"), "Run clustering"),
+    actionButton(ns("run_cluster"), "Run clustering", icon("running")),
     tags$table(
       tags$td(checkboxInput(ns("center"), "Center columns (features)", T)),
       tags$td(checkboxInput(ns("scale"), "Scale columns (features)", T))
     ),
-    h4("Parameter tuning"),
-    wellPanel(
-      checkboxInput(ns("find_k_agg"), "Calculate optimal # of clusters and agglomeration method", 
-                    value = F),  
-    ),
+    checkboxInput(ns("find_k_agg"), "Calculate optimal # of clusters and agglomeration method", 
+                  value = F),
+    shinyjs::hidden(
+      div(id = ns("tune"),
+          h4("Parameter tuning"),      
+          wellPanel(
+            checkboxInput(ns("wss"), "Try within-cluster SS measurement (can be slow)", F),
+            checkboxInput(ns("sil"), "Try Silhouette value measurement (can be slow)", F)
+          )
+      )),
     sliderInput(ns("k_slider"), "Choose # of clusters:", 2, 10, 2, step = 1),
     selectInput(ns("agg_method"), "Choose an agglomeration method:",
-                c("average", "single", "complete", "ward", "weighted"), "complete"),
+                c(# "average",
+                  "single", "complete", "ward", "weighted"), "complete"),
     checkboxInput(ns("circle"), "Fan shaped dendrogram", F)
   )
 }
 
-clusteringUI <- function(id) {
+clusteringModUI <- function(id) {
   ns <- NS(id)
   tagList(
     h1("Clustering formation "),
+    shinyjs::hidden(span(id = ns("wait"), p("Running...please wait..."), style = "color:orange")),
     shinyjs::hidden(
       div(id = ns("parameters"),
-          h2("Choose parameter by their performance"),
+          h2("Choose parameters by their performance"),
           h3("Agglomerative coefficients"),
           verbatimTextOutput(ns("message_method")),
-          h3("Number of clusters k value"),
+          h3("Number of clusters (k)"),
           h4("by tree merging steps"),
           verbatimTextOutput(ns("message_h")),
           fluidRow(
@@ -51,57 +58,80 @@ clusteringUI <- function(id) {
 }
 
 #'
-#'@param dat a reactive function with data.frame of index by animal in it
-clusteringMod <- function(id, val = reactive(NULL),
-                          dat = reactive(), cor_mat = F, 
+#'@param dat a reactive function with data.frame of animal by index in it. If the data is index by
+#'       animal, then \code{transpose} should be set to \code{T} 
+#'@param col_sel a reactive function. The col names of the \code{dat} to be selected for clustering 
+#'       analysis
+#'@return if \code{input$find_k_agg} is on, return texts and graphs to UI, otherwise return a 
+#'        dendrogram and a download button to download a cluster result .csv.
+clusteringMod <- function(id, val = NULL, dat, #= reactive(NULL),
+                         # col_sel = reactive(NULL), 
+                         cor_mat = F, transpose = F,
                           ...) {
   moduleServer(
     id,
     function(input, output, session) {
 cat("clusteringMod\n")
+      req(dat)
       tempVar <- reactiveValues()
       
-      observeEvent(dat, { # may not work
-        k_max <- nrow(dat()) - 1
+      observeEvent(!is.null(dat() ), { # update k slider max value
+        if(transpose) { k_max <- ncol(dat()) - 1 } else { k_max <- nrow(dat()) - 1 }
+        k_max <- min(100, k_max)
+# cat(" observe dat\n  k_max", k_max, "\n")
         updateSliderInput(session, "k_slider", max = k_max)  
       })
       
       observeEvent(input$find_k_agg, {
        if(isTRUE(input$find_k_agg)) {
          shinyjs::show("parameters")
+         shinyjs::show("tune")
        } else {
          shinyjs::hide("parameters")
+         shinyjs::hide("tune")
        }
       })
       
       observeEvent(input$run_cluster, {
-cat(" observe run_cluster");print(dim(dat()))        
-        req(!is.null(dat()))
+cat(" observe run_cluster\n  dat:");print(dim(dat()));cat("  val:");print(names(val))
+        req(!is.null(dat()), "dt_index" %in% names(val) )
+        shinyjs::show("wait")
+#         if(length(col_sel()) > 0) {
+#           indexes <- col_sel()
+# # cat(" length desc file > 0\n  desc:");print(head(col_sel()));cat("indexes:");print(head(indexes))
+#           dt <- dplyr::select(dat(), matches(indexes))
+# # cat("  dt:");print(dim(dt))
+#         }
+        if(transpose) {
+          dt <- data.frame(t(dat())) # colnames are lost
+        } else {dt <- dat()}
         
         output$method <- renderText({paste0("(", input$agg_method, ")")})
         
         # Tune parameters K and agglomerative coefficient
         if(input$find_k_agg) { # Maybe change to warning message
-         
-          # Find optimal agglomeriative method
-          cl <- runCluster(dat(), cor_mat, input$scale, input$center) # !!!
-          cl$cluster_obj
-          cl$best_method # agglomeration method
-          cl$agg_coefs # agglomerative coefficients
           
+          # Find optimal agglomeriative method
+          cl <- runCluster(dt, cor_mat, input$scale, input$center, n_core = 4) # !!! takes very long time with 2900 indexes
+
+          # cl$cluster_obj
+          # cl$best_method # agglomeration method
+          # cl$agg_coefs # agglomerative coefficients
           output$message_method <- renderPrint({
             paste0("The best method is ", cl$best_method, " with an agglomerative coefficients of ", 
                    cl$agg_coefs[cl$best_method])
           }) # textoutput
-          
+    
           updateSelectInput(session, "agg_method", selected = cl$best_method)
-          
+
           # Find best k
           # list(k_h, k_tss, k_sil, h, p_tss, p_sil)
           op_cut <- reactive({
-            findOptimalCut(dat(), cl$cluster_obj, hc_method = input$agg_method)
+            findOptimalCut(input, output, session,
+                           dt, cl$cluster_obj, hc_method = input$agg_method, 
+                           wss = reactive(input$wss), silhouette = reactive(input$sil))
           })
-          
+cat(" Done findoptimalcut\n")
           output$message_h <- renderPrint({
             paste0("The best k is ", op_cut()$k_h, " at the largest height change of ", op_cut()$h)
           })
@@ -114,13 +144,15 @@ cat(" observe run_cluster");print(dim(dat()))
             print(op_cut()$p_sil)
           })
           
-         # cutree(cl$cluster_obj, k = op_cut)
+          shinyjs::hide("wait")
            
         } else { # run with known k and ac
+          
           # list(cluster_obj, clusters)
-          cl <- runFinalCluster(dat(), cor_mat = F, cluster_object = NULL,
+          cl <- runFinalCluster(dt, cor_mat = F, cluster_object = NULL,
                                 scale = input$scale, center = input$center, k = input$k_slider,
                                 best_method = input$agg_method)
+          tempVar$cl <- cl
           
           # dendrograph
           output$plot_dendro <- renderPlot({
@@ -130,10 +162,12 @@ cat(" observe run_cluster");print(dim(dat()))
           downloadModuleServer("download_clusters", downloadName = "clusters", 
                                data.frame(index = names(cl$clusters), cluster = cl$clusters),
                                type = "csv")
-          
+          shinyjs::hide("wait")
+          # return(cl) # 
+        #  val[["cluster"]] <- cl$clusters
         } # if find k agg
         
       }) # observe run_cluster
       
-  
+      return(reactive(tempVar$cl))
       })}

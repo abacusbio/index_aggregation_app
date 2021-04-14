@@ -34,7 +34,7 @@ dataViewerModuleSidebarUI <- function(id, defaultName = "") {
 dataViewerModuleTabUI <- function(id) {
   ns <- NS(id)
   tagList(
-    #  span(uiOutput(ns("stefan_filter_error_message")), style = "color:salmon"),
+    # span(uiOutput(ns("stefan_filter_error_message")), style = "color:salmon"),
     div(DT::DTOutput(ns("dataviewer")))
   )
 }

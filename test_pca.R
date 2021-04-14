@@ -302,6 +302,7 @@ z <- zClust(data)
 cols <- colorRampPalette(brewer.pal(10, "RdBu"))(256)
 
 heatmap.2(z$data, trace='none', col=rev(cols), Rowv=z$Rowv, Colv=z$Colv)
+
 ### end example ###
 
 # retrive dendrogram info 2March2021

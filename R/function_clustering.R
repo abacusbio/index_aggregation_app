@@ -1,7 +1,8 @@
 #' Run cluster analysis using either raw data or its correlation matrix
 #' 
 #' @description already got k and best_method, produce cluster groups directly
-#' 
+#' @param dat a numeric matrix or data.frame object with features in the rows and observations in  
+#'       the columns. The objective is to reduce the feature dimension and cluster observations 
 runFinalCluster <- function(dat, cor_mat = F, cluster_object = NULL,
                               scale = T, center = T, k = 2, best_method = "complete") {
   
@@ -11,9 +12,9 @@ runFinalCluster <- function(dat, cor_mat = F, cluster_object = NULL,
     # use agnes
     # this cluster the col of dat (observation)
     if(cor_mat) {
-      cluster_object <- agnes(as.dist(1-cor_mat), diss = T, method = best_method)
+      cluster_object <- cluster::agnes(as.dist(1-cor_mat), diss = T, method = best_method)
     } else {
-      cluster_object <- agnes(t(dat), method = best_method) # same as agnes(daisy(t(dat)), diss = T)
+      cluster_object <- cluster::agnes(t(dat), method = best_method) # same as agnes(daisy(t(dat)), diss = T)
     }
   } else if(!class(cluster_object)[1] %in% c("agnes", "hclust")) { # error
     
@@ -29,35 +30,38 @@ runFinalCluster <- function(dat, cor_mat = F, cluster_object = NULL,
 }
 
 
-# Run cluster analysis using either raw data or its correlation matrix
+#' Run cluster analysis using either raw data or its correlation matrix
 #'
-#'@param dat a numeric matrix or data.frame object with features in the rows and observations in  
+#' @param dat a numeric matrix or data.frame object with features in the rows and observations in  
 #'       the columns. The objective is to reduce the feature dimension and cluster observations
-#'@param cor_mat logical, if T then dat is a correlation matrix instead. Default is F
-#'@param stand logical, whether to standardise dat. The arg will be ignored when \code{cor_mat} is 
+#' @param cor_mat logical, if T then dat is a correlation matrix instead. Default is F
+#' @param stand logical, whether to standardise dat. The arg will be ignored when \code{cor_mat} is 
 #'       \code{TRUE}
-runCluster <- function(dat, cor_mat = F, scale = T, center = T) {
-  
+runCluster <- function(dat, cor_mat = F, scale = T, center = T, n_core = 4) {
+
   dat <- t(scale(t(dat), center, scale))
-  
+cat("runCluster\n dim dat:");print(dim(dat)) # 999, 2909
   # use agnes to choose the best agglomeration
   # methods to assess
-  m <- c( "average", "single", "complete", "ward", "weighted") # ward = ward.D2 in hclust
+  m <- c( # "average", 
+    "single", "complete", "ward", "weighted") # ward = ward.D2 in hclust
   names(m) <- m
   
   # function to compute agglomerative coefficient. Closer to 1 the better.
   
   if(cor_mat) {
-    ac <- function(x) agnes(as.dist(1-cor_mat), diss = T, method = x)$ac
+    ac <- function(x) cluster::agnes(as.dist(1-cor_mat), diss = T, method = x)$ac
   } else {
-    ac <- function(x) agnes(t(dat), method = x)$ac # same as agnes(daisy(t(dat)), diss = T)
+    ac <- function(x) cluster::agnes(t(dat), method = x)$ac # same as agnes(daisy(t(dat)), diss = T)
   }
-  
-  af <- purrr::map(m, ac)
+cat(" try agglo methods\n"); t <- Sys.time()
+#  af <- purrr::map(m, ac) # no error should run in 1.104345 s
+   # af <- lapply(m, function(i) { print(i); return(ac(i))})
+   af <- lapply(m, ac) # for Domino  mclapply(m, ac, mc.cores = n_core) 
+cat(" done trying agglo methods in "); print(Sys.time() - t) # 6min 2090 obs 999 features
   best_method <- names(which.min(1-abs(unlist(af))))
-  
-  cl <- agnes(t(dat), method = best_method) # this cluster the col of dat (observation)
-  
+
+  cl <- cluster::agnes(t(dat), method = best_method) # this cluster the col of dat (observation)
   # h3 <- heatmap.2(cor_mat, symm = T, col = gcol2, trace = "none",
   #                 hclustfun = function(x) hclust(x, "ward.D2"),
   #                 distfun = function(x) as.dist(1 - x)) # 1 - abs(x) ?? # 
@@ -71,44 +75,54 @@ runCluster <- function(dat, cor_mat = F, scale = T, center = T) {
 #'       functions
 #'@param hc_method, the agglomeration method. Options are "ward" (agnes), "ward.D2" (hcluster),
 #'       "average", "single", "complete"...for corresponding cluster function
-#'@param k an integer, the number of clusters to cut. Default is 0 and the optimal cut will be 
-#'       calculated by 
+#'@param k_max an integer, the max number of clusters to test in \link[factoextra]{fviz_nbclust}.
 #'@detail choose the best cutoff: \url{https://uc-r.github.io/hc_clustering}
-findOptimalCut <- function(dat, cl, hc_method = "ward"
-                           #input, output, session
-                           ) {
+findOptimalCut <- function(input, output, session,
+                           dat, cl, hc_method = "ward", k_max = 10,
+                           wss = reactive(F), silhouette = reactive(F)) {
 cat("findOptimalCut\n cl:") # ;print(cl);
-#cat(" ### BEFORE ###\n  cl$height:");print(cl$height);cat(" diff height:");print(diff(cl$height))
+  k_tss <- NULL; k_sil <- NULL; p_tss <- NULL; p_sil <- NULL
+# cat(" ### BEFORE ###\n  cl$height:");print(cl$height);cat(" diff height:");print(diff(cl$height))
   cl_orig <- cl
-  if(class(cl)[1]!="hclust") cl <- as.hclust(cl) # agnes height not sorted
+  if(class(cl_orig)[1]!="hclust") cl <- as.hclust(cl_orig) # agnes height not sorted
   
   # largest height change cutoff
   cl$height <- round(cl$height, 6)
   idx <- which.max(diff(cl$height))-1
   if(idx==0) idx <- which(diff(cl$height) == sort(diff(cl$height), decreasing = T)[2]) -1
   h <- cl$height[idx]
-#cat(" ### AFTER ###\n cl$height:");print(cl$height);cat(" diff height:");print(diff(cl$height))
-#cat(" h:", h, "\n");plot.new();plot(cl);rect.hclust(cl, h = h)
+# cat(" ### AFTER ###\n cl$height:");print(cl$height);cat(" diff height:");print(diff(cl$height))
+# cat(" h:", h, "\n");plot.new();plot(cl);rect.hclust(cl, h = h)
   clusters <- cutree(cl, h = h)
   k_h <- max(clusters)
+cat(" found best height\n")
+  if(wss()) {
+    # largest total sum of squares change cutoff
+    # k.max = 10, n_obs = 2009, n_f = 999 need 6.5 mins
+    # t <- Sys.time()
+    p_tss <- factoextra::fviz_nbclust(t(dat), factoextra::hcut, method = "wss",
+                                      k.max = min(k_max, nrow(dat) - 1),
+                                      hc_func = class(cl_orig)[1], hc_method = hc_method) # hcut args
+    # print(Sys.time()-t)
+    diff_tss <- diff(p_tss$data$y)
+    k_tss <- which.max(abs(diff(p_tss$data$y))/p_tss$data$y[1]) + 1
+    p_tss <- p_tss + 
+      ggplot2::geom_vline(xintercept = k_tss, linetype = "dashed", color = "steelblue") +
+      ggplot2::labs(subtitle = paste0("Agglomerative method: ", hc_method))
+cat(" found SS\n")    
+  }
   
-  # largest total sum of squares change cutoff
-  p_tss <- factoextra::fviz_nbclust(t(dat), factoextra::hcut, method = "wss",
-                                    k.max = nrow(dat) - 1,
-                                    hc_func = class(cl_orig)[1], hc_method = hc_method) # hcut args
-  diff_tss <- diff(p_tss$data$y)
-  k_tss <- which.max(abs(diff(p_tss$data$y))/p_tss$data$y[1]) + 1
-  p_tss <- p_tss + 
-    ggplot2::geom_vline(xintercept = k_tss, linetype = "dashed", color = "steelblue") +
-    ggplot2::labs(subtitle = paste0("Agglomerative method: ", hc_method))
-  
-  # largest silouette cutoff
-  p_sil <- factoextra::fviz_nbclust(t(dat), factoextra::hcut, method = "silhouette",
-                                    k.max = nrow(dat) - 1,
-                                    hc_func = class(cl_orig)[1], hc_method = hc_method) + # hcut args
-    ggplot2::labs(subtitle = paste0("Agglomerative method: ", hc_method))
-  k_sil <- which.max(p_sil$data$y)
-  
+  if(silhouette()) {
+    # largest silhouette value cutoff
+    # k.max = 10, n_obs = 2009, n_f = 999 need 6 mins
+    p_sil <- factoextra::fviz_nbclust(t(dat), factoextra::hcut, method = "silhouette",
+                                      k.max = min(k_max, nrow(dat) - 1),
+                                      hc_func = class(cl_orig)[1], hc_method = hc_method) + # hcut args
+      ggplot2::labs(subtitle = paste0("Agglomerative method: ", hc_method))
+    k_sil <- which.max(p_sil$data$y)
+cat(" found silhouette\n")
+  }
+
   return(list(k_h = k_h, k_tss = k_tss, k_sil = k_sil,
               h = h, p_tss = p_tss, p_sil = p_sil)) # print(p_tss/psil to get the plot)
 }
