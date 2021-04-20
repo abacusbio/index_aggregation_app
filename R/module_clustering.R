@@ -53,7 +53,8 @@ clusteringModUI <- function(id) {
           )),
     h2("Final Clustering"),
     plotOutput(ns("plot_dendro"), width = "100%", height = "800px"),
-    downloadModuleUI(ns("download_clusters"), "Download the clusters")
+    downloadModuleUI(ns("dnld_cl"), "Download the cluster object"),
+    downloadModuleUI(ns("dnld_cluster"), "Download the clusters table")
   )
 }
 
@@ -64,7 +65,7 @@ clusteringModUI <- function(id) {
 #'       analysis
 #'@return if \code{input$find_k_agg} is on, return texts and graphs to UI, otherwise return a 
 #'        dendrogram and a download button to download a cluster result .csv.
-clusteringMod <- function(id, val = NULL, dat, #= reactive(NULL),
+clusteringMod <- function(id, val, dat, #= reactive(NULL),
                          # col_sel = reactive(NULL), 
                          cor_mat = F, transpose = F,
                           ...) {
@@ -72,8 +73,8 @@ clusteringMod <- function(id, val = NULL, dat, #= reactive(NULL),
     id,
     function(input, output, session) {
 cat("clusteringMod\n")
-      req(dat)
-      tempVar <- reactiveValues()
+      req(val, dat)
+      # tempVar <- reactiveValues()
       
       observeEvent(!is.null(dat() ), { # update k slider max value
         if(transpose) { k_max <- ncol(dat()) - 1 } else { k_max <- nrow(dat()) - 1 }
@@ -93,7 +94,7 @@ cat("clusteringMod\n")
       })
       
       observeEvent(input$run_cluster, {
-cat(" observe run_cluster\n  dat:");print(dim(dat()));cat("  val:");print(names(val))
+# cat(" observe run_cluster\n  dat:");print(dim(dat()));cat("  val:");print(names(val))
         req(!is.null(dat()), "dt_index" %in% names(val) )
         shinyjs::show("wait")
 #         if(length(col_sel()) > 0) {
@@ -148,20 +149,23 @@ cat(" Done findoptimalcut\n")
            
         } else { # run with known k and ac
           
+          shinyjs::show("wait")
           # list(cluster_obj, clusters)
           cl <- runFinalCluster(dt, cor_mat = F, cluster_object = NULL,
                                 scale = input$scale, center = input$center, k = input$k_slider,
                                 best_method = input$agg_method)
-          tempVar$cl <- cl
-          
+          val$cl <- cl # 20april2021
+cat(" else runFinalCluster\n  val$cl:");print(names(val$cl))          
           # dendrograph
           output$plot_dendro <- renderPlot({
             drawDendro(as.hclust(cl$cluster_obj), cl$clusters, circle = input$circle)
           })
           
-          downloadModuleServer("download_clusters", downloadName = "clusters", 
-                               data.frame(index = names(cl$clusters), cluster = cl$clusters),
-                               type = "csv")
+          # download clustering objects
+          downloadModuleServer("dnld_cl", "cluster_object", cl$cluster_obj, F, "rdata")
+          downloadModuleServer("dnld_cluster", downloadName = "clusters", 
+                               data.frame(Index = names(cl$clusters), cluster = cl$clusters),
+                               F, "csv")
           shinyjs::hide("wait")
           # return(cl) # 
         #  val[["cluster"]] <- cl$clusters
@@ -169,5 +173,5 @@ cat(" Done findoptimalcut\n")
         
       }) # observe run_cluster
       
-      return(reactive(tempVar$cl))
+      return(reactive(val$cl))
       })}

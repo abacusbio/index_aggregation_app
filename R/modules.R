@@ -35,9 +35,10 @@ uploadTableModuleServer <- function(id, sheet = 1, skip = 0, what = NULL,...) {
       userFile <- reactive({
         # First check if a file does exist and if not show "Please upload a file" in the UI
         # This text will be displayed in each results tab if a data set is missing
-        validate(
-          need(input$file != "", "Please upload a file")
-        )
+        # validate(
+        #   need(input$file != "", "Please upload a file")
+        # )
+        req(input$file) # 19April2021 mute the warning
 
         # similar as above, check the file format
         validate(

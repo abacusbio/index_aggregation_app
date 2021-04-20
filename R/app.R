@@ -142,7 +142,8 @@ ui <- fluidPage(
        mainPanel(
          tabsetPanel(id = "view_index", # id can't have .
            tabPanel("View index", value = "tab.index1",
-             renderDtTableModuleUI("index1")
+             # renderDtTableModuleUI("index1") # too long
+             downloadModuleUI("dnld_index", "Download the index table")
              )
                      
          ) # tabsetPanel view_index
@@ -185,8 +186,43 @@ ui <- fluidPage(
         
       ), # mainPanel
       fluid = T) # sidebarLayout fluid = F doesn't work here
-  ) # tabPanel Clustering analysis
+  ), # tabPanel Clustering analysis
   #  ) # navbarMenu Clustering
+  
+  #  navbarMenu("Clustering", menuName = "menu.cluster",
+  # "----",
+  #  "Survey Gizmo file preprocess", # section header
+  tabPanel( # on the dropdown list of navbarmenu
+    "Index Aggregation", value = 'tab.agg',
+    # Sidebar on the left
+    sidebarLayout(
+      sidebarPanel(
+        conditionalPanel(
+          condition = "input.run_cluster == 'tab.agg.1' && input.plant_app == 'tab.agg'",
+          #clusteringModSidebarUI("find_cl")
+        ),
+        
+        conditionalPanel(
+          condition = "input.run_cluster == 'tab.agg.2' && input.plant_app == 'tab.agg'",
+          #clusterDxModSidebarUI("Dx")
+        ),
+        width = 3), # sidebarPanel
+      
+      # Show a plot of the generated distribution
+      mainPanel(
+        tabsetPanel(id = "run_agg", # id can't have .
+          tabPanel("Step 1: Run aggregation", value = "tab.agg.1",
+                   # clusteringModUI("find_cl")     
+                   ),
+                    
+          tabPanel("Step 2: Aggregation diagnosis", value = "tab.agg.2",
+                   # clusterDxModUI("Dx")
+                   )     
+        ) # tabsetPanel run_cluster
+      ), # mainPanel
+      fluid = T) # sidebarLayout fluid = F doesn't work here
+  ) # tabPanel Aggregation
+  
   ) # nevbarPage
 ) # ui
 
@@ -311,7 +347,7 @@ server <- function(input, output, session) {
   })
   
   # show and download data table. Apply column filters and the search bar.
-  # the updated datatable is stored in val$data_filtered
+  # the updated datatable is stored in val$dt_ev_filtered & val$dt_ebv_filtered
   dataViewerModuleServer("ev_filter", reactive(val$dt_ev_clean), val,
                          filter_dat_name = "dt_ev_filtered",
                          filter_cols = reactive(input$`stfn_ev-filter_col`),
@@ -326,7 +362,7 @@ server <- function(input, output, session) {
     req(input$plant_app == 'tab.index' && input$view_index == "tab.index1")
     req(length(reactiveValuesToList(val)) <= 10 && 
           length(reactiveValuesToList(val)) >=8) # avoid re-calculate when downstream analysis is aready triggered
-    req(val$dt_ev_filtered, val$dt_ev_filtered, val$dt_description_clean, val$dt_desc_ev_clean)
+    req(val$dt_ev_filtered, val$dt_ebv_filtered, val$dt_description_clean, val$dt_desc_ev_clean)
 # cat(" req satisified\n")
     # ID, sex, ..., trait1, trait2, ... index1, index2, ...
     val$dt_sub_ebv_index_ids <- calculateIndividualBW(input, output, session,
@@ -345,39 +381,48 @@ server <- function(input, output, session) {
     # names(val$dt_index) <- val$dt_sub_index_ids$ID # rownames auto get from original colnames
   })
   
+  ## INDEX STATISTICS ##
   # takes long time to load
   # renderDtTableModuleServer("index1", reactive(val$dt_sub_index_ids), T, downloadName = "index")
+  downloadModuleServer("dnld_index", "index", 
+                       data.frame(ID = rownames(val$dt_index), val$dt_index), F, "csv")
   
-  ## INDEX STATISTICS ##
   
   ## CLUSTER ##
-  # # a smaller data
-  # votes.repub <- cluster::votes.repub[
-  #   which(apply(cluster::votes.repub, 1, is.na) %>% apply(2, sum) ==0),] # states by features
-  # 
-  # observeEvent(votes.repub,{
-  #   req(length(votes.repub) > 0)
-  #   val$dt_index <- data.frame(t(votes.repub)) # feature x states
-  #   print(dim(val$dt_index))
-  #   })
-  # 
-  # cl <- clusteringMod("find_cl", val, dat = reactive(val$dt_index), transpose = F)
-
-  # return list(cluster_obj, clusters). Create val$clusters.
-  # if didn't run finalCluster will return list(cluster_obj, best_method, agg_coefs)
-  # with the simulation it takes 6 min to find an agglomerative method, 6.5 min to run wss for k, 
-  # and 6 min to run silhouette for k
-  cl <- clusteringMod("find_cl", val,
-                dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
-                cor_mat = F, transpose = F)
   
-  ## DIAGNOSIS ##
-  clusterDxMod("Dx", val, reactive(val$dt_index), cl()$cluster_obj, cl()$clusters,
+  # a smaller data
+  votes.repub <- cluster::votes.repub[
+    which(apply(cluster::votes.repub, 1, is.na) %>% apply(2, sum) ==0),] # states by features
+
+  observeEvent(votes.repub,{
+    req(length(votes.repub) > 0)
+    val$dt_index <- data.frame(t(votes.repub)) # feature x states
+    print(dim(val$dt_index))
+    })
+
+  cl <- clusteringMod("find_cl", val, dat = reactive(val$dt_index), transpose = F)
+
+  # # return list(cluster_obj, clusters). Create val$cl.
+  # # if didn't run finalCluster will return list(cluster_obj, best_method, agg_coefs)
+  # # with the simulation it takes 6 min to find an agglomerative method, 6.5 min to run wss for k, 
+  # # and 6 min to run silhouette for k
+  # cl <- clusteringMod("find_cl", val,
+  #               dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
+  #               cor_mat = F, transpose = F)
+  
+  ## CLUSTER DIAGNOSIS ##
+  
+  # if upload new files, fill val$cl with list(cluster_obj, clusters)
+  clusterDxMod("Dx", val, 
                transpose = T, reactive(input$`find_cl-center`), reactive(input$`find_cl-scale`))
   
+  # cluster should be cbind into t(val$index) and val$dt_ev_filtered and/or dt_sub_index_ids? before aggregation?
+  
+  ## AGGREGATION ##
   ## CREATE INDEX WEIGHT GIVEN CLUSTERING RESULTS ##
   
-  ## Aggregation ##
+  # need to upload val$dt_sub_index_ids, val$dt_index, ?
+  
   
   
 } # server

@@ -44,7 +44,7 @@ cat(" start zClust", t <- Sys.time(), "\n")
   z_mat <- zClust(x_mat, which_dim = ifelse(transpose, "column", "row"), center, scale, cl = new_cl, 
              method = cl_obj$method, show_corr(), bi_clust())
 cat(" zClust finished"); print(Sys.time()-t)
-cat(" z:");print(z_mat[-1]);print(head(z_mat$Rowv$labels[z_mat$Rowv$order]))
+# cat(" z:");print(z_mat[-1]);print(head(z_mat$Rowv$labels[z_mat$Rowv$order]))
   if(show_corr()) {
     x <- z_mat$cor_mat
   } else {
