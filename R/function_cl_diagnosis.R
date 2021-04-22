@@ -77,7 +77,7 @@ cat(" starts heatmap\n"); t <- Sys.time()
                             silent = T)
 cat(" heatmap finished");print(Sys.time()-t)
   
-  return(out)
+  return(list(heatmap = out, data = x))
   # return(list(x = x, col = rev(cols), Rowv = cl_obj, Colv = F,
   #             ColSideColors = NA, RowSideColors = 3))
   # 

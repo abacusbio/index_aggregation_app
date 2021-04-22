@@ -105,7 +105,7 @@ clusterDxMod <- function(id, val = NULL, transpose = T,
   moduleServer(
     id,
     function(input, output, session) {
-      cat("clusterDxMod\n")
+cat("clusterDxMod\n")
       tempVar <- reactiveValues()
       
       observeEvent(input$show_corr, { shinyjs::toggle(id = "bi_clust", condition = !input$show_corr) })
@@ -233,34 +233,24 @@ cat(" cl_obj:");print(val$cl$cluster_obj$call)
         if(transpose) {x <- t(val$dt_index) } else { x <- val$dt_index} # index x animal
         
         output$plot_heat <- renderPlot({
+          req(x, val$cl$cluster_obj, val$cl$clusters)
           # width changes everytime the browser size changes
           tempVar$width  <- session$clientData[[paste0("output_", session$ns("plot_heat"), 
                                                        "_width")]]
-          
           # gtable
           # this doesn't require observe input$run_heatmap from the 2nd time...
-          tempVar$heatmap <-
+          out <- 
             plotHeatmap(input, output, session,
                         x, val$cl$cluster_obj, val$cl$clusters, 
                         transpose = T, center = center(), scale = scale(),
-                        show_corr = reactive(input$show_corr), bi_clust = reactive(input$bi_clust),
-                        index_sel = reactive(input$sel_index), 
-                        cluster_sel = reactive(input$sel_clusters))
+                        show_corr = reactive(input$show_corr), bi_clust = reactive(input$bi_clust)
+                        # index_sel = reactive(input$sel_index), 
+                        # cluster_sel = reactive(input$sel_clusters)
+                        )
+          tempVar$heatmap <- out$heatmap; tempVar$data <- out$data
 # cat(" tempVar$heatmap:\n");print(class(tempVar$heatmap));print(tempVar$heatmap[-c(1:2)]); # plot(tempVar$heatmap)
 # cat("  starts heatmap.2\n"); t <- Sys.time()
           return(tempVar$heatmap)
-          #           return(pheatmap::pheatmap(mat = tempVar$heatmap$x, color = tempVar$heatmap$col,
-          #                                     cluster_rows = tempVar$heatmap$Rowv, cluster_cols = tempVar$heatmap$Colv,
-          #                                     cutree_cols = tempVar$heatmap$ColSideColors,
-          #                                     cutree_rows = tempVar$heatmap$RowSideColors))
-          
-          # test = matrix(rnorm(200), 20, 10)
-          # test[1:10, seq(1, 10, 2)] = test[1:10, seq(1, 10, 2)] + 3
-          # test[11:20, seq(2, 10, 2)] = test[11:20, seq(2, 10, 2)] + 2
-          # test[15:20, seq(2, 10, 2)] = test[15:20, seq(2, 10, 2)] + 4
-          # colnames(test) = paste("Test", 1:10, sep = "")
-          # rownames(test) = paste("Gene", 1:20, sep = "")
-          # return(pheatmap::pheatmap(test))
           #  return(eval(tempVar$heatmap$call))
           # return(gplots::heatmap.2(x = tempVar$heatmap$x, Rowv = tempVar$heatmap$Rowv, 
           #                          Colv = tempVar$heatmap$Colv, col = tempVar$heatmap$col,
@@ -269,10 +259,11 @@ cat(" cl_obj:");print(val$cl$cluster_obj$call)
         })
         shinyjs::hide("wait")
 # cat("  heatmap.2 finished"); print(Sys.time()-t)
-        # downloadPlotModuleServer("download_heat", "heatmap_index", reactive(tempVar$heatmap),
-        #                          tempVar$width)
-        # downloadModuleServer("download_carpet", "heatmap_index", x, type = "csv")
-      })
+        downloadPlotModuleServer("download_heat", name = "index_heatmap", plots = tempVar$heatmap,
+                                 width = reactive(tempVar$width))
+        downloadModuleServer("download_carpet", "index_heatmap", tempVar$data,
+                             row.names = T, type = "csv")
+      }) # observeEvent 
       
       
     })}

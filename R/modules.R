@@ -301,23 +301,25 @@ downloadPlotModuleUI <- function(id) {
 }
 
 #'Download plot server function
-#'@param name reactive function, name to save the plot file as
+#'@param name a string, name to save the plot file as
 #'@return \item{downloadPlot1} a downloadHandler UI
-downloadPlotModuleServer <- function(name = "test_plot", plots = reactive(NULL),
-                                     width = "100%", height = "800px") {
+downloadPlotModuleServer <- function(id, name = "test_plot", plots = NULL,
+                                     width = reactive(800), height = 800) {
   moduleServer(
     id,
     function(input, output, session){
-      
+# cat("downloadPlotModuleServer width:", width(), ", height:", height, "\n")
       output$downloadPlot1 <- downloadHandler(
-        filename = paste0(name, "_", Sys.Date(), ".png"), # function() {paste0(name(), "_", Sys.Date(), ".png")},
+        filename = function() {paste0(name, "_", Sys.Date(), ".png")},
         content = function(file) {
-          png(file, width, height, pointsize = 14) # 908, 550
-          if(class(plots())=="list" && "call" %in% names(plots())) {
-            eval(plots()$call)
+          
+          png(file, width(), height, "px", pointsize = 14)
+          if(class(plots)=="list" && "call" %in% names(plots)) {
+            eval(plots$call)
           } else {
-            print(plots())
+            print(plots)
           }
+          
           dev.off()
         }, contentType = "image/png"
       )

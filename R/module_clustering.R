@@ -53,6 +53,7 @@ clusteringModUI <- function(id) {
           )),
     h2("Final Clustering"),
     plotOutput(ns("plot_dendro"), width = "100%", height = "800px"),
+    downloadModuleUI(ns("dnld_dendro")),
     downloadModuleUI(ns("dnld_cl"), "Download the cluster object"),
     downloadModuleUI(ns("dnld_cluster"), "Download the clusters table")
   )
@@ -74,7 +75,7 @@ clusteringMod <- function(id, val, dat, #= reactive(NULL),
     function(input, output, session) {
 cat("clusteringMod\n")
       req(val, dat)
-      # tempVar <- reactiveValues()
+      tempVar <- reactiveValues()
       
       observeEvent(!is.null(dat() ), { # update k slider max value
         if(transpose) { k_max <- ncol(dat()) - 1 } else { k_max <- nrow(dat()) - 1 }
@@ -158,10 +159,15 @@ cat(" Done findoptimalcut\n")
 cat(" else runFinalCluster\n  val$cl:");print(names(val$cl))          
           # dendrograph
           output$plot_dendro <- renderPlot({
-            drawDendro(as.hclust(cl$cluster_obj), cl$clusters, circle = input$circle)
+            tempVar$width  <- session$clientData[[paste0("output_", session$ns("plot_dendro"), 
+                                                         "_width")]]
+            tempVar$plot <- drawDendro(as.hclust(cl$cluster_obj), cl$clusters, circle = input$circle)
+            return(tempVar$plot)
           })
           
           # download clustering objects
+          downloadPlotModuleServer("dnld_dendro", name = "dendrogram", plots = tempVar$plot,
+                                   width = reactive(tempVar$width))
           downloadModuleServer("dnld_cl", "cluster_object", cl$cluster_obj, F, "rdata")
           downloadModuleServer("dnld_cluster", downloadName = "clusters", 
                                data.frame(Index = names(cl$clusters), cluster = cl$clusters),

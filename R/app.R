@@ -44,6 +44,7 @@ source("module_clustering.R", echo = F)
 source("module_data_filter.R")
 source("module_dt_viewer.R")
 source("module_cl_diagnosis.R")
+source("module_cl_summary.R")
 source("function_preprocess.R")
 source("function_copied_selindexrevamp.R")
 source("function_clean.R")
@@ -143,7 +144,8 @@ ui <- fluidPage(
          tabsetPanel(id = "view_index", # id can't have .
            tabPanel("View index", value = "tab.index1",
              # renderDtTableModuleUI("index1") # too long
-             downloadModuleUI("dnld_index", "Download the index table")
+             downloadModuleUI("dnld_index", "Download the index table"),
+             downloadModuleUI("dnld_index_group", "Download the index and group table")
              )
                      
          ) # tabsetPanel view_index
@@ -167,6 +169,11 @@ ui <- fluidPage(
         
         conditionalPanel(
           condition = "input.run_cluster == 'tab.cl.2' && input.plant_app == 'tab.cluster'",
+          clusterSumStatModSidebarUI("cl_sumstat")
+        ),
+        
+        conditionalPanel(
+          condition = "input.run_cluster == 'tab.cl.3' && input.plant_app == 'tab.cluster'",
           clusterDxModSidebarUI("Dx")
         ),
         width = 3), # sidebarPanel
@@ -178,7 +185,11 @@ ui <- fluidPage(
             clusteringModUI("find_cl")     
             ),
           
-          tabPanel("Step 2: Cluster diagnosis", value = "tab.cl.2",
+          tabPanel("Step 2: Cluster summary", value = "tab.cl.2",
+            clusterSumStatModUI("cl_sumstat")
+          ),
+          
+          tabPanel("Step 3: Cluster diagnosis", value = "tab.cl.3",
             clusterDxModUI("Dx")
           )
                     
@@ -386,9 +397,10 @@ server <- function(input, output, session) {
   # renderDtTableModuleServer("index1", reactive(val$dt_sub_index_ids), T, downloadName = "index")
   downloadModuleServer("dnld_index", "index", 
                        data.frame(ID = rownames(val$dt_index), val$dt_index), F, "csv")
+  downloadModuleServer("dnld_index_group", "index_group", val$dt_sub_index_ids, F, "csv")
   
   
-  ## CLUSTER ##
+  ## Find CLUSTER ##
   
   # a smaller data
   votes.repub <- cluster::votes.repub[
@@ -410,18 +422,22 @@ server <- function(input, output, session) {
   #               dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
   #               cor_mat = F, transpose = F)
   
+  ## CLUSTER SUMMARY STATISTICS ##
+  # need val$dt_index, val$cl
+  clusterSumStatMod("cl_sumstat", val, transpose = F)
+  
   ## CLUSTER DIAGNOSIS ##
   
-  # if upload new files, fill val$cl with list(cluster_obj, clusters)
+  # need val$dt_index, val$cl. if upload new files, fill val$cl with list(cluster_obj, clusters)
   clusterDxMod("Dx", val, 
                transpose = T, reactive(input$`find_cl-center`), reactive(input$`find_cl-scale`))
   
   # cluster should be cbind into t(val$index) and val$dt_ev_filtered and/or dt_sub_index_ids? before aggregation?
   
   ## AGGREGATION ##
-  ## CREATE INDEX WEIGHT GIVEN CLUSTERING RESULTS ##
   
-  # need to upload val$dt_sub_index_ids, val$dt_index, ?
+  ## CREATE INDEX WEIGHT GIVEN CLUSTERING RESULTS ##
+  # need to upload val$dt_index,  val$cl, val$dt_desc_ev_clean (for user group)
   
   
   
