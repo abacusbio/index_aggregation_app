@@ -45,6 +45,8 @@ source("module_data_filter.R")
 source("module_dt_viewer.R")
 source("module_cl_diagnosis.R")
 source("module_cl_summary.R")
+source("module_cl_weight.R")
+# source("module_aggregation.R")
 source("function_preprocess.R")
 source("function_copied_selindexrevamp.R")
 source("function_clean.R")
@@ -55,7 +57,7 @@ source("function_cl_diagnosis.R")
 # Define UI for application that draws a histogram
 ui <- fluidPage(
   shinyjs::useShinyjs(),
-  
+  includeCSS("css/bootstrap_minty_edited.css"), # 5june2020 can use to replace tags$head()
   tags$head(
         tags$style(HTML("
       .shiny-output-error-validation {
@@ -103,13 +105,18 @@ ui <- fluidPage(
            span(textOutput("stefan_filter_error_message_ev"), style = "color:salmon")
          ),
          
-         width = 3), # sidebarPanel
+         conditionalPanel(
+           condition = "input.upload == 'tab.step4' && input.plant_app == 'tab.upload'",
+           h4("sidebar title")
+         ),
+         
+         width = 4), # sidebarPanel, class = "bg-primary"),
        
        mainPanel(
          tabsetPanel(id = "upload", # id can't have .
            tabPanel("Step 1: Upload", value = "tab.step1",
              br(),
-             actionButton("demo", "Run demo data"),
+             actionButton("demo", "Run demo data", class="btn btn-secondary"),
              preprocessUploadModUI("step1")
            ),
            
@@ -121,6 +128,12 @@ ui <- fluidPage(
            tabPanel("Step 3: Filter EV", value = "tab.step3",
              br(),
              dataViewerModuleTabUI("ev_filter")
+           ),
+           
+           tabPanel("Step 4: Combine highly correlated indexes", value = "tab.step4",
+             br(),
+             h2("Combine highly correlated indexes"),
+             helpText("automatically, without diagnosis.")
            )
                      
          ) # tabsetPanel upload
@@ -209,26 +222,26 @@ ui <- fluidPage(
     sidebarLayout(
       sidebarPanel(
         conditionalPanel(
-          condition = "input.run_cluster == 'tab.agg.1' && input.plant_app == 'tab.agg'",
-          #clusteringModSidebarUI("find_cl")
+          condition = "input.run_agg == 'tab.agg.1' && input.plant_app == 'tab.agg'",
+          calWeiModSidebarUI("cl_weight")
         ),
         
         conditionalPanel(
           condition = "input.run_cluster == 'tab.agg.2' && input.plant_app == 'tab.agg'",
-          #clusterDxModSidebarUI("Dx")
+          # aggDxModSidebarUI("cl_weight")
         ),
         width = 3), # sidebarPanel
       
       # Show a plot of the generated distribution
       mainPanel(
         tabsetPanel(id = "run_agg", # id can't have .
-          tabPanel("Step 1: Run aggregation", value = "tab.agg.1",
-                   # clusteringModUI("find_cl")     
+          tabPanel("Step 1: Make new weights", value = "tab.agg.1",
+                   calWeiModUI("cl_weight")
                    ),
                     
           tabPanel("Step 2: Aggregation diagnosis", value = "tab.agg.2",
-                   # clusterDxModUI("Dx")
-                   )     
+                   # calWeiModUI("cl_weight")
+                   )
         ) # tabsetPanel run_cluster
       ), # mainPanel
       fluid = T) # sidebarLayout fluid = F doesn't work here
@@ -242,22 +255,22 @@ server <- function(input, output, session) {
     
   ## OPTIONS ###
   # allow file sizes up to 100MB
-  options(shiny.maxRequestSize = 100 * 1024 ^ 2  , shiny.trace = F # F
+  options(shiny.maxRequestSize = 100 * 1024 ^ 2  , shiny.trace = F
           , shiny.error = NULL #browser
   )
   
   ## INITIALIZE, load demo ##
   val <- reactiveValues()
   
-  desc_ebv <- readxl::read_xlsx("../data/description_bv.xlsx", col_names = T)
-  desc_ev <- read.csv2("../data/description_ev.csv", sep = ",", 
+  desc_ebv <- readxl::read_xlsx("data/description_bv.xlsx", col_names = T)
+  desc_ev <- read.csv2("data/description_ev.csv", sep = ",", 
                        col.names = c("column_labelling", "classifier"))
-  dat_ebv <- read.table("../data/sire_bv.csv", 
+  dat_ebv <- read.table("data/sire_bv.csv", 
                         colClasses = c(rep("character", 2), rep("double", 14)),
                         header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
                         quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
                         strip.white = T)
-  dat_ev <- read.table("../data/sire_ev.csv", 
+  dat_ev <- read.table("data/sire_ev.csv", 
                        colClasses = c("character", rep("double", 11), "character"),
                        header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
                        quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
@@ -402,25 +415,25 @@ server <- function(input, output, session) {
   
   ## Find CLUSTER ##
   
-  # a smaller data
-  votes.repub <- cluster::votes.repub[
-    which(apply(cluster::votes.repub, 1, is.na) %>% apply(2, sum) ==0),] # states by features
+  # # a smaller data
+  # votes.repub <- cluster::votes.repub[
+  #   which(apply(cluster::votes.repub, 1, is.na) %>% apply(2, sum) ==0),] # states by features
+  # 
+  # observeEvent(votes.repub,{
+  #   req(length(votes.repub) > 0)
+  #   val$dt_index <- data.frame(t(votes.repub)) # feature x states
+  #   print(dim(val$dt_index))
+  #   })
+  # 
+  # cl <- clusteringMod("find_cl", val, dat = reactive(val$dt_index), transpose = F)
 
-  observeEvent(votes.repub,{
-    req(length(votes.repub) > 0)
-    val$dt_index <- data.frame(t(votes.repub)) # feature x states
-    print(dim(val$dt_index))
-    })
-
-  cl <- clusteringMod("find_cl", val, dat = reactive(val$dt_index), transpose = F)
-
-  # # return list(cluster_obj, clusters). Create val$cl.
-  # # if didn't run finalCluster will return list(cluster_obj, best_method, agg_coefs)
-  # # with the simulation it takes 6 min to find an agglomerative method, 6.5 min to run wss for k, 
-  # # and 6 min to run silhouette for k
-  # cl <- clusteringMod("find_cl", val,
-  #               dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
-  #               cor_mat = F, transpose = F)
+  # return list(cluster_obj, clusters). Create val$cl.
+  # if didn't run finalCluster will return list(cluster_obj, best_method, agg_coefs)
+  # with the simulation it takes 6 min to find an agglomerative method, 6.5 min to run wss for k,
+  # and 6 min to run silhouette for k
+  cl <- clusteringMod("find_cl", val,
+                dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
+                cor_mat = F, transpose = F)
   
   ## CLUSTER SUMMARY STATISTICS ##
   # need val$dt_index, val$cl
@@ -432,13 +445,12 @@ server <- function(input, output, session) {
   clusterDxMod("Dx", val, 
                transpose = T, reactive(input$`find_cl-center`), reactive(input$`find_cl-scale`))
   
-  # cluster should be cbind into t(val$index) and val$dt_ev_filtered and/or dt_sub_index_ids? before aggregation?
-  
   ## AGGREGATION ##
   
   ## CREATE INDEX WEIGHT GIVEN CLUSTERING RESULTS ##
   # need to upload val$dt_index,  val$cl, val$dt_desc_ev_clean (for user group)
-  
+  # create val$cluster_w (vector) and val$dt_weight (data.frame)
+  calWeiMod("cl_weight", val, transpose = F)
   
   
 } # server

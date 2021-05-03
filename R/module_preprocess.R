@@ -4,6 +4,7 @@ preprocessUploadModsidebarUI <- function(id, title = "Step 1 file uploads") {
     h4(title),
     helpText("Upload description files before value files"),
     wellPanel(
+     # class = "bg-light",
       uploadTableModuleUI(ns("desc_ebv"), "EBV description"),
       textOutput(ns("error_m_1")),
       uploadTableModuleUI(ns("dat_ebv"), "EBV"),

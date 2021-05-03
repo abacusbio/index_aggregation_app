@@ -13,7 +13,7 @@ clusterSumStatModSidebarUI <- function(id) {
       uploadTableModuleUI(ns("upload_clusters"), "cluster table"),
       span(textOutput(ns("error_m_3")), style = "color:salmon")
     ),
-    h4("Index & cluster corr"),
+    h4("Index & cluster corr")
    # checkboxInput(ns("color"), "Show color scale", F)
     # uiOutput(ns("ui_sel_index")),
     # uiOutput(ns("ui_sel_clusters"))
@@ -26,6 +26,7 @@ clusterSumStatModUI <- function(id) {
     h1("Cluster Summary statistics"),
     h2("Within-cluster correlations"),
     textOutput(ns("warn_m")),
+    textOutput(ns("error_m")),
     renderDtTableModuleUI(ns("sum_cor"))
   )
 }
@@ -67,6 +68,11 @@ cat("clusterSumStatMod\n")
       
       observeEvent(length(index_user()) > 0, { # if use index_user, only observe once...
         # cat(" observe index_user\n  val names:");print(names(val))        
+        if("dt_index" %in% names(val$cl)) {
+          output$warn_m <- renderText({
+            "You are going to re-write the index table by your uploaded file."
+          })
+        }
         out <- index_user()[,-1]
         rownames(out) <- index_user()$ID
         val$dt_index <- out
@@ -158,7 +164,7 @@ cat("clusterSumStatMod\n")
       # renderDT("idx_clst_corr", val$dt_index[input$sel_index])
       
       # Index and cluster correlations
-      output$warn_m <- renderText({
+      output$error_m <- renderText({
         validate(need(!is.null(val$dt_index), "please finish filtering or upload an index"),
                  need(!is.null(val$cl$cluster_obj), 
                       "please finish 'run cluster' or upload a cluster object"),
@@ -170,7 +176,7 @@ cat("clusterSumStatMod\n")
       # observeEvent(input$run_heatmap, {
       sth <- reactive({
 cat("clusterSumStatMod\n reactive sth\n")
-        req(length(input$warn_m)==0, 
+        req(length(input$error_m)==0, 
             !is.null(val$dt_index), !is.null(val$cl$cluster_obj), !is.null(val$cl$clusters))
         
         shinyjs::show("wait")
@@ -187,10 +193,19 @@ cat("clusterSumStatMod\n reactive sth\n")
         }))
 
         sum_cor <- dplyr::group_by(df_cor, cluster) %>% 
-          dplyr::summarise(n = n(), mean = mean(cor), median = median(cor), sd = sd(cor), 
-                           min = min(cor), max = max(cor))
+          dplyr::summarise(n = n(), 
+                           mean = mean(cor, na.rm = T), median = median(cor, na.rm = T),
+                           sd = sd(cor, na.rm = T), 
+                           min = min(cor, na.rm = T), max = max(cor, na.rm = T))
+
+        missing <- dplyr::group_by(df_cor, cluster) %>% 
+          summarise(n_missing = sum(is.na(cor)))
+        
+        sum_cor <- dplyr::left_join(sum_cor, missing, by = "cluster")
+        
         return(sum_cor)
         })
       
-      renderDtTableModuleServer("sum_cor", sth, extensions = "FixedHeader",downloadName = "index_cor_summary")
+      renderDtTableModuleServer("sum_cor", sth, extensions = "FixedHeader",
+                                downloadName = "index_cor_summary")
     })}

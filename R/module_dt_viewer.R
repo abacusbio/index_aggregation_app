@@ -13,12 +13,13 @@ dataViewerModuleSidebarUI <- function(id, defaultName = "") {
       uiOutput(ns("ui_view_vars")),
       # sustitute decimal places with digits below
       numericInput(ns("view_dec"), "Decimals:", value = 2, min = 0),
-      tags$table(
-        tags$td(textInput(ns("view_name"), "Rename filtered data as:", defaultName,
-                          placeholder = "Provide data name")),
-        tags$td(actionButton(ns("view_store"), "Apply filter", icon = icon("pen"),
-                             class = "btn-success"), style = "padding-top:30px;")
-      ),
+      #tags$table(
+      #  tags$td(
+      textInput(ns("view_name"), "Rename new data as:", defaultName,
+                          placeholder = "Provide data name"),#),
+      #  tags$td(
+      actionButton(ns("view_store"), "Filter and save", icon = icon("pen"),
+                             class = "btn-success"), #style = "padding-top:20px;")),
       downloadModuleUI(ns("download_1")),
       downloadModuleUI(ns("download_2"), "Download the filter records")
       #， help_and_report(
@@ -205,7 +206,7 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
               extension = "KeyTable",
               escape = FALSE,
               editable = TRUE,
-              style = "bootstrap",
+              style = "bootstrap", #class = "table-primary", 
               options = list(
                 stateSave = TRUE, ## maintains state
                 # searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)), #?

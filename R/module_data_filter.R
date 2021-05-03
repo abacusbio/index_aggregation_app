@@ -6,10 +6,12 @@ stefanFilterModUI <- function(id) {
   tagList(
     h4("String variable level filter controller"),
     wellPanel(
-      actionButton(ns("clear"), "Clear selections", icon("eraser")),
+      actionButton(ns("clear"), "Clear selections", icon("eraser"), 
+                   class = "btn btn-outline-primary"),
       uiOutput(ns("filter_col_UI")), # Stefan's filter Col selector
       uiOutput(ns("data_filters")), # Stefan's filter level selector for each col selected above
-      actionButton(ns("stefan_button"), label = "Apply filter", icon = icon("hand-point-right"))
+      actionButton(ns("stefan_button"), label = "Apply filter", icon = icon("hand-point-right")
+                   , class = "btn btn-outline-primary")
     )
   )
 }

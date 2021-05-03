@@ -118,7 +118,7 @@ print(".RData")
 #' @return a download button
 downloadModuleUI <- function(id, label = "Download the table") {
   ns <- NS(id)
-  downloadButton(ns("download_table"), label = label)
+  downloadButton(ns("download_table"), label = label, class = "btn btn-outline-primary")
 }
 
 #' Download button server
@@ -235,7 +235,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
                         filter = colfilter, # col filter
                         #selection = list(mode = "multiple", target = "row+column"),#"multiple",
                         editable = editable,
-                        options = optionss
+                        options = optionss#, class = "table-primary"
         )
 
         if(length(columns) > 0) { # 25nov2020
@@ -297,7 +297,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
 #'Download button UI function
 downloadPlotModuleUI <- function(id) {
   ns <- NS(id)
-  downloadButton(ns("downloadPlot1"), "Download the plot")
+  downloadButton(ns("downloadPlot1"), "Download the plot", class = "btn btn-outline-primary")
 }
 
 #'Download plot server function

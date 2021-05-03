@@ -2,7 +2,8 @@ clusteringModSidebarUI <- function(id) {
   ns <- NS(id)
   tagList(
     # data selection ?
-    actionButton(ns("run_cluster"), "Run clustering", icon("running")),
+    actionButton(ns("run_cluster"), "Run clustering", icon("running"), 
+                 class = "btn btn-primary"),
     tags$table(
       tags$td(checkboxInput(ns("center"), "Center columns (features)", T)),
       tags$td(checkboxInput(ns("scale"), "Scale columns (features)", T))
