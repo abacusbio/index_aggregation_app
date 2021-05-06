@@ -17,9 +17,7 @@ uploadTableModuleUI <- function(id, label, multiple = F) {
               multiple = multiple,
               accept = c('text/csv',
                          'text/comma-separated-values,text/plain',
-                         '.csv',
-                         ".xlsx")
-    )
+                         '.csv', ".xlsx", ".RData"))
     # textInput(ns("na.string"), "NA symbol", value = c(""))
     #,verbatimTextOutput(ns("error"), placeholder = F) # 14may2020
    #,textOutput(ns("error_message"))

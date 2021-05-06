@@ -1,4 +1,6 @@
 cleanEVplant <- function(desc_ev, dat_ev) {
+  
+  if(class(dat_ev$Index)!="character") dat_ev$Index <- as.character(dat_ev$Index)
 
   m <- desc_ev$column_labelling[desc_ev$classifier=="EV"]
   m <- which(names(dat_ev) %in% m)

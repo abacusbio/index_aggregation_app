@@ -23,6 +23,7 @@ clusterSumStatModSidebarUI <- function(id) {
 clusterSumStatModUI <- function(id) {
   ns <- NS(id)
   tagList(
+    br(),
     h1("Cluster Summary statistics"),
     h2("Within-cluster correlations"),
     textOutput(ns("warn_m")),

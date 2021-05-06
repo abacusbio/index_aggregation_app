@@ -1,18 +1,18 @@
-calWeiModSidebarUI <- function(id, label = "Download the table") {
+calWeiModSidebarUI <- function(id) {
   ns <- NS(id)
   tagList(
     h4("Upload files (optional)"),
     wellPanel(
       uploadTableModuleUI(ns("upload_ev_desc"), "EV description file"),
-      span(textOutput(ns("error_m_0")), style = "color:salmon"),
+      span(textOutput(ns("error_m_0")), style = "color:text-danger"),
       uploadTableModuleUI(ns("upload_ev"), "EV file"),
       span(textOutput(ns("error_m_4")), style = "color:salmon"),
       uploadTableModuleUI(ns("upload_w"), "EV weight file (optional)"),
       span(textOutput(ns("error_m_5")), style = "color:salmon"),
       uploadTableModuleUI(ns("upload_index"), "index table (only has ID and index cols)"),
       span(textOutput(ns("error_m_1")), style = "color:salmon"),
-      uploadTableModuleUI(ns("upload_cl_obj"), "cluster object .RData file"),
-      span(textOutput(ns("error_m_2")), style = "color:salmon"),
+      # uploadTableModuleUI(ns("upload_cl_obj"), "cluster object .RData file"),
+      # span(textOutput(ns("error_m_2")), style = "color:salmon"),
       uploadTableModuleUI(ns("upload_clusters"), "cluster table"),
       span(textOutput(ns("error_m_3")), style = "color:salmon")
     )
@@ -22,40 +22,44 @@ calWeiModSidebarUI <- function(id, label = "Download the table") {
 calWeiModUI <- function(id) {
   ns <- NS(id)
   tagList(
+    br(),
     h1("Make new index weights"),
     helpText("Based on clusters"),
-    span(textOutput(ns("warn_m")), style = "color:orange"),
-    span(textOutput(ns("error_m")), style = "color:orange"),
+    div(textOutput(ns("warn_m")), class = "text-warning"),
+    div(textOutput(ns("error_m")), class = "text-danger"),
     # shinyjs::hidden(span(id = ns("wait"), p("Calculating...please wait..."), style = "color:orange")),
     # column(6,
     #     h2("Cluster weights"),
     #     renderDtTableModuleUI(ns("cluster_w"))  
     #   ),
     h2("Index weights"),
-    selectInput(ns("choose_w"), "Choose a weight(s)", c("equal weight", "by index variance"),
-                selected = "equal weight", multiple = T, selectize = T),
+    selectInput(ns("choose_w"), "Choose a weight(s)",
+                choices = c("equal weight"),# "by index correlation"),
+                selected = "equal weight", selectize = T),
     renderDtTableModuleUI(ns("index_w"), "Download the new index weight file"),
+    br(),br(),
     h2("New economic weights"),
     renderDtTableModuleUI(ns("ew_new"), "Download the new EW file")
   )
 }
 
-#' Download button server
+#' Calculate the weight for each index within a cluster
 #'
 #' @param id shiny object id
-#' @param val a reactive value object, containing at least 4 objects: 1) \code{dat}, a data.frame of 
-#'        animal by index, e.g. 
-#'        reactive(val$dt_index). If the data is index by animal, then \code{transpose} should be 
+#' @param val a reactive value object, containing at least 4 objects: 1) \code{reactive(
+#'        val$dt_index)}, a data.frame of animal by index. If the data is index by animal, 
+#'        then \code{transpose} should be 
 #'        set to \code{T}. 2) \code{cl}, a list containing \code{cl_obj}, a class "hclust" or 
-#'        "agnes" object. 3) \code{clusters}, a cluster assignment vector. e.g. a \code{cutree} 
-#'        output. 4) \code{dt_desc_ev_clean}, a data.frame of 2 columns: column_labelling and 
-#'        classifier/ 5) \code{dt_ev_clean}, a data.frame of columns Index and trait names
+#'        "agnes" object. 3) \code{val$cl$clusters}, a cluster assignment vector. e.g. a \code{cutree} 
+#'        output. 4) \code{val$dt_desc_ev_clean}, a data.frame of 2 columns: column_labelling and 
+#'        classifier/ 5) \code{val$dt_ev_filtered}, a data.frame of columns Index and trait names
+#' @param cl a reactive function of a list containing a cluster_obj and a vector of cluster
 #' @param cl a reactive function of a list containing a cluster_obj and a vector of cluster
 #'        assignments
 #' @param index a reactive function of a data.frame, animal ID by indexes, e.g. val$dt_index        
 #' 
-#' @return val$cluster_w, a numeric vector; and val$dt_weight, a data.frame of 2 columns: Index and
-#'         weight
+#' @return val$dt_weight, a data.frame of 3 columns: Index, cluster and weight; and val$dt_ev_agg,
+#'         a data.frame of columns as Index, cluster and traits
 calWeiMod <- function(id, val, transpose = T, ...) {
   moduleServer(
     id,
@@ -90,7 +94,7 @@ cat("calWeiMod\n")
       index_user <- uploadTableModuleServer("upload_index")
       
       output$error_m_1 <- renderText({
-cat(" error_m_1: names index_user");print(names(index_user())[1]=="ID")
+# cat(" error_m_1: names index_user");print(names(index_user())[1]=="ID")
         validate(
           need(class(index_user())!="try-error", attr(index_user(), "condition")$message),
           need(names(index_user())[1]=="ID", "Index file first column should be ID (for plant)")
@@ -98,8 +102,8 @@ cat(" error_m_1: names index_user");print(names(index_user())[1]=="ID")
       })
       
       observeEvent(length(index_user()) > 0, { # if use index_user, only observe once...
-cat(" observe index_user\n  val names:");print(names(val));cat("  error_m_1");print(input$error_m_1)
-        req(class(index_user())=="data.frame") # error_m_1 initial value is NULL, so doesn't work
+# cat(" observe index_user\n  val names:");print(names(val));cat("  error_m_1");print(input$error_m_1)
+        req(class(index_user())=="data.frame", names(index_user())[1]=="ID")
         if("dt_index" %in% names(val)) {
           output$warn_m <- renderText({
             "You are going to re-write the index table by your uploaded file."
@@ -110,29 +114,29 @@ cat(" observe index_user\n  val names:");print(names(val));cat("  error_m_1");pr
         val$dt_index <- out
       })
       
-      cl_obj_user <- uploadTableModuleServer("upload_cl_obj") # RData
-      
-      output$error_m_2 <- renderText({
-        validate(
-          need(class(cl_obj_user())!="try-error", attr(cl_obj_user(), "condition")$message),
-          need(class(cl_obj_user())[1] %in% c("hclust", "agnes"), "Please upload a cluster object")
-        )
-      })
-      
-      observeEvent(length(cl_obj_user()) > 0, {
-        # cat(" observe cl_obj_user\n  val names:");print(names(val))
-        req(class(cl_obj_user())[1] %in% c("hclust", "agnes"))
-        if(!"cl" %in% names(val)) {
-          val$cl <- NULL
-          
-        } else if("cl_obj" %in% names(val$cl)) {
-          output$warn_m <- renderText({
-            "You are going to re-write the clustering object by your uploaded file."
-          })
-        }
-        
-        val$cl$cluster_obj <- cl_obj_user()
-      })
+      # cl_obj_user <- uploadTableModuleServer("upload_cl_obj") # RData
+      # 
+      # output$error_m_2 <- renderText({
+      #   validate(
+      #     need(class(cl_obj_user())!="try-error", attr(cl_obj_user(), "condition")$message),
+      #     need(class(cl_obj_user())[1] %in% c("hclust", "agnes"), "Please upload a cluster object")
+      #   )
+      # })
+      # 
+      # observeEvent(length(cl_obj_user()) > 0, {
+      #   # cat(" observe cl_obj_user\n  val names:");print(names(val))
+      #   req(class(cl_obj_user())[1] %in% c("hclust", "agnes"))
+      #   if(!"cl" %in% names(val)) {
+      #     val$cl <- NULL
+      #     
+      #   } else if("cl_obj" %in% names(val$cl)) {
+      #     output$warn_m <- renderText({
+      #       "You are going to re-write the clustering object by your uploaded file."
+      #     })
+      #   }
+      #   
+      #   val$cl$cluster_obj <- cl_obj_user()
+      # })
       
       clusters_user <- uploadTableModuleServer("upload_clusters", 1, 0)
       
@@ -145,7 +149,7 @@ cat(" observe index_user\n  val names:");print(names(val));cat("  error_m_1");pr
       })
       
       observeEvent(length(clusters_user())>0, {
-        req(class(clusters_user())=="data.frame")
+        req(class(clusters_user())=="data.frame", names(clusters_user())[1]=="Index")
         if(!"cl" %in% names(val)) {
           val$cl <- NULL
           
@@ -172,14 +176,15 @@ cat(" observe index_user\n  val names:");print(names(val));cat("  error_m_1");pr
       })
       
       observeEvent(length(ew_user())>0, {
-        req(class(ew_user())=="data.frame")
-        if("dt_ev_clean" %in% names(val)) {
+        req(class(ew_user())=="data.frame", !is.null(val$dt_desc_ev_clean), 
+            names(ew_user())[1]=="Index")
+        if("dt_ev_filtered" %in% names(val)) {
           output$warn_m <- renderText({
             "You are going to re-write the EV table by your uploaded file."
           })
         }
         
-        val$dt_ev_clean <- ew_user()
+        val$dt_ev_filtered <- cleanEVplant(val$dt_desc_ev_clean, ew_user())
       })
       
       w_user <- uploadTableModuleServer("upload_w", 1, 0)
@@ -205,10 +210,10 @@ cat(" observe index_user\n  val names:");print(names(val));cat("  error_m_1");pr
       
       output$error_m <- renderText({
         validate(need(!is.null(val$dt_desc_ev_clean), "Please upload a EV description file"),
-                 need(!is.null(val$dt_ev_clean), "Please upload a EV file"),
+                 need(!is.null(val$dt_ev_filtered), "Please upload a EV file"),
                  need(!is.null(val$dt_index), "Please finish filtering or upload an index table"),
-                 need(!is.null(val$cl$cluster_obj), 
-                      "Please finish 'run cluster' or upload a cluster object"),
+                 # need(!is.null(val$cl$cluster_obj), 
+                      # "Please finish 'run cluster' or upload a cluster object"),
                  need(!is.null(val$cl$clusters), 
                       "Please finish 'run cluster' or upload a cluster table")
         )
@@ -216,9 +221,10 @@ cat(" observe index_user\n  val names:");print(names(val));cat("  error_m_1");pr
       
       # DETECT AND SHOW WEIGHTING OPTIONS
       observeEvent(length(val$dt_w_clean) > 0, { # not sure if only works once?
-cat(" observe val$dt_w_clean\n")
+# cat(" observe val$dt_w_clean\n")
         updateSelectInput(session, "choose_w", 
-                          choices = c("equal weight", names(val$dt_weight_clean)[-1]))
+                          choices = c("equal weight",# "by index correlation", 
+                                      names(val$dt_w_clean)[-1]))
       })
       
       # MAKE WEIGHTS
@@ -257,7 +263,7 @@ cat(" observe val$dt_w_clean\n")
       # make individual index weight:
       # get the variance of each index in its sub-group, divide by sum of their variances?
       index_w <- reactive({
-cat(" reactive index_w\n  input$choose_w == ", input$choose_w, "\n")
+# cat(" reactive index_w\n  input$choose_w == ", input$choose_w, "\n")
         req(length(input$error_m)==0, 
             !is.null(val$dt_index), !is.null(val$cl$clusters),
             input$choose_w!="")
@@ -269,17 +275,17 @@ cat(" reactive index_w\n  input$choose_w == ", input$choose_w, "\n")
           idx <- match(names(val$cl$clusters)[grep(i, val$cl$clusters)], colnames(index_cov))
           
           if(length(input$choose_w)==1 && input$choose_w==""){
-cat("  if input$choose_w==''\n")
+# cat("  if input$choose_w==''\n")
             
           } else if(length(input$choose_w)==1 && input$choose_w == "equal weight") {
             out <- rep(1/length(idx), times = length(idx))
             out <- data.frame(Index = colnames(index_cov)[idx], cluster = i, weight = out)
             
-          } else if (length(input$choose_w)==1 && input$choose_w == "by index variance" ) {
-            out <- diag(index_cov[idx,idx])/sum(diag(index_cov[idx,idx]))
-            out <- data.frame(Index = colnames(index_cov)[idx], cluster = i, weight = out)
+          # } else if (length(input$choose_w)==1 && input$choose_w == "by index correlation" ) {
+          #   out <- diag(index_cov[idx,idx])/sum(diag(index_cov[idx,idx]))
+          #   out <- data.frame(Index = colnames(index_cov)[idx], cluster = i, weight = out)
             
-          } else {
+          } else { # user chosen variable
             idx_row <- match(colnames(index_cov), val$dt_w_clean$Index)
             w_col <- which(input$choose_w %in% names(val$dt_w_clean))
             
@@ -302,25 +308,26 @@ cat("  if input$choose_w==''\n")
       # make aggregated index
       # make aggregated EW
       ew_new <- reactive({
-cat(" reactive index_w\n")
+# cat(" reactive index_w\n")
         req(length(input$error_m)==0, index_w, 
-            !is.null(val$dt_desc_ev_clean), !is.null(val$dt_ev_clean))
+            !is.null(val$dt_desc_ev_clean), !is.null(val$dt_ev_filtered))
         
-        idx_trait <- which(names(val$dt_ev_clean) %in% 
+        idx_trait <- which(names(val$dt_ev_filtered) %in% 
                              val$dt_desc_ev_clean$column_labelling[
                                val$dt_desc_ev_clean$classifier=="EV"])
         
         ews_new <- do.call(rbind, lapply(unique(val$cl$clusters), function( i ) {
           index_names <- names(val$cl$clusters)[val$cl$clusters == i]
           index_wei <- index_w()$weight[match(index_names, index_w()$Index)]
-          row_idx <- match(index_names, val$dt_ev_clean$Index)
-          ew_table <- sweep(val$dt_ev_clean[row_idx, idx_trait], 1, index_wei, "*") # row1*index_w[1], row2*index_w[2]...
+          row_idx <- match(index_names, val$dt_ev_filtered$Index)
+          ew_table <- sweep(val$dt_ev_filtered[row_idx, idx_trait], 1, index_wei, "*") # row1*index_w[1], row2*index_w[2]...
 # cat("  ew_table: dim");print(dim(ew_table));print(ew_table[1:3,1:3])          
           index_new <- colSums(ew_table, na.rm = F)/100 # vector
 # cat("  index_new: i =", i, ", class", class(index_new), ", length");print(length(index_new));print(head(index_new))
           return(data.frame(Index = paste0("new_index_", i), cluster = i, t(index_new)))
         }))
         
+        val$dt_ev_agg <- ews_new
         return(ews_new)
       })
       

@@ -2,8 +2,12 @@
 #' 
 #' @description already got k and best_method, produce cluster groups directly
 #' @param dat a numeric matrix or data.frame object with features in the rows and observations in  
-#'       the columns. The objective is to reduce the feature dimension and cluster observations 
-runFinalCluster <- function(dat, cor_mat = F, cluster_object = NULL,
+#'       the columns. The objective is to reduce the feature dimension and cluster observations
+#' @param cor_mat logical, if T then dat is a correlation matrix instead. Default is F
+#' @param absolute logical, if T then use the absolute value of the correlation matrix. Only works
+#'        if \code{cor_mat} == T
+#' @return a list of a \code{agnes} output and a \code{cutree} output
+runFinalCluster <- function(dat, cor_mat = F, cor_absolute, cluster_object = NULL,
                               scale = T, center = T, k = 2, best_method = "complete") {
   
   if(class(cluster_object)[1] == "NULL") { # use raw data
@@ -12,7 +16,10 @@ runFinalCluster <- function(dat, cor_mat = F, cluster_object = NULL,
     # use agnes
     # this cluster the col of dat (observation)
     if(cor_mat) {
-      cluster_object <- cluster::agnes(as.dist(1-cor_mat), diss = T, method = best_method)
+      
+      corr <- cor(t(dat))
+      if(cor_absolute) corr <- abs(corr)
+      cluster_object <- cluster::agnes(as.dist(1-corr), diss = T, method = best_method)
     } else {
       cluster_object <- cluster::agnes(t(dat), method = best_method) # same as agnes(daisy(t(dat)), diss = T)
     }
@@ -35,9 +42,11 @@ runFinalCluster <- function(dat, cor_mat = F, cluster_object = NULL,
 #' @param dat a numeric matrix or data.frame object with features in the rows and observations in  
 #'       the columns. The objective is to reduce the feature dimension and cluster observations
 #' @param cor_mat logical, if T then dat is a correlation matrix instead. Default is F
+#' @param absolute logical, if T then use the absolute value of the correlation matrix. Only works
+#'        if \code{cor_mat} == T
 #' @param stand logical, whether to standardise dat. The arg will be ignored when \code{cor_mat} is 
 #'       \code{TRUE}
-runCluster <- function(dat, cor_mat = F, scale = T, center = T, n_core = 4) {
+runCluster <- function(dat, cor_mat = F, cor_absolute = F, scale = T, center = T, n_core = 4) {
 
   dat <- t(scale(t(dat), center, scale))
 cat("runCluster\n dim dat:");print(dim(dat)) # 999, 2909
@@ -50,7 +59,11 @@ cat("runCluster\n dim dat:");print(dim(dat)) # 999, 2909
   # function to compute agglomerative coefficient. Closer to 1 the better.
   
   if(cor_mat) {
-    ac <- function(x) cluster::agnes(as.dist(1-cor_mat), diss = T, method = x)$ac
+    
+    corr <- cor(t(dat))
+    if(cor_absolute) corr <- abs(corr)
+    ac <- function(x) cluster::agnes(as.dist(1-corr), diss = T, method = x)$ac
+    
   } else {
     ac <- function(x) cluster::agnes(t(dat), method = x)$ac # same as agnes(daisy(t(dat)), diss = T)
   }

@@ -15,7 +15,7 @@ options(repos = c("CRAN" = "https://mran.microsoft.com/snapshot/2019-04-15",
 # options("repos")
 # old.packages()
 
-# options(shiny.reactlog = T) # lzhang April172020
+options(shiny.reactlog = T) # ctrl+F3
 # reactlogReset()
 
 # library(parallel)
@@ -23,6 +23,7 @@ library(shiny)
 library(DT)
 library(shinyjs)
 library(shinyWidgets)
+#library(reactlog)
 
 library(dplyr)
 library(purrr)
@@ -46,7 +47,7 @@ source("module_dt_viewer.R")
 source("module_cl_diagnosis.R")
 source("module_cl_summary.R")
 source("module_cl_weight.R")
-# source("module_aggregation.R")
+source("module_aggregation.R")
 source("function_preprocess.R")
 source("function_copied_selindexrevamp.R")
 source("function_clean.R")
@@ -61,7 +62,7 @@ ui <- fluidPage(
   tags$head(
         tags$style(HTML("
       .shiny-output-error-validation {
-        color: salmon;
+        color: red;
         /*font-weight: bold;*/
       }
     "))
@@ -125,9 +126,17 @@ ui <- fluidPage(
              dataViewerModuleTabUI("ebv_filter")
            ),
            
+           tabPanel("EBV summary statistics", value = "tab.ebv.sumstat",
+             br()
+           ),
+           
            tabPanel("Step 3: Filter EV", value = "tab.step3",
              br(),
              dataViewerModuleTabUI("ev_filter")
+           ),
+           
+           tabPanel("EV summary statistics", value = "tab.ev.sumstat",
+             br()
            ),
            
            tabPanel("Step 4: Combine highly correlated indexes", value = "tab.step4",
@@ -137,7 +146,7 @@ ui <- fluidPage(
            )
                      
          ) # tabsetPanel upload
-       ), # mainPanel
+       ),# class = "bg-light"), # mainPanel
        fluid = T) # sidebarLayout fluid = F doesn't work here
    ), # tabPanel Upload Files
    # ), # navbarMenu File upload
@@ -151,7 +160,7 @@ ui <- fluidPage(
            condition = "input.view_index == 'tab.index1' && input.plant_app == 'tab.index'",
            # clusteringSidebarUI("find_cl")
          ),
-         width = 3), # sidebarPanel
+         width = 4), # sidebarPanel
        
        mainPanel(
          tabsetPanel(id = "view_index", # id can't have .
@@ -189,7 +198,7 @@ ui <- fluidPage(
           condition = "input.run_cluster == 'tab.cl.3' && input.plant_app == 'tab.cluster'",
           clusterDxModSidebarUI("Dx")
         ),
-        width = 3), # sidebarPanel
+        width = 4), # sidebarPanel
       
       # Show a plot of the generated distribution
       mainPanel(
@@ -227,10 +236,10 @@ ui <- fluidPage(
         ),
         
         conditionalPanel(
-          condition = "input.run_cluster == 'tab.agg.2' && input.plant_app == 'tab.agg'",
-          # aggDxModSidebarUI("cl_weight")
+          condition = "input.run_agg == 'tab.agg.2' && input.plant_app == 'tab.agg'",
+          aggDxModSidebarUI("agg_dx")
         ),
-        width = 3), # sidebarPanel
+        width = 4), # sidebarPanel
       
       # Show a plot of the generated distribution
       mainPanel(
@@ -240,7 +249,7 @@ ui <- fluidPage(
                    ),
                     
           tabPanel("Step 2: Aggregation diagnosis", value = "tab.agg.2",
-                   # calWeiModUI("cl_weight")
+                   aggDxModUI("agg_dx")
                    )
         ) # tabsetPanel run_cluster
       ), # mainPanel
@@ -300,7 +309,7 @@ server <- function(input, output, session) {
     val$dt_description_clean <- cleanDescData(val$desc_ebv)
     val$dt_ebv_clean <- cleanEbvData(val$dt_description_clean, val$dat_ebv)
     val$dt_desc_ev_clean <- val$desc_ev
-    val$dt_ev_clean <- cleanEVplant(val$dt_description_clean, val$dat_ev)
+    val$dt_ev_clean <- cleanEVplant(val$dt_desc_ev_clean, val$dat_ev)
     
     if("dat_w" %in% names(val)) {
       val$dt_w_clean <- cleanW(val$dt_w_clean) 
@@ -415,25 +424,25 @@ server <- function(input, output, session) {
   
   ## Find CLUSTER ##
   
-  # # a smaller data
-  # votes.repub <- cluster::votes.repub[
-  #   which(apply(cluster::votes.repub, 1, is.na) %>% apply(2, sum) ==0),] # states by features
-  # 
-  # observeEvent(votes.repub,{
-  #   req(length(votes.repub) > 0)
-  #   val$dt_index <- data.frame(t(votes.repub)) # feature x states
-  #   print(dim(val$dt_index))
-  #   })
-  # 
-  # cl <- clusteringMod("find_cl", val, dat = reactive(val$dt_index), transpose = F)
+  # a smaller data
+  votes.repub <- cluster::votes.repub[
+    which(apply(cluster::votes.repub, 1, is.na) %>% apply(2, sum) ==0),] # states by features
 
-  # return list(cluster_obj, clusters). Create val$cl.
-  # if didn't run finalCluster will return list(cluster_obj, best_method, agg_coefs)
-  # with the simulation it takes 6 min to find an agglomerative method, 6.5 min to run wss for k,
-  # and 6 min to run silhouette for k
-  cl <- clusteringMod("find_cl", val,
-                dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
-                cor_mat = F, transpose = F)
+  observeEvent(votes.repub,{
+    req(length(votes.repub) > 0)
+    val$dt_index <- data.frame(t(votes.repub)) # feature x states
+    print(dim(val$dt_index))
+    })
+
+  cl <- clusteringMod("find_cl", val, dat = reactive(val$dt_index), transpose = F)
+
+  # # return list(cluster_obj, clusters). Create val$cl.
+  # # if didn't run finalCluster will return list(cluster_obj, best_method, agg_coefs)
+  # # with the simulation it takes 6 min to find an agglomerative method, 6.5 min to run wss for k,
+  # # and 6 min to run silhouette for k
+  # cl <- clusteringMod("find_cl", val,
+  #               dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
+  #               transpose = F)
   
   ## CLUSTER SUMMARY STATISTICS ##
   # need val$dt_index, val$cl
@@ -447,11 +456,17 @@ server <- function(input, output, session) {
   
   ## AGGREGATION ##
   
-  ## CREATE INDEX WEIGHT GIVEN CLUSTERING RESULTS ##
-  # need to upload val$dt_index,  val$cl, val$dt_desc_ev_clean (for user group)
-  # create val$cluster_w (vector) and val$dt_weight (data.frame)
+  # CREATE INDEX WEIGHT GIVEN CLUSTERING RESULTS #
+  # need to upload val$dt_index,  val$cl, val$dt_ev_filtered, val$dt_desc_ev_clean (for user group)
+  # create val$dt_weight (data.frame), a data.frame of 3 columns: Index, cluster and weight; and 
+  # val$dt_ev_agg, a data.frame of columns as Index, cluster and traits
   calWeiMod("cl_weight", val, transpose = F)
   
+  # AGGREGATED INDEX DIAGNOSIS #
+#  observeEvent(val$dt_ev_agg, {
+# cat("observe val$dt_ev_agg\n")
+  aggDxMod("agg_dx", val, transpose = F, reactive(val$cl$clusters), reactive(val$dt_ev_agg))
+  # })
   
 } # server
 

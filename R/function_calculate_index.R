@@ -37,6 +37,7 @@ calculateIndividualBW <- function (input, output, session,
   if(sum(is.na(indexes)) > 0) stop("calculateIndividualBW indexes has NA")
 
   ids <- desc_ebv$column_labelling[grep("ID|ClassVar", desc_ebv$classifier)]
+# cat("calculateIndividualBW\n ids:");print(ids);cat(" df_ebv_select:\n");print(head(df_ebv_select))  
   out <- data.frame(df_ebv_select[,ids], sub_ebv, indexes)
   
   return(out)

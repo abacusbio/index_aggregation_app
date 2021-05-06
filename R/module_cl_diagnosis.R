@@ -23,7 +23,8 @@ clusterDxModSidebarUI <- function(id) {
       checkboxInput(ns("show_corr"), "Show index correlation matrix (no plant info)", 
                     value = T),
       checkboxInput(ns("bi_clust"), "Also cluster plant", value = F),
-      actionButton(ns("run_heatmap"), "Show heatmap", icon("running")),
+      actionButton(ns("run_heatmap"), "Show heatmap", icon("running"),
+                   class = "btn btn-outline-primary")
     ),
     
     # shinyjs::hidden(
@@ -45,6 +46,7 @@ clusterDxModSidebarUI <- function(id) {
 clusterDxModUI <- function(id) {
   ns <- NS(id)
   tagList(
+    br(),
     h1("Clustering diagnosis "),
     # shinyjs::hidden(
     #   div(id = ns("parameters"),
@@ -68,16 +70,17 @@ clusterDxModUI <- function(id) {
     #       )
     #   )),
     # h2("Index and cluster correlations"),
+    br(),
     h2("Heatmap"),
     helpText(
-      div("Warning:", style = "color:orange"),
+      div("Warning:", class = "text-warning"), #style = "color:orange"),
       "Heatmap is for visualisation. The index dendrogram is derived from the previous
           tab 'Step 1: run cluster' using the chosen input of either the correlation matrix or the
           original data (recommend). If you want to swap the input for clustering, please go back 
           and re-run clustering analyses"
     ),
     shinyjs::hidden(span(id = ns("wait"), p("Plotting...please wait..."), style = "color:orange")),
-    textOutput(ns("warn_m")),
+    div(textOutput(ns("warn_m")), class = "text-warning"),
     plotOutput(ns("plot_heat"), width = "100%", height = "800px"),
     tags$table(
       tags$td(downloadPlotModuleUI(ns("download_heat"))),
@@ -122,7 +125,13 @@ cat("clusterDxMod\n")
       })
       
       observeEvent(length(index_user()) > 0, { # if use index_user, only observe once...
-# cat(" observe index_user\n  val names:");print(names(val))        
+# cat(" observe index_user\n  val names:");print(names(val))
+        req(class(index_user())=="data.frame") # error_m_1 initial value is NULL, so doesn't work
+        if("dt_index" %in% names(val)) {
+          output$warn_m <- renderText({
+            "You are going to re-write the index table by your uploaded file."
+          })
+        }
         out <- index_user()[,-1]
         rownames(out) <- index_user()$ID
         val$dt_index <- out
