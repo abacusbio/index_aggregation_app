@@ -76,7 +76,7 @@ clusteringModUI <- function(id) {
 #'@param dat a reactive function with data.frame of animal by index in it. If the data is index by
 #'       animal, then \code{transpose} should be set to \code{T} 
 #'@param col_sel a reactive function. The col names of the \code{dat} to be selected for clustering 
-#'       analysis
+#'       analysis. 4) \code{val$dt_desc_ev_clean}, a data.frame of 2 columns: column_labelling and 
 #'@return if \code{input$find_k_agg} is on, return texts and graphs to UI, otherwise return a 
 #'        dendrogram and a download button to download a cluster result .csv.
 clusteringMod <- function(id, val, dat, #= reactive(NULL),

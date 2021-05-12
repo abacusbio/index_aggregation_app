@@ -74,7 +74,7 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
           output$demo_message <- renderText({ "You are using uploaded data now" })
         } else {
           flag <- T
-          delay(30000, stopApp())
+          shinyjs::delay(30000, stopApp())
         }
       })
       
@@ -96,7 +96,7 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
           val$desc_ev <- desc_ev()
         } else {
           flag <- T
-          delay(30000, stopApp())
+          shinyjs::delay(30000, stopApp())
         }
       })
       
@@ -120,7 +120,7 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
           val$dat_ebv <- dat_ebv()
         } else {
           flag <- T
-          delay(30000, stopApp())
+          shinyjs::delay(30000, stopApp())
         }
       })
       
@@ -144,7 +144,7 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
           val$dat_ev <- dat_ev()
         } else {
           flag <- T
-          delay(30000, stopApp())
+          shinyjs::delay(30000, stopApp())
         }
       })
       
@@ -172,7 +172,7 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
           val$dat_wt <- dat_wt()
         } else {
           flag <- T
-          delay(30000, stopApp())
+          shinyjs::delay(30000, stopApp())
         }
       })
       

@@ -21,14 +21,14 @@ options(shiny.reactlog = T) # ctrl+F3
 # library(parallel)
 library(shiny)
 library(DT)
-library(shinyjs)
+# library(shinyjs) # try lazy loading
 library(shinyWidgets)
 #library(reactlog)
 
 library(dplyr)
 library(purrr)
 
-library(RColorBrewer)
+#library(RColorBrewer) # try lazy loading
 library(ggplot2)
 library(pheatmap)
 # library(gplots) # heatmap.2
@@ -54,6 +54,7 @@ source("function_clean.R")
 source("function_calculate_index.R")
 source("function_clustering.R")
 source("function_cl_diagnosis.R")
+source("function_aggregation_diag.R")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -152,7 +153,7 @@ ui <- fluidPage(
    # ), # navbarMenu File upload
    
    tabPanel( # on the dropdown list of navbarmenu
-     "Index viewer", value = 'tab.index',
+     "Index Viewer", value = 'tab.index',
      # Sidebar on the left
      sidebarLayout(
        sidebarPanel(
@@ -180,7 +181,7 @@ ui <- fluidPage(
                # "----",
                #  "Survey Gizmo file preprocess", # section header
   tabPanel( # on the dropdown list of navbarmenu
-    "Clustering analysis", value = 'tab.cluster',
+    "Clustering Analysis", value = 'tab.cluster',
     # Sidebar on the left
     sidebarLayout(
       sidebarPanel(
@@ -424,25 +425,25 @@ server <- function(input, output, session) {
   
   ## Find CLUSTER ##
   
-  # a smaller data
-  votes.repub <- cluster::votes.repub[
-    which(apply(cluster::votes.repub, 1, is.na) %>% apply(2, sum) ==0),] # states by features
+  # # a smaller data
+  # votes.repub <- cluster::votes.repub[
+  #   which(apply(cluster::votes.repub, 1, is.na) %>% apply(2, sum) ==0),] # states by features
+  # 
+  # observeEvent(votes.repub,{
+  #   req(length(votes.repub) > 0)
+  #   val$dt_index <- data.frame(t(votes.repub)) # feature x states
+  #   print(dim(val$dt_index))
+  #   })
+  # 
+  # cl <- clusteringMod("find_cl", val, dat = reactive(val$dt_index), transpose = F)
 
-  observeEvent(votes.repub,{
-    req(length(votes.repub) > 0)
-    val$dt_index <- data.frame(t(votes.repub)) # feature x states
-    print(dim(val$dt_index))
-    })
-
-  cl <- clusteringMod("find_cl", val, dat = reactive(val$dt_index), transpose = F)
-
-  # # return list(cluster_obj, clusters). Create val$cl.
-  # # if didn't run finalCluster will return list(cluster_obj, best_method, agg_coefs)
-  # # with the simulation it takes 6 min to find an agglomerative method, 6.5 min to run wss for k,
-  # # and 6 min to run silhouette for k
-  # cl <- clusteringMod("find_cl", val,
-  #               dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
-  #               transpose = F)
+  # return list(cluster_obj, clusters). Create val$cl.
+  # if didn't run finalCluster will return list(cluster_obj, best_method, agg_coefs)
+  # with the simulation it takes 6 min to find an agglomerative method, 6.5 min to run wss for k,
+  # and 6 min to run silhouette for k
+  cl <- clusteringMod("find_cl", val,
+                dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
+                transpose = F)
   
   ## CLUSTER SUMMARY STATISTICS ##
   # need val$dt_index, val$cl
@@ -465,7 +466,8 @@ server <- function(input, output, session) {
   # AGGREGATED INDEX DIAGNOSIS #
 #  observeEvent(val$dt_ev_agg, {
 # cat("observe val$dt_ev_agg\n")
-  aggDxMod("agg_dx", val, transpose = F, reactive(val$cl$clusters), reactive(val$dt_ev_agg))
+  aggDxMod("agg_dx", val, transpose = F, reactive(val$cl$clusters), reactive(val$dt_ev_agg),
+           reactive(val$dt_index))
   # })
   
 } # server
