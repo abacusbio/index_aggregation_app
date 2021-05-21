@@ -74,7 +74,7 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
           output$demo_message <- renderText({ "You are using uploaded data now" })
         } else {
           flag <- T
-          shinyjs::delay(30000, stopApp())
+          shinyjs::delay(30000, stopApp()) # 30 seconds
         }
       })
       
@@ -134,7 +134,7 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
       })
       
       observeEvent(length(dat_ev()) > 0, { 
-        #cat("preprocessMod\n observe desc_ebv ");cat(length(desc_ebv()), "\n")
+#cat("preprocessMod\n observe desc_ebv ");cat(length(desc_ebv()), "\n")
         output$sanity_message <- renderText({
           if(!"desc_ev" %in% names(val)) "Please upload an EBV description file first."
         })
@@ -158,15 +158,15 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
       })
       
       observeEvent(length(dat_wt()) > 0, { 
-        #cat("preprocessMod\n observe desc_ebv ");cat(length(desc_ebv()), "\n")
+#cat("preprocessMod\n observe desc_ebv ");cat(length(desc_ebv()), "\n")
         output$sanity_message <- renderText({
           if(!"desc_ev" %in% names(val)) {
-            "Please upload an EBV description file first."
+            "Please upload an EV description file first."
           } else if (!"dat_ev" %in% names(val)) {
             "Please upload an economic value file first."
           }
         })
-        txt <- sanityCheckWt(dat_wt(), dat_ev(), desc_ev()) 
+        txt <- sanityCheckWt(dat_wt(), desc_ev(), dat_ev())
         output$sanity_message <- renderText({ txt })
         if(is.null(txt)) {
           val$dat_wt <- dat_wt()

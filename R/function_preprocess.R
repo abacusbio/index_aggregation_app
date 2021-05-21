@@ -229,7 +229,10 @@ sanityCheckEBV <- function(df_ebv, df_description = NULL) {
                     collapse = ", "),
              "\n The app will sleep in 30,000 seconds. Please reload and try again.")
     return(out)
-    }
+  }
+  
+  ## Illegal inputs
+  #m <- match()
 }
 
 #' Note that this is a transpose of the EV file in index testing app.
@@ -278,7 +281,6 @@ sanityCheckEV <- function(df_econval, df_description) {
   }
 
 sanityCheckWt <- function(df_wt, desc_ev = NULL, df_econval = NULL) {
-  
   # if(is.null(df_econval)) {
   #   return("Please upload an economic value file first.")
   # }
@@ -287,13 +289,23 @@ sanityCheckWt <- function(df_wt, desc_ev = NULL, df_econval = NULL) {
   #   return("Please upload an economic value description file first.")
   # }
   
+  ## Names do not match
+  index_ev <- df_econval$Index
+  index_wt <- df_wt$Index
+  
+  m <- match(index_wt, index_ev)
+  if(any(is.na(m)) > 0) {
+    out <- paste0("Aggregation weight: data error:\n",
+                  " Index name(s) does not exist in economic value files:\n",
+                  paste0(w[which(is.na(m))], collapse = ", "),
+                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+    return(out)
+  }
+  
   ## Weights are not numerical
-  traits <- desc_ev$column_labelling[desc_ev$classifier %in% c("ClassVar", "EV")]
   w <- grep("[^Index]", colnames(df_wt))
   
-  classes <- unlist(lapply(w, function( i ){
-    class(df_wt[, i])
-  }))
+  classes <- sapply(df_wt[,w,drop = F], class)
   
   if(any(!classes %in% c("numeric", "double", "integer"))) {
     
@@ -301,16 +313,6 @@ sanityCheckWt <- function(df_wt, desc_ev = NULL, df_econval = NULL) {
                   " Character strings detected in\n",
                   paste0(w[which(!classes %in% c("numeric", "double", "integer"))],
                          collapse = ", "),
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
-    return(out)
-  }
-  
-  ## names do not match
-  m <- match(w, traits)
-  if(any(is.na(m)) > 0) {
-    out <- paste0("Aggregation weight: data error:\n",
-                  " Variable name(s) does not exist in economic value files:\n",
-                  paste0(w[which(is.na(m))], collapse = ", "),
                   "\n The app will sleep in 30,000 seconds. Please reload and try again.")
     return(out)
   }

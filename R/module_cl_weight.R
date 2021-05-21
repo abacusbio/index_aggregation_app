@@ -77,7 +77,10 @@ cat("calWeiMod\n")
       output$error_m_0 <- renderText({
         validate(
           need(class(ev_desc_user())!="try-error", attr(ev_desc_user(), "condition")$message),
-          need(names(ev_desc_user())[1]=="column_labelling", "Description file column header wrong.")
+          need(names(ev_desc_user())[1]=="column_labelling", 
+               "Description file column header wrong."),
+          need("EV" %in% ev_desc_user()[,2,drop = T], 
+               "Are you sure this is an EV description file?")
         )
       })
       

@@ -92,9 +92,8 @@ cat("clusteringMod\n")
       
       observeEvent(!is.null(dat() ), { # update k slider max value
         if(transpose) { k_max <- ncol(dat()) - 1 } else { k_max <- nrow(dat()) - 1 }
-        k_max <- min(100, k_max)
 # cat(" observe dat\n  k_max", k_max, "\n")
-        updateSliderInput(session, "k_slider", max = k_max)  
+        updateSliderInput(session, "k_slider", max = min(k_max, 10))
       })
       
       observeEvent(input$find_k_agg, {
