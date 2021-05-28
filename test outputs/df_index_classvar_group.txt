@@ -1,0 +1,2910 @@
+Index,RM,group,new_index_by_cluster
+index_1,tropical,J,1
+index_2,tropical,I,1
+index_3,tropical,B,1
+index_4,tropical,D,1
+index_5,tropical,J,1
+index_6,tropical,C,1
+index_7,tropical,J,1
+index_8,tropical,E,1
+index_9,tropical,D,1
+index_10,tropical,H,1
+index_11,tropical,C,1
+index_12,tropical,B,1
+index_13,tropical,C,1
+index_14,tropical,E,1
+index_15,tropical,C,1
+index_16,tropical,D,1
+index_17,tropical,J,1
+index_18,tropical,E,1
+index_19,tropical,J,2
+index_20,tropical,F,1
+index_21,tropical,J,3
+index_22,tropical,H,1
+index_23,tropical,I,1
+index_24,tropical,E,1
+index_25,tropical,B,1
+index_26,tropical,B,3
+index_27,tropical,I,1
+index_28,tropical,F,1
+index_29,tropical,B,1
+index_30,tropical,E,1
+index_31,tropical,J,1
+index_32,tropical,G,1
+index_33,tropical,A,1
+index_34,tropical,B,1
+index_35,tropical,I,1
+index_36,tropical,H,1
+index_37,tropical,I,1
+index_38,tropical,J,1
+index_39,tropical,J,1
+index_40,tropical,B,1
+index_41,tropical,E,1
+index_42,tropical,C,2
+index_43,tropical,J,1
+index_44,tropical,B,1
+index_45,tropical,E,1
+index_46,tropical,I,1
+index_47,tropical,B,1
+index_48,tropical,J,1
+index_49,tropical,J,1
+index_50,tropical,G,1
+index_51,tropical,G,1
+index_52,tropical,F,1
+index_53,tropical,B,1
+index_54,tropical,F,1
+index_55,tropical,J,1
+index_56,tropical,A,1
+index_57,tropical,A,3
+index_58,tropical,F,1
+index_59,tropical,I,1
+index_60,tropical,E,1
+index_61,tropical,F,1
+index_62,tropical,C,1
+index_63,tropical,E,1
+index_64,tropical,C,1
+index_65,tropical,J,1
+index_66,tropical,J,1
+index_67,tropical,E,1
+index_68,tropical,C,1
+index_69,tropical,G,1
+index_70,tropical,I,1
+index_71,tropical,G,3
+index_72,tropical,F,1
+index_73,tropical,B,3
+index_74,tropical,I,1
+index_75,tropical,E,1
+index_76,tropical,B,1
+index_77,tropical,B,1
+index_78,tropical,H,1
+index_79,tropical,C,1
+index_80,tropical,F,3
+index_81,tropical,E,1
+index_82,tropical,H,1
+index_83,tropical,A,1
+index_84,tropical,E,1
+index_85,tropical,J,1
+index_86,tropical,D,1
+index_87,tropical,I,3
+index_88,tropical,B,1
+index_89,tropical,I,1
+index_90,tropical,D,1
+index_91,tropical,F,3
+index_92,tropical,F,1
+index_93,tropical,A,1
+index_94,tropical,C,1
+index_95,tropical,F,1
+index_96,tropical,A,1
+index_97,tropical,F,1
+index_98,tropical,H,1
+index_99,tropical,F,2
+index_100,dry,C,1
+index_101,dry,J,1
+index_102,dry,B,1
+index_103,dry,E,1
+index_104,dry,B,3
+index_105,dry,C,1
+index_106,dry,A,1
+index_107,dry,B,1
+index_108,dry,F,1
+index_109,dry,I,3
+index_110,dry,D,1
+index_111,dry,I,1
+index_112,dry,C,1
+index_113,dry,F,3
+index_114,dry,B,1
+index_115,dry,H,1
+index_116,dry,D,1
+index_117,dry,J,1
+index_118,dry,F,1
+index_119,dry,A,1
+index_120,dry,J,1
+index_121,dry,F,1
+index_122,dry,G,1
+index_123,dry,H,3
+index_124,dry,B,3
+index_125,dry,J,1
+index_126,dry,J,1
+index_127,dry,D,1
+index_128,dry,H,1
+index_129,dry,F,1
+index_130,dry,C,1
+index_131,dry,A,1
+index_132,dry,J,1
+index_133,dry,D,1
+index_134,dry,H,1
+index_135,dry,F,1
+index_136,dry,F,1
+index_137,dry,J,3
+index_138,dry,E,3
+index_139,dry,D,3
+index_140,dry,E,1
+index_141,dry,H,1
+index_142,dry,D,1
+index_143,dry,F,3
+index_144,dry,B,1
+index_145,dry,B,1
+index_146,dry,H,1
+index_147,dry,J,1
+index_148,dry,G,1
+index_149,dry,E,3
+index_150,dry,F,1
+index_151,dry,E,3
+index_152,dry,F,1
+index_153,dry,B,3
+index_154,dry,D,1
+index_155,dry,H,1
+index_156,dry,E,1
+index_157,dry,I,1
+index_158,dry,C,1
+index_159,dry,D,1
+index_160,dry,J,1
+index_161,dry,C,1
+index_162,dry,J,1
+index_163,dry,F,1
+index_164,dry,D,1
+index_165,dry,A,3
+index_166,dry,C,1
+index_167,dry,I,1
+index_168,dry,G,1
+index_169,dry,F,1
+index_170,dry,J,1
+index_171,dry,G,1
+index_172,dry,B,1
+index_173,dry,I,1
+index_174,dry,H,1
+index_175,dry,C,1
+index_176,dry,F,1
+index_177,dry,A,1
+index_178,dry,A,1
+index_179,dry,J,1
+index_180,dry,J,3
+index_181,dry,I,1
+index_182,dry,H,1
+index_183,dry,G,1
+index_184,dry,G,1
+index_185,dry,C,1
+index_186,dry,D,1
+index_187,dry,H,1
+index_188,dry,E,1
+index_189,dry,A,1
+index_190,dry,G,1
+index_191,dry,C,2
+index_192,dry,C,1
+index_193,dry,E,1
+index_194,dry,G,2
+index_195,dry,H,1
+index_196,dry,I,1
+index_197,dry,G,1
+index_198,dry,F,1
+index_199,dry,J,1
+index_200,dry,A,1
+index_201,dry,J,1
+index_202,dry,B,1
+index_203,dry,E,1
+index_204,dry,B,1
+index_205,dry,B,1
+index_206,dry,G,1
+index_207,dry,H,1
+index_208,dry,H,1
+index_209,dry,F,1
+index_210,dry,A,1
+index_211,dry,J,1
+index_212,dry,H,1
+index_213,dry,G,1
+index_214,dry,G,1
+index_215,dry,C,1
+index_216,dry,G,1
+index_217,dry,E,1
+index_218,dry,J,1
+index_219,dry,F,1
+index_220,dry,J,1
+index_221,dry,B,1
+index_222,dry,D,1
+index_223,dry,F,1
+index_224,dry,H,1
+index_225,dry,H,2
+index_226,moist subtropical,G,1
+index_227,moist subtropical,B,1
+index_228,moist subtropical,C,1
+index_229,moist subtropical,B,1
+index_230,moist subtropical,A,3
+index_231,moist subtropical,J,1
+index_232,moist subtropical,E,1
+index_233,moist subtropical,B,1
+index_234,moist subtropical,E,1
+index_235,moist subtropical,C,2
+index_236,moist subtropical,F,1
+index_237,moist subtropical,I,1
+index_238,moist subtropical,F,3
+index_239,moist subtropical,H,3
+index_240,moist subtropical,B,1
+index_241,moist subtropical,D,3
+index_242,moist subtropical,J,1
+index_243,moist subtropical,E,1
+index_244,moist subtropical,A,3
+index_245,moist subtropical,J,1
+index_246,moist subtropical,E,2
+index_247,moist subtropical,H,1
+index_248,moist subtropical,J,1
+index_249,moist subtropical,C,1
+index_250,moist subtropical,G,1
+index_251,moist subtropical,D,2
+index_252,moist subtropical,I,1
+index_253,moist subtropical,D,1
+index_254,moist subtropical,D,1
+index_255,moist subtropical,E,1
+index_256,moist subtropical,I,1
+index_257,moist subtropical,B,1
+index_258,moist subtropical,A,1
+index_259,moist subtropical,J,1
+index_260,moist subtropical,C,1
+index_261,moist subtropical,A,1
+index_262,moist subtropical,G,1
+index_263,moist subtropical,I,1
+index_264,moist subtropical,C,1
+index_265,moist subtropical,I,2
+index_266,moist subtropical,H,2
+index_267,moist subtropical,G,1
+index_268,moist subtropical,D,1
+index_269,moist subtropical,C,1
+index_270,moist subtropical,A,3
+index_271,moist subtropical,B,1
+index_272,moist subtropical,E,1
+index_273,moist subtropical,I,1
+index_274,moist subtropical,I,1
+index_275,moist subtropical,I,1
+index_276,moist subtropical,B,1
+index_277,moist subtropical,J,1
+index_278,moist subtropical,J,1
+index_279,moist subtropical,B,3
+index_280,moist subtropical,J,1
+index_281,moist subtropical,J,3
+index_282,moist subtropical,A,1
+index_283,moist subtropical,H,1
+index_284,moist subtropical,H,1
+index_285,moist subtropical,B,3
+index_286,moist subtropical,E,1
+index_287,moist subtropical,A,1
+index_288,moist subtropical,G,3
+index_289,moist subtropical,H,3
+index_290,moist subtropical,D,3
+index_291,moist subtropical,D,3
+index_292,moist subtropical,C,1
+index_293,moist subtropical,D,1
+index_294,moist subtropical,D,1
+index_295,moist subtropical,G,1
+index_296,moist subtropical,C,1
+index_297,moist subtropical,D,1
+index_298,moist subtropical,D,1
+index_299,moist subtropical,F,1
+index_300,moist subtropical,E,2
+index_301,moist subtropical,C,1
+index_302,moist subtropical,D,1
+index_303,moist subtropical,H,3
+index_304,moist subtropical,G,1
+index_305,moist subtropical,A,1
+index_306,moist subtropical,B,3
+index_307,moist subtropical,F,1
+index_308,moist subtropical,G,1
+index_309,moist subtropical,C,1
+index_310,moist subtropical,A,1
+index_311,moist subtropical,G,2
+index_312,moist subtropical,J,1
+index_313,moist subtropical,F,1
+index_314,moist subtropical,D,1
+index_315,moist subtropical,J,1
+index_316,moist subtropical,C,3
+index_317,moist subtropical,F,3
+index_318,moist subtropical,B,1
+index_319,moist subtropical,G,1
+index_320,moist subtropical,A,1
+index_321,moist subtropical,F,1
+index_322,moist subtropical,D,1
+index_323,moist subtropical,E,1
+index_324,moist subtropical,G,1
+index_325,moist subtropical,E,1
+index_326,moist subtropical,I,1
+index_327,moist subtropical,J,1
+index_328,moist subtropical,D,1
+index_329,moist subtropical,A,1
+index_330,moist subtropical,J,1
+index_331,moist subtropical,D,1
+index_332,moist subtropical,G,1
+index_333,moist subtropical,A,1
+index_334,moist subtropical,F,1
+index_335,moist subtropical,J,1
+index_336,moist subtropical,D,1
+index_337,moist subtropical,D,1
+index_338,moist subtropical,E,1
+index_339,moist subtropical,E,3
+index_340,moist subtropical,E,1
+index_341,moist subtropical,F,3
+index_342,moist subtropical,G,1
+index_343,moist subtropical,J,1
+index_344,moist subtropical,E,1
+index_345,moist subtropical,A,1
+index_346,moist subtropical,H,3
+index_347,moist subtropical,J,1
+index_348,moist subtropical,G,1
+index_349,moist subtropical,H,1
+index_350,moist subtropical,C,3
+index_351,moist subtropical,E,1
+index_352,moist subtropical,B,3
+index_353,moist subtropical,J,1
+index_354,moist subtropical,J,1
+index_355,moist subtropical,D,1
+index_356,moist subtropical,D,1
+index_357,moist subtropical,D,3
+index_358,moist subtropical,H,1
+index_359,moist subtropical,A,1
+index_360,moist subtropical,C,1
+index_361,moist subtropical,I,1
+index_362,moist subtropical,J,1
+index_363,moist subtropical,I,1
+index_364,moist subtropical,J,1
+index_365,moist subtropical,G,1
+index_366,moist continental,J,1
+index_367,moist continental,C,1
+index_368,moist continental,I,3
+index_369,moist continental,E,1
+index_370,moist continental,H,1
+index_371,moist continental,E,1
+index_372,moist continental,G,3
+index_373,moist continental,H,1
+index_374,moist continental,C,1
+index_375,moist continental,E,1
+index_376,moist continental,D,1
+index_377,moist continental,E,1
+index_378,moist continental,I,1
+index_379,moist continental,D,1
+index_380,moist continental,I,3
+index_381,moist continental,E,3
+index_382,moist continental,B,1
+index_383,moist continental,I,1
+index_384,moist continental,H,1
+index_385,moist continental,B,1
+index_386,moist continental,B,1
+index_387,moist continental,J,1
+index_388,moist continental,C,1
+index_389,moist continental,A,1
+index_390,moist continental,E,1
+index_391,moist continental,B,3
+index_392,moist continental,I,1
+index_393,moist continental,C,3
+index_394,moist continental,G,1
+index_395,moist continental,C,3
+index_396,moist continental,G,3
+index_397,moist continental,H,2
+index_398,moist continental,J,1
+index_399,moist continental,B,1
+index_400,moist continental,A,2
+index_401,moist continental,H,1
+index_402,moist continental,G,1
+index_403,moist continental,H,1
+index_404,moist continental,E,1
+index_405,moist continental,J,2
+index_406,moist continental,D,1
+index_407,moist continental,F,1
+index_408,moist continental,F,1
+index_409,moist continental,I,1
+index_410,moist continental,B,1
+index_411,moist continental,G,1
+index_412,moist continental,E,1
+index_413,moist continental,B,1
+index_414,moist continental,J,1
+index_415,moist continental,I,2
+index_416,moist continental,H,1
+index_417,moist continental,E,1
+index_418,moist continental,H,1
+index_419,moist continental,C,1
+index_420,moist continental,B,3
+index_421,moist continental,F,3
+index_422,moist continental,E,1
+index_423,moist continental,A,1
+index_424,moist continental,G,3
+index_425,moist continental,F,1
+index_426,moist continental,A,3
+index_427,moist continental,J,1
+index_428,moist continental,I,1
+index_429,moist continental,J,3
+index_430,moist continental,A,2
+index_431,moist continental,C,1
+index_432,moist continental,B,1
+index_433,moist continental,F,1
+index_434,moist continental,E,2
+index_435,moist continental,B,1
+index_436,moist continental,F,1
+index_437,moist continental,J,2
+index_438,moist continental,J,1
+index_439,moist continental,J,1
+index_440,moist continental,F,1
+index_441,moist continental,D,3
+index_442,moist continental,E,1
+index_443,moist continental,I,1
+index_444,moist continental,J,1
+index_445,moist continental,A,3
+index_446,moist continental,C,1
+index_447,moist continental,F,1
+index_448,moist continental,A,1
+index_449,moist continental,D,1
+index_450,moist continental,F,1
+index_451,moist continental,F,1
+index_452,moist continental,I,1
+index_453,moist continental,F,1
+index_454,moist continental,A,1
+index_455,moist continental,F,3
+index_456,moist continental,A,1
+index_457,moist continental,B,1
+index_458,moist continental,H,1
+index_459,moist continental,E,1
+index_460,moist continental,E,2
+index_461,moist continental,C,3
+index_462,moist continental,G,3
+index_463,moist continental,I,1
+index_464,moist continental,I,1
+index_465,moist continental,D,1
+index_466,moist continental,B,1
+index_467,moist continental,I,1
+index_468,moist continental,I,1
+index_469,moist continental,B,1
+index_470,moist continental,G,1
+index_471,moist continental,D,1
+index_472,moist continental,J,1
+index_473,moist continental,D,1
+index_474,moist continental,A,3
+index_475,moist continental,F,1
+index_476,moist continental,J,1
+index_477,moist continental,J,1
+index_478,moist continental,H,1
+index_479,moist continental,B,1
+index_480,moist continental,E,3
+index_481,moist continental,F,1
+index_482,moist continental,J,1
+index_483,moist continental,C,1
+index_484,moist continental,H,1
+index_485,moist continental,F,1
+index_486,moist continental,G,1
+index_487,moist continental,E,3
+index_488,moist continental,H,1
+index_489,moist continental,J,1
+index_490,moist continental,C,1
+index_491,moist continental,A,3
+index_492,moist continental,H,1
+index_493,moist continental,F,2
+index_494,moist continental,J,1
+index_495,moist continental,B,1
+index_496,moist continental,J,1
+index_497,moist continental,E,1
+index_498,moist continental,D,1
+index_499,moist continental,C,3
+index_500,moist continental,I,1
+index_501,moist continental,A,3
+index_502,moist continental,G,1
+index_503,moist continental,H,1
+index_504,moist continental,I,1
+index_505,moist continental,E,1
+index_506,moist continental,G,1
+index_507,moist continental,G,1
+index_508,moist continental,B,1
+index_509,moist continental,A,1
+index_510,moist continental,D,1
+index_511,moist continental,B,1
+index_512,moist continental,C,1
+index_513,moist continental,D,1
+index_514,moist continental,J,1
+index_515,moist continental,C,1
+index_516,moist continental,B,1
+index_517,moist continental,E,1
+index_518,moist continental,B,2
+index_519,moist continental,E,1
+index_520,moist continental,E,1
+index_521,moist continental,B,1
+index_522,moist continental,E,1
+index_523,moist continental,J,1
+index_524,moist continental,G,3
+index_525,moist continental,C,1
+index_526,moist continental,I,1
+index_527,moist continental,H,1
+index_528,moist continental,J,1
+index_529,moist continental,H,1
+index_530,moist continental,J,1
+index_531,moist continental,B,1
+index_532,moist continental,J,1
+index_533,moist continental,A,1
+index_534,moist continental,J,1
+index_535,moist continental,G,1
+index_536,moist continental,B,1
+index_537,moist continental,A,3
+index_538,moist continental,D,1
+index_539,moist continental,H,1
+index_540,moist continental,E,1
+index_541,moist continental,B,1
+index_542,moist continental,I,1
+index_543,moist continental,E,2
+index_544,moist continental,G,1
+index_545,moist continental,I,1
+index_546,moist continental,B,1
+index_547,moist continental,J,1
+index_548,moist continental,G,1
+index_549,moist continental,A,1
+index_550,moist continental,B,1
+index_551,moist continental,F,2
+index_552,moist continental,G,1
+index_553,moist continental,B,1
+index_554,moist continental,H,1
+index_555,moist continental,H,1
+index_556,moist continental,I,3
+index_557,moist continental,H,1
+index_558,moist continental,C,1
+index_559,moist continental,J,1
+index_560,moist continental,I,3
+index_561,moist continental,H,1
+index_562,moist continental,A,1
+index_563,moist continental,F,1
+index_564,moist continental,I,1
+index_565,moist continental,B,1
+index_566,moist continental,G,1
+index_567,moist continental,D,1
+index_568,moist continental,J,1
+index_569,moist continental,B,1
+index_570,moist continental,H,2
+index_571,moist continental,H,1
+index_572,moist continental,G,1
+index_573,moist continental,E,1
+index_574,moist continental,I,1
+index_575,moist continental,F,1
+index_576,moist continental,F,3
+index_577,moist continental,D,1
+index_578,moist continental,H,1
+index_579,moist continental,F,1
+index_580,moist continental,A,1
+index_581,moist continental,G,1
+index_582,moist continental,H,1
+index_583,moist continental,F,1
+index_584,moist continental,G,3
+index_585,moist continental,J,1
+index_586,moist continental,B,1
+index_587,moist continental,F,1
+index_588,moist continental,F,1
+index_589,moist continental,D,3
+index_590,moist continental,J,1
+index_591,moist continental,G,1
+index_592,moist continental,B,2
+index_593,moist continental,E,1
+index_594,moist continental,B,3
+index_595,moist continental,I,1
+index_596,moist continental,I,2
+index_597,moist continental,J,3
+index_598,moist continental,E,1
+index_599,moist continental,I,1
+index_600,moist continental,I,1
+index_601,moist continental,A,3
+index_602,moist continental,J,1
+index_603,moist continental,A,1
+index_604,moist continental,D,1
+index_605,moist continental,D,1
+index_606,moist continental,A,1
+index_607,moist continental,J,3
+index_608,moist continental,F,1
+index_609,moist continental,A,1
+index_610,moist continental,I,3
+index_611,moist continental,E,1
+index_612,moist continental,D,3
+index_613,moist continental,F,1
+index_614,moist continental,D,1
+index_615,moist continental,D,3
+index_616,moist continental,H,1
+index_617,moist continental,J,1
+index_618,moist continental,C,1
+index_619,moist continental,H,2
+index_620,moist continental,F,1
+index_621,moist continental,D,3
+index_622,moist continental,C,1
+index_623,moist continental,G,1
+index_624,moist continental,E,1
+index_625,moist continental,F,1
+index_626,moist continental,A,1
+index_627,moist continental,D,1
+index_628,moist continental,F,2
+index_629,moist continental,F,1
+index_630,moist continental,J,1
+index_631,moist continental,C,1
+index_632,moist continental,C,1
+index_633,moist continental,A,1
+index_634,moist continental,G,1
+index_635,moist continental,B,1
+index_636,moist continental,B,1
+index_637,moist continental,G,1
+index_638,moist continental,A,1
+index_639,moist continental,A,1
+index_640,moist continental,F,1
+index_641,moist continental,I,1
+index_642,moist continental,H,1
+index_643,moist continental,H,1
+index_644,moist continental,J,1
+index_645,moist continental,J,1
+index_646,moist continental,E,1
+index_647,moist continental,A,1
+index_648,moist continental,D,1
+index_649,moist continental,F,1
+index_650,moist continental,C,1
+index_651,moist continental,I,1
+index_652,moist continental,A,2
+index_653,moist continental,H,1
+index_654,moist continental,E,3
+index_655,moist continental,B,1
+index_656,moist continental,B,1
+index_657,moist continental,H,3
+index_658,moist continental,J,1
+index_659,moist continental,C,1
+index_660,moist continental,F,1
+index_661,moist continental,J,1
+index_662,moist continental,F,1
+index_663,moist continental,A,1
+index_664,moist continental,H,1
+index_665,moist continental,A,1
+index_666,moist continental,H,1
+index_667,moist continental,I,1
+index_668,moist continental,F,1
+index_669,moist continental,I,1
+index_670,moist continental,F,1
+index_671,moist continental,F,1
+index_672,moist continental,J,1
+index_673,moist continental,I,1
+index_674,moist continental,A,3
+index_675,moist continental,D,3
+index_676,polar,E,3
+index_677,polar,H,1
+index_678,polar,H,1
+index_679,polar,I,1
+index_680,polar,J,1
+index_681,polar,F,1
+index_682,polar,H,1
+index_683,polar,D,1
+index_684,polar,C,3
+index_685,polar,J,1
+index_686,polar,H,3
+index_687,polar,J,1
+index_688,polar,B,3
+index_689,polar,A,1
+index_690,polar,F,1
+index_691,polar,J,1
+index_692,polar,I,1
+index_693,polar,H,3
+index_694,polar,H,1
+index_695,polar,I,1
+index_696,polar,J,1
+index_697,polar,D,1
+index_698,polar,F,3
+index_699,polar,I,1
+index_700,polar,J,1
+index_701,polar,E,1
+index_702,polar,H,1
+index_703,polar,C,1
+index_704,polar,B,1
+index_705,polar,B,1
+index_706,polar,G,3
+index_707,polar,E,1
+index_708,polar,F,1
+index_709,polar,A,3
+index_710,polar,A,1
+index_711,polar,A,1
+index_712,polar,J,1
+index_713,polar,G,1
+index_714,polar,B,1
+index_715,polar,I,1
+index_716,polar,J,1
+index_717,polar,C,1
+index_718,polar,B,1
+index_719,polar,E,1
+index_720,polar,I,1
+index_721,polar,G,1
+index_722,polar,E,1
+index_723,polar,E,2
+index_724,polar,I,1
+index_725,polar,C,1
+index_726,polar,I,1
+index_727,polar,D,1
+index_728,polar,G,1
+index_729,polar,C,1
+index_730,polar,H,1
+index_731,polar,B,3
+index_732,polar,B,3
+index_733,polar,G,1
+index_734,polar,C,1
+index_735,polar,A,1
+index_736,polar,A,3
+index_737,polar,G,1
+index_738,polar,G,1
+index_739,polar,F,1
+index_740,polar,H,1
+index_741,polar,H,1
+index_742,polar,I,1
+index_743,polar,A,1
+index_744,polar,A,1
+index_745,polar,H,1
+index_746,polar,A,1
+index_747,polar,H,1
+index_748,polar,E,1
+index_749,polar,A,3
+index_750,polar,B,1
+index_751,polar,A,1
+index_752,polar,J,1
+index_753,polar,C,1
+index_754,polar,A,1
+index_755,polar,C,3
+index_756,polar,H,1
+index_757,polar,I,1
+index_758,polar,I,1
+index_759,polar,D,1
+index_760,polar,B,1
+index_761,polar,J,1
+index_762,polar,E,1
+index_763,polar,G,2
+index_764,polar,G,1
+index_765,polar,G,1
+index_766,polar,B,1
+index_767,polar,I,1
+index_768,polar,C,1
+index_769,polar,F,1
+index_770,polar,G,1
+index_771,polar,C,1
+index_772,polar,G,1
+index_773,polar,J,1
+index_774,polar,D,1
+index_775,polar,G,3
+index_776,polar,B,1
+index_777,polar,E,1
+index_778,polar,E,1
+index_779,polar,H,2
+index_780,polar,G,1
+index_781,polar,A,1
+index_782,polar,E,1
+index_783,polar,E,3
+index_784,polar,I,1
+index_785,polar,A,1
+index_786,polar,I,1
+index_787,polar,G,1
+index_788,polar,A,1
+index_789,polar,F,1
+index_790,polar,I,1
+index_791,polar,A,1
+index_792,polar,J,1
+index_793,polar,G,1
+index_794,polar,A,1
+index_795,polar,E,1
+index_796,polar,C,1
+index_797,polar,F,2
+index_798,polar,F,1
+index_799,polar,D,1
+index_800,polar,C,1
+index_801,polar,E,1
+index_802,polar,D,3
+index_803,polar,B,1
+index_804,polar,D,1
+index_805,polar,H,1
+index_806,polar,A,3
+index_807,polar,A,1
+index_808,polar,D,1
+index_809,polar,H,1
+index_810,highlands,C,1
+index_811,highlands,H,1
+index_812,highlands,J,1
+index_813,highlands,D,1
+index_814,highlands,C,1
+index_815,highlands,D,1
+index_816,highlands,I,1
+index_817,highlands,D,1
+index_818,highlands,H,1
+index_819,highlands,A,1
+index_820,highlands,C,1
+index_821,highlands,J,3
+index_822,highlands,B,1
+index_823,highlands,A,1
+index_824,highlands,D,1
+index_825,highlands,B,3
+index_826,highlands,F,1
+index_827,highlands,J,1
+index_828,highlands,D,1
+index_829,highlands,I,2
+index_830,highlands,I,1
+index_831,highlands,B,2
+index_832,highlands,J,1
+index_833,highlands,A,1
+index_834,highlands,H,3
+index_835,highlands,D,1
+index_836,highlands,B,1
+index_837,highlands,G,3
+index_838,highlands,G,1
+index_839,highlands,A,1
+index_840,highlands,I,1
+index_841,highlands,F,3
+index_842,highlands,E,2
+index_843,highlands,I,1
+index_844,highlands,D,3
+index_845,highlands,J,1
+index_846,highlands,E,1
+index_847,highlands,D,1
+index_848,highlands,A,3
+index_849,highlands,C,3
+index_850,highlands,H,1
+index_851,highlands,C,1
+index_852,highlands,I,1
+index_853,highlands,B,1
+index_854,highlands,D,3
+index_855,highlands,D,3
+index_856,highlands,A,1
+index_857,highlands,F,1
+index_858,highlands,D,3
+index_859,highlands,F,1
+index_860,highlands,I,1
+index_861,highlands,I,3
+index_862,highlands,D,1
+index_863,highlands,E,1
+index_864,highlands,B,1
+index_865,highlands,D,1
+index_866,highlands,D,1
+index_867,highlands,C,1
+index_868,highlands,I,3
+index_869,highlands,A,1
+index_870,highlands,B,1
+index_871,highlands,D,1
+index_872,highlands,H,1
+index_873,highlands,I,1
+index_874,highlands,E,1
+index_875,highlands,B,1
+index_876,highlands,I,1
+index_877,highlands,B,1
+index_878,highlands,E,2
+index_879,highlands,A,1
+index_880,highlands,C,1
+index_881,highlands,B,3
+index_882,highlands,D,1
+index_883,highlands,E,1
+index_884,highlands,G,1
+index_885,highlands,J,1
+index_886,highlands,C,3
+index_887,highlands,I,3
+index_888,highlands,E,1
+index_889,highlands,B,1
+index_890,highlands,G,1
+index_891,highlands,G,1
+index_892,highlands,D,1
+index_893,highlands,I,1
+index_894,highlands,F,1
+index_895,highlands,I,1
+index_896,highlands,E,1
+index_897,highlands,J,1
+index_898,highlands,C,1
+index_899,highlands,G,1
+index_900,highlands,D,3
+index_901,highlands,F,3
+index_902,highlands,C,1
+index_903,highlands,I,1
+index_904,highlands,H,2
+index_905,highlands,E,1
+index_906,highlands,D,1
+index_907,highlands,J,3
+index_908,highlands,D,1
+index_909,highlands,I,1
+index_910,highlands,J,1
+index_911,highlands,E,1
+index_912,highlands,C,1
+index_913,highlands,J,1
+index_914,highlands,C,1
+index_915,highlands,C,1
+index_916,highlands,D,1
+index_917,highlands,G,2
+index_918,highlands,F,1
+index_919,highlands,D,1
+index_920,highlands,J,1
+index_921,highlands,H,1
+index_922,highlands,B,1
+index_923,highlands,H,1
+index_924,highlands,C,2
+index_925,highlands,G,3
+index_926,highlands,C,1
+index_927,highlands,D,1
+index_928,highlands,A,1
+index_929,highlands,E,1
+index_930,highlands,E,1
+index_931,highlands,D,1
+index_932,highlands,H,1
+index_933,highlands,F,1
+index_934,highlands,C,1
+index_935,highlands,G,1
+index_936,highlands,E,1
+index_937,highlands,E,1
+index_938,highlands,H,1
+index_939,highlands,C,1
+index_940,highlands,H,1
+index_941,highlands,F,1
+index_942,highlands,J,1
+index_943,highlands,C,1
+index_944,highlands,C,1
+index_945,highlands,F,1
+index_946,highlands,F,1
+index_947,highlands,B,3
+index_948,highlands,G,1
+index_949,highlands,F,1
+index_950,highlands,G,1
+index_951,highlands,D,1
+index_952,highlands,I,2
+index_953,highlands,G,1
+index_954,highlands,B,1
+index_955,highlands,J,1
+index_956,highlands,E,1
+index_957,highlands,D,1
+index_958,highlands,E,1
+index_959,highlands,D,1
+index_960,highlands,D,3
+index_961,highlands,E,3
+index_962,highlands,A,1
+index_963,highlands,A,1
+index_964,highlands,E,1
+index_965,highlands,H,1
+index_966,highlands,B,1
+index_967,highlands,G,1
+index_968,highlands,I,1
+index_969,highlands,I,1
+index_970,highlands,I,1
+index_971,highlands,A,3
+index_972,highlands,B,1
+index_973,highlands,H,1
+index_974,highlands,I,1
+index_975,highlands,E,1
+index_976,highlands,E,3
+index_977,highlands,I,1
+index_978,highlands,A,1
+index_979,highlands,B,1
+index_980,highlands,H,3
+index_981,highlands,J,2
+index_982,highlands,D,1
+index_983,highlands,B,1
+index_984,highlands,B,1
+index_985,highlands,F,1
+index_986,highlands,J,1
+index_987,highlands,I,1
+index_988,highlands,C,1
+index_989,highlands,F,1
+index_990,highlands,E,1
+index_991,highlands,F,1
+index_992,highlands,I,1
+index_993,highlands,H,1
+index_994,highlands,I,1
+index_995,highlands,H,1
+index_996,highlands,B,1
+index_997,highlands,J,1
+index_998,highlands,F,1
+index_999,highlands,B,3
+index_1000,highlands,E,1
+index_1001,highlands,I,1
+index_1002,highlands,F,1
+index_1003,highlands,B,3
+index_1004,highlands,E,1
+index_1005,highlands,J,1
+index_1006,highlands,B,1
+index_1007,highlands,D,1
+index_1008,highlands,A,3
+index_1009,highlands,G,1
+index_1010,highlands,E,3
+index_1011,highlands,F,1
+index_1012,highlands,E,1
+index_1013,highlands,D,1
+index_1014,highlands,F,1
+index_1015,highlands,J,1
+index_1016,highlands,F,2
+index_1017,highlands,G,1
+index_1018,highlands,D,1
+index_1019,highlands,E,1
+index_1020,highlands,A,1
+index_1021,humid subtropical,G,1
+index_1022,humid subtropical,A,1
+index_1023,humid subtropical,F,1
+index_1024,humid subtropical,D,2
+index_1025,humid subtropical,H,1
+index_1026,humid subtropical,E,1
+index_1027,humid subtropical,J,1
+index_1028,humid subtropical,J,1
+index_1029,humid subtropical,C,1
+index_1030,humid subtropical,D,3
+index_1031,humid subtropical,G,3
+index_1032,humid subtropical,C,1
+index_1033,humid subtropical,I,1
+index_1034,humid subtropical,E,1
+index_1035,humid subtropical,J,1
+index_1036,humid subtropical,C,1
+index_1037,humid subtropical,B,1
+index_1038,humid subtropical,D,1
+index_1039,humid subtropical,C,3
+index_1040,humid subtropical,H,1
+index_1041,humid subtropical,D,2
+index_1042,humid subtropical,H,3
+index_1043,humid subtropical,B,1
+index_1044,humid subtropical,E,3
+index_1045,humid subtropical,G,1
+index_1046,humid subtropical,E,1
+index_1047,humid subtropical,D,1
+index_1048,humid subtropical,A,1
+index_1049,humid subtropical,J,1
+index_1050,humid subtropical,F,1
+index_1051,humid subtropical,I,3
+index_1052,humid subtropical,A,3
+index_1053,humid subtropical,G,3
+index_1054,humid subtropical,E,3
+index_1055,humid subtropical,E,1
+index_1056,humid subtropical,B,1
+index_1057,humid subtropical,I,1
+index_1058,humid subtropical,I,1
+index_1059,humid subtropical,B,3
+index_1060,humid subtropical,I,1
+index_1061,humid subtropical,I,3
+index_1062,humid subtropical,D,3
+index_1063,humid subtropical,E,3
+index_1064,humid subtropical,C,1
+index_1065,humid subtropical,D,1
+index_1066,humid subtropical,E,1
+index_1067,humid subtropical,G,1
+index_1068,humid subtropical,C,1
+index_1069,humid subtropical,J,1
+index_1070,humid subtropical,I,1
+index_1071,humid subtropical,C,1
+index_1072,humid subtropical,G,1
+index_1073,humid subtropical,E,3
+index_1074,humid subtropical,D,1
+index_1075,humid subtropical,I,1
+index_1076,humid subtropical,C,1
+index_1077,humid subtropical,D,1
+index_1078,humid subtropical,J,1
+index_1079,humid subtropical,C,1
+index_1080,humid subtropical,A,1
+index_1081,humid subtropical,H,3
+index_1082,humid subtropical,A,3
+index_1083,humid subtropical,C,1
+index_1084,humid subtropical,B,1
+index_1085,humid subtropical,C,1
+index_1086,humid subtropical,J,1
+index_1087,humid subtropical,F,1
+index_1088,humid subtropical,H,1
+index_1089,humid subtropical,F,1
+index_1090,humid subtropical,H,1
+index_1091,humid subtropical,D,1
+index_1092,humid subtropical,H,3
+index_1093,humid subtropical,J,1
+index_1094,humid subtropical,E,1
+index_1095,humid subtropical,B,1
+index_1096,humid subtropical,J,1
+index_1097,humid subtropical,F,1
+index_1098,humid subtropical,E,3
+index_1099,humid subtropical,A,2
+index_1100,humid subtropical,I,3
+index_1101,humid subtropical,I,1
+index_1102,humid subtropical,H,1
+index_1103,humid subtropical,G,1
+index_1104,humid subtropical,C,1
+index_1105,humid subtropical,H,1
+index_1106,humid subtropical,A,1
+index_1107,Mediterranean,J,1
+index_1108,Mediterranean,J,2
+index_1109,Mediterranean,H,1
+index_1110,Mediterranean,H,3
+index_1111,Mediterranean,A,1
+index_1112,Mediterranean,D,1
+index_1113,Mediterranean,I,1
+index_1114,Mediterranean,I,1
+index_1115,Mediterranean,F,3
+index_1116,Mediterranean,B,2
+index_1117,Mediterranean,G,1
+index_1118,Mediterranean,D,3
+index_1119,Mediterranean,E,1
+index_1120,Mediterranean,D,2
+index_1121,Mediterranean,B,1
+index_1122,Mediterranean,J,1
+index_1123,Mediterranean,C,2
+index_1124,Mediterranean,D,1
+index_1125,Mediterranean,B,1
+index_1126,Mediterranean,G,1
+index_1127,Mediterranean,G,1
+index_1128,Mediterranean,C,1
+index_1129,Mediterranean,J,3
+index_1130,Mediterranean,I,1
+index_1131,Mediterranean,D,1
+index_1132,Mediterranean,A,1
+index_1133,Mediterranean,G,1
+index_1134,Mediterranean,H,1
+index_1135,Mediterranean,J,1
+index_1136,Mediterranean,I,1
+index_1137,Mediterranean,A,1
+index_1138,Mediterranean,I,1
+index_1139,Mediterranean,A,1
+index_1140,Mediterranean,A,3
+index_1141,Mediterranean,A,1
+index_1142,Mediterranean,H,2
+index_1143,Mediterranean,F,1
+index_1144,Mediterranean,A,1
+index_1145,Mediterranean,D,1
+index_1146,Mediterranean,A,1
+index_1147,Mediterranean,C,1
+index_1148,Mediterranean,B,1
+index_1149,Mediterranean,F,1
+index_1150,Mediterranean,C,1
+index_1151,Mediterranean,A,1
+index_1152,Mediterranean,B,1
+index_1153,Mediterranean,F,1
+index_1154,Mediterranean,D,1
+index_1155,Mediterranean,F,1
+index_1156,Mediterranean,E,1
+index_1157,Mediterranean,B,1
+index_1158,Mediterranean,D,1
+index_1159,Mediterranean,A,1
+index_1160,Mediterranean,H,3
+index_1161,Mediterranean,A,1
+index_1162,Mediterranean,J,1
+index_1163,Mediterranean,J,1
+index_1164,Mediterranean,B,1
+index_1165,Mediterranean,D,1
+index_1166,Mediterranean,B,1
+index_1167,Mediterranean,E,1
+index_1168,Mediterranean,E,1
+index_1169,Mediterranean,D,1
+index_1170,Mediterranean,I,3
+index_1171,Mediterranean,G,1
+index_1172,Mediterranean,J,1
+index_1173,Mediterranean,G,1
+index_1174,Mediterranean,C,3
+index_1175,Mediterranean,E,1
+index_1176,Humid continental,D,1
+index_1177,Humid continental,F,1
+index_1178,Humid continental,F,1
+index_1179,Humid continental,I,1
+index_1180,Humid continental,I,1
+index_1181,Humid continental,J,3
+index_1182,Humid continental,H,1
+index_1183,Humid continental,F,1
+index_1184,Humid continental,B,1
+index_1185,Humid continental,H,1
+index_1186,Humid continental,C,1
+index_1187,Humid continental,I,1
+index_1188,Humid continental,I,1
+index_1189,Humid continental,F,1
+index_1190,Humid continental,H,1
+index_1191,Humid continental,E,3
+index_1192,Humid continental,J,1
+index_1193,Humid continental,D,3
+index_1194,Humid continental,C,1
+index_1195,Humid continental,G,3
+index_1196,Humid continental,C,1
+index_1197,Humid continental,B,1
+index_1198,Humid continental,G,1
+index_1199,Humid continental,H,1
+index_1200,Humid continental,B,1
+index_1201,Humid continental,F,1
+index_1202,Humid continental,B,1
+index_1203,Humid continental,A,1
+index_1204,Humid continental,B,1
+index_1205,Humid continental,E,3
+index_1206,Humid continental,G,1
+index_1207,Humid continental,H,3
+index_1208,Humid continental,C,1
+index_1209,Humid continental,I,1
+index_1210,Humid continental,A,3
+index_1211,Humid continental,G,1
+index_1212,Humid continental,I,1
+index_1213,Humid continental,J,1
+index_1214,Humid continental,C,1
+index_1215,Humid continental,I,1
+index_1216,Humid continental,B,1
+index_1217,Humid continental,J,1
+index_1218,Humid continental,D,1
+index_1219,Humid continental,J,1
+index_1220,Humid continental,F,1
+index_1221,Humid continental,J,1
+index_1222,Humid continental,F,1
+index_1223,Humid continental,E,1
+index_1224,Humid continental,B,1
+index_1225,Humid continental,I,1
+index_1226,Humid continental,F,1
+index_1227,Humid continental,C,3
+index_1228,Humid continental,B,1
+index_1229,Humid continental,J,1
+index_1230,Humid continental,G,1
+index_1231,Humid continental,H,1
+index_1232,Humid continental,G,1
+index_1233,Humid continental,C,1
+index_1234,Humid continental,B,1
+index_1235,Humid continental,I,1
+index_1236,Humid continental,G,2
+index_1237,Humid continental,A,1
+index_1238,Humid continental,I,1
+index_1239,Humid continental,H,1
+index_1240,Humid continental,H,1
+index_1241,Humid continental,F,1
+index_1242,Humid continental,F,1
+index_1243,Humid continental,H,1
+index_1244,Humid continental,F,1
+index_1245,Humid continental,H,1
+index_1246,Humid continental,I,1
+index_1247,subtropical dessert,E,2
+index_1248,subtropical dessert,H,1
+index_1249,subtropical dessert,D,2
+index_1250,subtropical dessert,B,1
+index_1251,subtropical dessert,H,3
+index_1252,subtropical dessert,H,1
+index_1253,subtropical dessert,J,1
+index_1254,subtropical dessert,I,1
+index_1255,subtropical dessert,H,1
+index_1256,subtropical dessert,I,1
+index_1257,subtropical dessert,C,1
+index_1258,subtropical dessert,J,1
+index_1259,subtropical dessert,J,1
+index_1260,subtropical dessert,C,1
+index_1261,subtropical dessert,J,3
+index_1262,subtropical dessert,D,1
+index_1263,subtropical dessert,A,3
+index_1264,subtropical dessert,E,1
+index_1265,subtropical dessert,B,1
+index_1266,subtropical dessert,J,1
+index_1267,subtropical dessert,C,1
+index_1268,subtropical dessert,G,1
+index_1269,subtropical dessert,H,1
+index_1270,subtropical dessert,E,1
+index_1271,subtropical dessert,A,1
+index_1272,subtropical dessert,C,1
+index_1273,subtropical dessert,D,3
+index_1274,subtropical dessert,E,1
+index_1275,subtropical dessert,E,1
+index_1276,subtropical dessert,D,1
+index_1277,subtropical dessert,D,1
+index_1278,subtropical dessert,C,1
+index_1279,subtropical dessert,D,1
+index_1280,subtropical dessert,E,2
+index_1281,subtropical dessert,A,1
+index_1282,subtropical dessert,G,1
+index_1283,subtropical dessert,G,1
+index_1284,subtropical dessert,D,1
+index_1285,subtropical dessert,B,2
+index_1286,subtropical dessert,E,1
+index_1287,subtropical dessert,D,1
+index_1288,subtropical dessert,F,1
+index_1289,subtropical dessert,E,3
+index_1290,subtropical dessert,F,1
+index_1291,subtropical dessert,C,1
+index_1292,subtropical dessert,F,1
+index_1293,subtropical dessert,H,1
+index_1294,subtropical dessert,I,1
+index_1295,subtropical dessert,A,1
+index_1296,subtropical dessert,C,1
+index_1297,subtropical dessert,C,1
+index_1298,subtropical dessert,E,1
+index_1299,subtropical dessert,B,3
+index_1300,subtropical dessert,F,1
+index_1301,subtropical dessert,J,1
+index_1302,subtropical dessert,J,3
+index_1303,subtropical dessert,G,1
+index_1304,subtropical dessert,G,1
+index_1305,subtropical dessert,D,1
+index_1306,subtropical dessert,F,1
+index_1307,subtropical dessert,B,1
+index_1308,subtropical dessert,G,1
+index_1309,subtropical dessert,D,3
+index_1310,subtropical dessert,I,1
+index_1311,subtropical dessert,B,1
+index_1312,subtropical dessert,G,1
+index_1313,subtropical dessert,D,1
+index_1314,subtropical dessert,G,3
+index_1315,subtropical dessert,J,1
+index_1316,subtropical dessert,G,1
+index_1317,subtropical dessert,A,1
+index_1318,subtropical dessert,J,2
+index_1319,subtropical dessert,H,1
+index_1320,subtropical dessert,J,3
+index_1321,subtropical dessert,H,1
+index_1322,subtropical dessert,J,1
+index_1323,subtropical dessert,A,1
+index_1324,subtropical dessert,B,1
+index_1325,subtropical dessert,C,1
+index_1326,subtropical dessert,I,2
+index_1327,subtropical dessert,B,1
+index_1328,subtropical dessert,A,1
+index_1329,subtropical dessert,E,1
+index_1330,subtropical dessert,B,1
+index_1331,subtropical dessert,D,1
+index_1332,subtropical dessert,D,1
+index_1333,subtropical dessert,B,1
+index_1334,subtropical dessert,H,1
+index_1335,subtropical dessert,H,1
+index_1336,subtropical dessert,H,1
+index_1337,subtropical dessert,E,1
+index_1338,subtropical dessert,F,1
+index_1339,subtropical dessert,F,1
+index_1340,subtropical dessert,D,1
+index_1341,subtropical dessert,C,1
+index_1342,subtropical dessert,B,1
+index_1343,subtropical dessert,I,1
+index_1344,subtropical dessert,C,1
+index_1345,subtropical dessert,G,1
+index_1346,subtropical dessert,A,1
+index_1347,subtropical dessert,I,1
+index_1348,subtropical dessert,E,1
+index_1349,subtropical dessert,A,1
+index_1350,subtropical dessert,I,1
+index_1351,subtropical dessert,I,1
+index_1352,subtropical dessert,F,3
+index_1353,subtropical dessert,I,3
+index_1354,subtropical dessert,D,1
+index_1355,subtropical dessert,E,1
+index_1356,subtropical dessert,D,3
+index_1357,subtropical dessert,E,1
+index_1358,subtropical dessert,F,1
+index_1359,subtropical dessert,H,1
+index_1360,subtropical dessert,C,1
+index_1361,subtropical dessert,J,1
+index_1362,subtropical dessert,B,1
+index_1363,subtropical dessert,E,1
+index_1364,subtropical dessert,B,1
+index_1365,subtropical dessert,I,1
+index_1366,subtropical dessert,E,1
+index_1367,subtropical dessert,J,1
+index_1368,subtropical dessert,E,1
+index_1369,subtropical dessert,G,1
+index_1370,subtropical dessert,G,3
+index_1371,subtropical dessert,F,3
+index_1372,subtropical dessert,B,1
+index_1373,subtropical dessert,E,3
+index_1374,subtropical dessert,J,3
+index_1375,subtropical dessert,H,1
+index_1376,subtropical dessert,I,3
+index_1377,subtropical dessert,E,1
+index_1378,subtropical dessert,G,1
+index_1379,subtropical dessert,J,1
+index_1380,subtropical dessert,G,3
+index_1381,subtropical dessert,E,1
+index_1382,subtropical dessert,G,1
+index_1383,subtropical dessert,E,1
+index_1384,subtropical dessert,E,1
+index_1385,subtropical dessert,A,3
+index_1386,subtropical dessert,H,1
+index_1387,subtropical dessert,G,3
+index_1388,subtropical dessert,I,1
+index_1389,subtropical dessert,E,1
+index_1390,subtropical dessert,D,3
+index_1391,subtropical dessert,B,1
+index_1392,subtropical dessert,A,1
+index_1393,subtropical dessert,G,1
+index_1394,subtropical dessert,J,1
+index_1395,subtropical dessert,B,3
+index_1396,subtropical dessert,I,1
+index_1397,subtropical dessert,J,1
+index_1398,subtropical dessert,F,1
+index_1399,subtropical dessert,F,3
+index_1400,subtropical dessert,D,1
+index_1401,subtropical dessert,A,1
+index_1402,subtropical dessert,C,1
+index_1403,subtropical dessert,I,1
+index_1404,subtropical dessert,A,1
+index_1405,subtropical dessert,D,1
+index_1406,subtropical dessert,A,1
+index_1407,subtropical dessert,E,1
+index_1408,subtropical dessert,D,1
+index_1409,subtropical dessert,H,1
+index_1410,subtropical dessert,E,1
+index_1411,subtropical dessert,B,1
+index_1412,subtropical dessert,J,1
+index_1413,subtropical dessert,C,3
+index_1414,subtropical dessert,A,1
+index_1415,subtropical dessert,F,1
+index_1416,subtropical dessert,C,1
+index_1417,subtropical dessert,J,1
+index_1418,subtropical dessert,D,1
+index_1419,subtropical dessert,H,1
+index_1420,subtropical dessert,A,2
+index_1421,subtropical dessert,A,1
+index_1422,subtropical dessert,J,1
+index_1423,subtropical dessert,D,1
+index_1424,subtropical dessert,E,2
+index_1425,subtropical dessert,E,1
+index_1426,subtropical dessert,E,2
+index_1427,subtropical dessert,C,3
+index_1428,subtropical dessert,D,1
+index_1429,subtropical dessert,I,1
+index_1430,subtropical dessert,D,1
+index_1431,subtropical dessert,E,1
+index_1432,subtropical dessert,I,1
+index_1433,subtropical dessert,J,3
+index_1434,subtropical dessert,I,1
+index_1435,subtropical dessert,G,1
+index_1436,subtropical dessert,B,3
+index_1437,subtropical dessert,H,1
+index_1438,subtropical dessert,H,1
+index_1439,subtropical dessert,A,1
+index_1440,subtropical dessert,F,1
+index_1441,subtropical dessert,H,1
+index_1442,subtropical dessert,J,1
+index_1443,subtropical dessert,H,1
+index_1444,subtropical dessert,H,1
+index_1445,subtropical dessert,H,3
+index_1446,subtropical dessert,H,1
+index_1447,subtropical dessert,J,1
+index_1448,subtropical dessert,D,1
+index_1449,subtropical dessert,H,1
+index_1450,subtropical dessert,F,1
+index_1451,subtropical dessert,A,1
+index_1452,subtropical dessert,H,1
+index_1453,subtropical dessert,D,3
+index_1454,subtropical dessert,C,1
+index_1455,subtropical dessert,H,3
+index_1456,subtropical dessert,D,1
+index_1457,subtropical dessert,C,3
+index_1458,subtropical dessert,H,1
+index_1459,subtropical dessert,A,1
+index_1460,subtropical dessert,A,1
+index_1461,subtropical dessert,E,1
+index_1462,subtropical dessert,E,1
+index_1463,subtropical dessert,H,2
+index_1464,subtropical dessert,F,1
+index_1465,subtropical dessert,C,1
+index_1466,subtropical dessert,J,1
+index_1467,subtropical dessert,B,1
+index_1468,subtropical dessert,E,1
+index_1469,subtropical dessert,H,1
+index_1470,subtropical dessert,J,1
+index_1471,subtropical dessert,E,3
+index_1472,subtropical dessert,B,3
+index_1473,subtropical dessert,J,1
+index_1474,subtropical dessert,E,1
+index_1475,subtropical dessert,F,1
+index_1476,subtropical dessert,I,1
+index_1477,subtropical dessert,H,1
+index_1478,subtropical dessert,G,1
+index_1479,subtropical dessert,C,1
+index_1480,subtropical dessert,D,1
+index_1481,subtropical dessert,E,1
+index_1482,subtropical dessert,C,2
+index_1483,subtropical dessert,A,1
+index_1484,subtropical dessert,C,1
+index_1485,subtropical dessert,A,2
+index_1486,subtropical dessert,H,1
+index_1487,subtropical dessert,D,1
+index_1488,subtropical dessert,D,3
+index_1489,subtropical dessert,F,1
+index_1490,subtropical dessert,I,1
+index_1491,subtropical dessert,E,1
+index_1492,subtropical dessert,H,1
+index_1493,subtropical dessert,F,2
+index_1494,subtropical dessert,B,1
+index_1495,subtropical dessert,J,1
+index_1496,subtropical dessert,J,1
+index_1497,subtropical dessert,H,1
+index_1498,subtropical dessert,B,3
+index_1499,subtropical dessert,E,1
+index_1500,subtropical dessert,I,3
+index_1501,subtropical dessert,G,1
+index_1502,subtropical dessert,J,1
+index_1503,subtropical dessert,A,1
+index_1504,Mid-latitude desert,I,3
+index_1505,Mid-latitude desert,B,2
+index_1506,Mid-latitude desert,B,1
+index_1507,Mid-latitude desert,H,1
+index_1508,Mid-latitude desert,A,1
+index_1509,Mid-latitude desert,B,1
+index_1510,Mid-latitude desert,G,1
+index_1511,Mid-latitude desert,A,1
+index_1512,Mid-latitude desert,A,1
+index_1513,Mid-latitude desert,B,1
+index_1514,Mid-latitude desert,A,1
+index_1515,Mid-latitude desert,B,1
+index_1516,Mid-latitude desert,D,1
+index_1517,Mid-latitude desert,D,1
+index_1518,Mid-latitude desert,H,1
+index_1519,Mid-latitude desert,B,1
+index_1520,Mid-latitude desert,B,1
+index_1521,Mid-latitude desert,F,1
+index_1522,Mid-latitude desert,D,2
+index_1523,Mid-latitude desert,A,3
+index_1524,Mid-latitude desert,D,1
+index_1525,Mid-latitude desert,B,1
+index_1526,Mid-latitude desert,F,1
+index_1527,Mid-latitude desert,J,1
+index_1528,Mid-latitude desert,A,3
+index_1529,Mid-latitude desert,B,1
+index_1530,Mid-latitude desert,G,1
+index_1531,Mid-latitude desert,H,1
+index_1532,Mid-latitude desert,J,1
+index_1533,Mid-latitude desert,I,1
+index_1534,Mid-latitude desert,F,1
+index_1535,Mid-latitude desert,G,1
+index_1536,Mid-latitude desert,D,1
+index_1537,Mid-latitude desert,C,1
+index_1538,Mid-latitude desert,D,3
+index_1539,Mid-latitude desert,F,1
+index_1540,Mid-latitude desert,J,1
+index_1541,Mid-latitude desert,D,1
+index_1542,Mid-latitude desert,F,3
+index_1543,Mid-latitude desert,D,3
+index_1544,Mid-latitude desert,D,3
+index_1545,Mid-latitude desert,B,1
+index_1546,Mid-latitude desert,B,1
+index_1547,Mid-latitude desert,D,3
+index_1548,Mid-latitude desert,G,3
+index_1549,Mid-latitude desert,J,1
+index_1550,Mid-latitude desert,F,1
+index_1551,Mid-latitude desert,H,1
+index_1552,Mid-latitude desert,B,1
+index_1553,Mid-latitude desert,I,1
+index_1554,Mid-latitude desert,G,3
+index_1555,Mid-latitude desert,G,3
+index_1556,Mid-latitude desert,D,3
+index_1557,Mid-latitude desert,F,1
+index_1558,Mid-latitude desert,G,1
+index_1559,Mid-latitude desert,J,1
+index_1560,Mid-latitude desert,D,3
+index_1561,Mid-latitude desert,H,1
+index_1562,Mid-latitude desert,D,3
+index_1563,Mid-latitude desert,E,1
+index_1564,Mid-latitude desert,D,1
+index_1565,Mid-latitude desert,B,1
+index_1566,Mid-latitude desert,J,1
+index_1567,Mid-latitude desert,H,2
+index_1568,Mid-latitude desert,B,1
+index_1569,Mid-latitude desert,C,1
+index_1570,Mid-latitude desert,E,1
+index_1571,Mid-latitude desert,I,1
+index_1572,Mid-latitude desert,D,1
+index_1573,Mid-latitude desert,D,1
+index_1574,Mid-latitude desert,F,1
+index_1575,Mid-latitude desert,G,1
+index_1576,Mid-latitude desert,F,1
+index_1577,Mid-latitude desert,F,1
+index_1578,Mid-latitude desert,G,1
+index_1579,Mid-latitude desert,F,1
+index_1580,Mid-latitude desert,J,1
+index_1581,Mid-latitude desert,F,1
+index_1582,Mid-latitude desert,E,1
+index_1583,Mid-latitude desert,G,1
+index_1584,Mid-latitude desert,E,1
+index_1585,Mid-latitude desert,E,3
+index_1586,Mid-latitude desert,A,2
+index_1587,Mid-latitude desert,E,1
+index_1588,Mid-latitude desert,E,1
+index_1589,Mid-latitude desert,J,1
+index_1590,Mid-latitude desert,D,1
+index_1591,Mid-latitude desert,C,3
+index_1592,Mid-latitude desert,B,1
+index_1593,Mid-latitude desert,H,1
+index_1594,Mid-latitude desert,I,2
+index_1595,Mid-latitude desert,A,3
+index_1596,Mid-latitude desert,A,2
+index_1597,Mid-latitude desert,F,1
+index_1598,Mid-latitude desert,J,1
+index_1599,Mid-latitude desert,H,3
+index_1600,Mid-latitude desert,F,1
+index_1601,Mid-latitude desert,C,1
+index_1602,Mid-latitude desert,I,2
+index_1603,Mid-latitude desert,G,1
+index_1604,Mid-latitude desert,F,1
+index_1605,Mid-latitude desert,B,3
+index_1606,Mid-latitude desert,E,1
+index_1607,Mid-latitude desert,A,1
+index_1608,Mid-latitude desert,J,3
+index_1609,Mid-latitude desert,F,1
+index_1610,Mid-latitude desert,C,1
+index_1611,Mid-latitude desert,I,1
+index_1612,Mid-latitude desert,H,1
+index_1613,Mid-latitude desert,I,3
+index_1614,Mid-latitude desert,B,1
+index_1615,Mid-latitude desert,E,1
+index_1616,Mid-latitude desert,G,1
+index_1617,Mid-latitude desert,A,1
+index_1618,Mid-latitude desert,H,1
+index_1619,Mid-latitude desert,C,1
+index_1620,Mid-latitude desert,G,1
+index_1621,Mid-latitude desert,H,3
+index_1622,Mid-latitude desert,F,1
+index_1623,Mid-latitude desert,E,1
+index_1624,Mid-latitude desert,I,1
+index_1625,Mid-latitude desert,J,1
+index_1626,Mid-latitude desert,J,1
+index_1627,Mid-latitude desert,C,1
+index_1628,Mid-latitude desert,I,3
+index_1629,Mid-latitude desert,A,1
+index_1630,Mid-latitude desert,I,1
+index_1631,Mid-latitude desert,B,1
+index_1632,Mid-latitude desert,E,2
+index_1633,Mid-latitude desert,H,2
+index_1634,Mid-latitude desert,I,1
+index_1635,Mid-latitude desert,I,1
+index_1636,Mid-latitude desert,A,2
+index_1637,Mid-latitude desert,I,1
+index_1638,Mid-latitude desert,C,3
+index_1639,Mid-latitude desert,C,3
+index_1640,Mid-latitude desert,B,1
+index_1641,Mid-latitude desert,A,1
+index_1642,Mid-latitude desert,G,1
+index_1643,Mid-latitude desert,I,1
+index_1644,Mid-latitude desert,C,1
+index_1645,Mid-latitude desert,H,1
+index_1646,Mid-latitude desert,I,3
+index_1647,Mid-latitude desert,F,1
+index_1648,Mid-latitude desert,E,1
+index_1649,Mid-latitude desert,I,1
+index_1650,Mid-latitude desert,A,1
+index_1651,Mid-latitude desert,B,2
+index_1652,Mid-latitude desert,E,1
+index_1653,Mid-latitude desert,G,3
+index_1654,Mid-latitude desert,H,1
+index_1655,Mid-latitude desert,F,1
+index_1656,Mid-latitude desert,E,1
+index_1657,Mid-latitude desert,I,3
+index_1658,Mid-latitude desert,G,1
+index_1659,Mid-latitude desert,C,1
+index_1660,Mid-latitude desert,B,2
+index_1661,Mid-latitude desert,F,1
+index_1662,Mid-latitude desert,A,3
+index_1663,Mid-latitude desert,G,1
+index_1664,Mid-latitude desert,J,1
+index_1665,Mid-latitude desert,E,1
+index_1666,Mid-latitude desert,E,1
+index_1667,Mid-latitude desert,J,1
+index_1668,Mid-latitude desert,B,1
+index_1669,Mid-latitude desert,J,1
+index_1670,Mid-latitude desert,H,1
+index_1671,Mid-latitude desert,F,1
+index_1672,Mid-latitude desert,A,1
+index_1673,Mid-latitude desert,F,1
+index_1674,Mid-latitude desert,F,3
+index_1675,Mid-latitude desert,A,3
+index_1676,Mid-latitude desert,C,1
+index_1677,Mid-latitude desert,B,2
+index_1678,Mid-latitude desert,E,1
+index_1679,Mid-latitude desert,A,1
+index_1680,Mid-latitude desert,A,3
+index_1681,Mid-latitude desert,F,1
+index_1682,Mid-latitude desert,B,1
+index_1683,Mid-latitude desert,D,1
+index_1684,Mid-latitude desert,H,1
+index_1685,Mid-latitude desert,I,1
+index_1686,Mid-latitude desert,A,1
+index_1687,Mid-latitude desert,E,1
+index_1688,Mid-latitude desert,F,1
+index_1689,Mid-latitude desert,E,1
+index_1690,Mid-latitude desert,E,3
+index_1691,Mid-latitude desert,I,3
+index_1692,Mid-latitude desert,H,1
+index_1693,Mid-latitude desert,F,1
+index_1694,Mid-latitude desert,A,1
+index_1695,Mid-latitude desert,J,1
+index_1696,Mid-latitude desert,B,1
+index_1697,Mid-latitude desert,I,1
+index_1698,Mid-latitude desert,B,2
+index_1699,Mid-latitude desert,J,1
+index_1700,Mid-latitude desert,B,1
+index_1701,Mid-latitude desert,A,3
+index_1702,Mid-latitude desert,F,3
+index_1703,Mid-latitude desert,I,1
+index_1704,Mid-latitude desert,A,1
+index_1705,Mid-latitude desert,J,1
+index_1706,Mid-latitude desert,H,1
+index_1707,Mid-latitude desert,E,1
+index_1708,Mid-latitude desert,B,1
+index_1709,Mid-latitude desert,I,1
+index_1710,Mid-latitude desert,F,1
+index_1711,Mid-latitude desert,J,1
+index_1712,Mid-latitude desert,F,1
+index_1713,Mid-latitude desert,I,1
+index_1714,Mid-latitude desert,C,2
+index_1715,Mid-latitude desert,I,1
+index_1716,Mid-latitude desert,C,1
+index_1717,Mid-latitude desert,C,1
+index_1718,Mid-latitude desert,H,1
+index_1719,Mid-latitude desert,F,1
+index_1720,Mid-latitude desert,G,1
+index_1721,Mid-latitude desert,J,1
+index_1722,Mid-latitude desert,F,1
+index_1723,Mid-latitude desert,J,3
+index_1724,Mid-latitude desert,A,1
+index_1725,Mid-latitude desert,I,1
+index_1726,Mid-latitude desert,G,1
+index_1727,Mid-latitude desert,J,1
+index_1728,Mid-latitude desert,H,1
+index_1729,Mid-latitude desert,B,1
+index_1730,Mid-latitude desert,H,1
+index_1731,Mid-latitude desert,J,1
+index_1732,Mid-latitude desert,B,1
+index_1733,Mid-latitude desert,B,1
+index_1734,Mid-latitude desert,F,1
+index_1735,Mid-latitude desert,H,1
+index_1736,Mid-latitude desert,D,3
+index_1737,Mid-latitude desert,F,1
+index_1738,Mid-latitude desert,C,3
+index_1739,Mid-latitude desert,B,1
+index_1740,Mid-latitude desert,H,1
+index_1741,Mid-latitude desert,G,1
+index_1742,Mid-latitude desert,D,1
+index_1743,Mid-latitude desert,C,3
+index_1744,Mid-latitude desert,C,3
+index_1745,Mid-latitude desert,I,1
+index_1746,Mid-latitude desert,F,1
+index_1747,Mid-latitude desert,D,1
+index_1748,Mid-latitude desert,D,1
+index_1749,Mid-latitude desert,H,1
+index_1750,Mid-latitude desert,H,3
+index_1751,Mid-latitude desert,I,1
+index_1752,Mid-latitude desert,J,1
+index_1753,Mid-latitude desert,I,1
+index_1754,Mid-latitude desert,H,1
+index_1755,Mid-latitude desert,C,1
+index_1756,Mid-latitude desert,C,1
+index_1757,Mid-latitude desert,A,3
+index_1758,Mid-latitude desert,F,1
+index_1759,Mid-latitude desert,H,1
+index_1760,Mid-latitude desert,E,1
+index_1761,Mid-latitude desert,A,3
+index_1762,Mid-latitude desert,B,1
+index_1763,Mid-latitude desert,G,1
+index_1764,Mid-latitude desert,I,1
+index_1765,Mid-latitude desert,G,1
+index_1766,Mid-latitude desert,E,1
+index_1767,Mid-latitude desert,B,1
+index_1768,Mid-latitude desert,I,3
+index_1769,Mid-latitude desert,H,1
+index_1770,Mid-latitude desert,C,2
+index_1771,Mid-latitude desert,C,1
+index_1772,Mid-latitude desert,B,3
+index_1773,Mid-latitude desert,H,1
+index_1774,Mid-latitude desert,E,1
+index_1775,Mid-latitude desert,D,1
+index_1776,Mid-latitude desert,H,1
+index_1777,Mid-latitude desert,J,3
+index_1778,Mid-latitude desert,E,1
+index_1779,Mid-latitude desert,C,1
+index_1780,Mid-latitude desert,C,1
+index_1781,Mid-latitude desert,A,3
+index_1782,Mid-latitude desert,H,1
+index_1783,Mid-latitude desert,F,3
+index_1784,Mid-latitude desert,E,1
+index_1785,Mid-latitude desert,I,1
+index_1786,Mid-latitude desert,I,1
+index_1787,Mid-latitude desert,F,1
+index_1788,Mid-latitude desert,F,3
+index_1789,Mid-latitude desert,I,1
+index_1790,Mid-latitude desert,E,1
+index_1791,Mid-latitude desert,B,1
+index_1792,Mid-latitude desert,C,1
+index_1793,Mid-latitude desert,G,1
+index_1794,Mid-latitude desert,F,3
+index_1795,Mid-latitude desert,H,1
+index_1796,Mid-latitude desert,J,1
+index_1797,Mid-latitude desert,E,1
+index_1798,Mid-latitude desert,G,1
+index_1799,Mid-latitude desert,B,1
+index_1800,Mid-latitude desert,E,1
+index_1801,Mid-latitude desert,D,1
+index_1802,Mid-latitude desert,B,1
+index_1803,Mid-latitude desert,A,1
+index_1804,Mid-latitude desert,C,1
+index_1805,Mid-latitude desert,D,1
+index_1806,Mid-latitude desert,J,1
+index_1807,Mid-latitude desert,A,1
+index_1808,Mid-latitude desert,G,3
+index_1809,Mid-latitude desert,C,1
+index_1810,Mid-latitude desert,I,1
+index_1811,Mid-latitude desert,H,1
+index_1812,Mid-latitude desert,I,1
+index_1813,Mid-latitude desert,J,1
+index_1814,Mid-latitude desert,D,1
+index_1815,Mid-latitude desert,I,1
+index_1816,Mid-latitude desert,H,1
+index_1817,Mid-latitude desert,E,1
+index_1818,Mid-latitude desert,B,3
+index_1819,Mid-latitude desert,J,1
+index_1820,Mid-latitude desert,H,1
+index_1821,Mid-latitude desert,H,1
+index_1822,Mid-latitude desert,J,3
+index_1823,Mid-latitude desert,E,3
+index_1824,Mid-latitude desert,D,1
+index_1825,Mid-latitude desert,E,1
+index_1826,Mid-latitude desert,I,1
+index_1827,Mid-latitude desert,D,1
+index_1828,Mid-latitude desert,A,3
+index_1829,Mid-latitude desert,I,1
+index_1830,Mid-latitude desert,I,1
+index_1831,Mid-latitude desert,D,3
+index_1832,Mid-latitude desert,A,1
+index_1833,Mid-latitude desert,E,3
+index_1834,Mid-latitude desert,B,1
+index_1835,Mid-latitude desert,A,1
+index_1836,Mid-latitude desert,A,1
+index_1837,Mid-latitude desert,B,2
+index_1838,Mid-latitude desert,I,1
+index_1839,Mid-latitude desert,J,1
+index_1840,Mid-latitude desert,A,3
+index_1841,Mid-latitude desert,D,1
+index_1842,Mid-latitude desert,A,1
+index_1843,Mid-latitude desert,G,1
+index_1844,Mid-latitude desert,I,1
+index_1845,Mid-latitude desert,C,1
+index_1846,Mid-latitude desert,H,3
+index_1847,Mid-latitude desert,F,1
+index_1848,Mid-latitude desert,B,3
+index_1849,Mid-latitude desert,G,1
+index_1850,Mid-latitude desert,D,1
+index_1851,Mid-latitude desert,G,1
+index_1852,Mid-latitude desert,C,1
+index_1853,Mid-latitude desert,I,1
+index_1854,Mid-latitude desert,G,2
+index_1855,Mid-latitude desert,E,1
+index_1856,Mid-latitude desert,A,1
+index_1857,Mid-latitude desert,F,3
+index_1858,Mid-latitude desert,C,1
+index_1859,Mid-latitude desert,I,1
+index_1860,Mid-latitude desert,G,1
+index_1861,Mid-latitude desert,E,1
+index_1862,Mid-latitude desert,E,1
+index_1863,Mid-latitude desert,G,1
+index_1864,Mid-latitude desert,F,1
+index_1865,Mid-latitude desert,J,2
+index_1866,Mid-latitude desert,B,1
+index_1867,Mid-latitude desert,E,1
+index_1868,Mid-latitude desert,F,2
+index_1869,Mid-latitude desert,I,1
+index_1870,Mid-latitude desert,I,3
+index_1871,Mid-latitude desert,J,1
+index_1872,Mid-latitude desert,G,1
+index_1873,Mid-latitude desert,C,1
+index_1874,Mid-latitude desert,B,1
+index_1875,Mid-latitude desert,C,1
+index_1876,Mid-latitude desert,H,1
+index_1877,Mid-latitude desert,J,3
+index_1878,Mid-latitude desert,G,3
+index_1879,Mid-latitude desert,F,1
+index_1880,Mid-latitude desert,B,1
+index_1881,Mid-latitude desert,B,1
+index_1882,Mid-latitude desert,C,1
+index_1883,Mid-latitude desert,J,3
+index_1884,Mid-latitude desert,E,1
+index_1885,Mid-latitude desert,A,1
+index_1886,Mid-latitude desert,B,1
+index_1887,Mid-latitude desert,F,1
+index_1888,Mid-latitude desert,H,1
+index_1889,Mid-latitude desert,A,1
+index_1890,Mid-latitude desert,I,1
+index_1891,Mid-latitude desert,D,1
+index_1892,Mid-latitude desert,G,3
+index_1893,Mid-latitude desert,F,1
+index_1894,Mid-latitude desert,E,1
+index_1895,Mid-latitude desert,C,1
+index_1896,Mid-latitude desert,C,1
+index_1897,Mid-latitude desert,B,1
+index_1898,Mid-latitude desert,E,3
+index_1899,Mid-latitude desert,I,3
+index_1900,Mid-latitude desert,F,3
+index_1901,Mid-latitude desert,I,1
+index_1902,Mid-latitude desert,I,1
+index_1903,Mid-latitude desert,H,1
+index_1904,Mid-latitude desert,F,3
+index_1905,Mid-latitude desert,C,1
+index_1906,Mid-latitude desert,F,1
+index_1907,Mid-latitude desert,H,1
+index_1908,Mid-latitude desert,A,1
+index_1909,Mid-latitude desert,B,1
+index_1910,Mid-latitude desert,F,1
+index_1911,Mid-latitude desert,A,1
+index_1912,Mid-latitude desert,B,3
+index_1913,Mid-latitude desert,C,1
+index_1914,Mid-latitude desert,J,1
+index_1915,Mid-latitude desert,I,3
+index_1916,Mid-latitude desert,G,3
+index_1917,Mid-latitude desert,B,2
+index_1918,Mid-latitude desert,J,1
+index_1919,Mid-latitude desert,F,1
+index_1920,Mid-latitude desert,I,1
+index_1921,Mid-latitude desert,J,1
+index_1922,Mid-latitude desert,A,1
+index_1923,Mid-latitude desert,J,1
+index_1924,Mid-latitude desert,I,1
+index_1925,Mid-latitude desert,C,1
+index_1926,Mid-latitude desert,B,1
+index_1927,Mid-latitude desert,J,1
+index_1928,Mid-latitude desert,A,1
+index_1929,Mid-latitude desert,B,1
+index_1930,Mid-latitude desert,J,1
+index_1931,Mid-latitude desert,I,3
+index_1932,Mid-latitude desert,H,1
+index_1933,Mid-latitude desert,E,3
+index_1934,Mid-latitude desert,G,1
+index_1935,Mid-latitude desert,B,1
+index_1936,Mid-latitude desert,D,1
+index_1937,Mid-latitude desert,I,1
+index_1938,Mid-latitude desert,I,3
+index_1939,Mid-latitude desert,I,3
+index_1940,Mid-latitude desert,H,3
+index_1941,Mid-latitude desert,E,1
+index_1942,Mid-latitude desert,E,1
+index_1943,Mid-latitude desert,H,1
+index_1944,Mid-latitude desert,H,1
+index_1945,Mid-latitude desert,G,3
+index_1946,Mid-latitude desert,I,1
+index_1947,Mid-latitude desert,J,1
+index_1948,Mid-latitude desert,C,1
+index_1949,Mid-latitude desert,I,1
+index_1950,Mid-latitude desert,C,1
+index_1951,Mid-latitude desert,G,1
+index_1952,Mid-latitude desert,C,1
+index_1953,Mid-latitude desert,F,1
+index_1954,Mid-latitude desert,D,1
+index_1955,Mid-latitude desert,E,1
+index_1956,Mid-latitude desert,D,1
+index_1957,Mid-latitude desert,I,1
+index_1958,Mid-latitude desert,F,1
+index_1959,Mid-latitude desert,C,1
+index_1960,Mid-latitude desert,F,1
+index_1961,Mid-latitude desert,J,1
+index_1962,Mid-latitude desert,I,1
+index_1963,Mid-latitude desert,A,1
+index_1964,Mid-latitude desert,B,3
+index_1965,Mid-latitude desert,H,1
+index_1966,Mid-latitude desert,E,1
+index_1967,Mid-latitude desert,J,1
+index_1968,Mid-latitude desert,C,2
+index_1969,Mid-latitude desert,H,3
+index_1970,Mid-latitude desert,E,1
+index_1971,Mid-latitude desert,H,3
+index_1972,Mid-latitude desert,J,1
+index_1973,Mid-latitude desert,H,1
+index_1974,Mid-latitude desert,H,1
+index_1975,Mid-latitude desert,E,1
+index_1976,Mid-latitude desert,H,1
+index_1977,Mid-latitude desert,D,1
+index_1978,Mid-latitude desert,J,1
+index_1979,Mid-latitude desert,E,1
+index_1980,Mid-latitude desert,I,1
+index_1981,Mid-latitude desert,B,3
+index_1982,Mid-latitude desert,I,3
+index_1983,Mid-latitude desert,I,1
+index_1984,Mid-latitude desert,C,1
+index_1985,Mid-latitude desert,E,1
+index_1986,Mid-latitude desert,C,2
+index_1987,Mid-latitude desert,H,1
+index_1988,Mid-latitude desert,F,1
+index_1989,Mid-latitude desert,H,1
+index_1990,Mid-latitude desert,I,1
+index_1991,Mid-latitude desert,A,1
+index_1992,Equatorial savanna,D,1
+index_1993,Equatorial savanna,E,3
+index_1994,Equatorial savanna,F,1
+index_1995,Equatorial savanna,A,1
+index_1996,Equatorial savanna,H,1
+index_1997,Equatorial savanna,E,1
+index_1998,Equatorial savanna,J,1
+index_1999,Equatorial savanna,A,1
+index_2000,Equatorial savanna,F,1
+index_2001,Equatorial savanna,D,1
+index_2002,Equatorial savanna,G,1
+index_2003,Equatorial savanna,E,1
+index_2004,Equatorial savanna,H,1
+index_2005,Equatorial savanna,D,1
+index_2006,Equatorial savanna,I,1
+index_2007,Equatorial savanna,D,1
+index_2008,Equatorial savanna,D,1
+index_2009,Equatorial savanna,I,1
+index_2010,Equatorial savanna,C,1
+index_2011,Equatorial savanna,I,1
+index_2012,Equatorial savanna,D,1
+index_2013,Equatorial savanna,A,3
+index_2014,Equatorial savanna,H,1
+index_2015,Equatorial savanna,G,3
+index_2016,Equatorial savanna,F,2
+index_2017,Equatorial savanna,G,1
+index_2018,Equatorial savanna,A,2
+index_2019,Equatorial savanna,I,1
+index_2020,Equatorial savanna,C,3
+index_2021,Equatorial savanna,J,2
+index_2022,Equatorial savanna,I,1
+index_2023,Equatorial savanna,C,1
+index_2024,Equatorial savanna,B,3
+index_2025,Equatorial savanna,D,1
+index_2026,Equatorial savanna,F,1
+index_2027,Equatorial savanna,I,1
+index_2028,Equatorial savanna,G,1
+index_2029,Equatorial savanna,J,2
+index_2030,Equatorial savanna,A,1
+index_2031,Equatorial savanna,J,1
+index_2032,Equatorial savanna,D,1
+index_2033,Equatorial savanna,D,1
+index_2034,Equatorial savanna,G,1
+index_2035,Equatorial savanna,F,2
+index_2036,Equatorial savanna,C,1
+index_2037,Equatorial savanna,G,1
+index_2038,Equatorial savanna,H,1
+index_2039,Equatorial savanna,D,3
+index_2040,Equatorial savanna,D,1
+index_2041,Equatorial savanna,B,1
+index_2042,Equatorial savanna,D,3
+index_2043,Equatorial savanna,H,1
+index_2044,Equatorial savanna,D,1
+index_2045,Equatorial savanna,D,1
+index_2046,Equatorial savanna,C,3
+index_2047,Equatorial savanna,J,3
+index_2048,Equatorial savanna,B,1
+index_2049,Equatorial savanna,F,1
+index_2050,Equatorial savanna,A,2
+index_2051,Equatorial savanna,F,3
+index_2052,Equatorial savanna,H,1
+index_2053,Equatorial savanna,B,1
+index_2054,Equatorial savanna,B,1
+index_2055,Equatorial savanna,B,3
+index_2056,Equatorial savanna,D,1
+index_2057,Equatorial savanna,A,3
+index_2058,Equatorial savanna,I,1
+index_2059,Equatorial savanna,C,3
+index_2060,Equatorial savanna,E,1
+index_2061,Equatorial savanna,D,1
+index_2062,Equatorial savanna,E,1
+index_2063,Equatorial savanna,J,1
+index_2064,Equatorial savanna,F,1
+index_2065,Equatorial savanna,E,1
+index_2066,Equatorial savanna,A,1
+index_2067,Equatorial savanna,D,1
+index_2068,Equatorial savanna,E,3
+index_2069,Equatorial savanna,J,3
+index_2070,Equatorial savanna,B,1
+index_2071,Equatorial savanna,F,1
+index_2072,Equatorial savanna,F,1
+index_2073,Equatorial savanna,I,1
+index_2074,Equatorial savanna,E,1
+index_2075,Equatorial savanna,J,1
+index_2076,Equatorial savanna,C,1
+index_2077,Equatorial savanna,J,1
+index_2078,Equatorial savanna,F,3
+index_2079,Equatorial savanna,A,1
+index_2080,Equatorial savanna,E,1
+index_2081,Equatorial savanna,F,1
+index_2082,Equatorial savanna,E,1
+index_2083,Equatorial savanna,G,1
+index_2084,Equatorial savanna,F,1
+index_2085,Equatorial savanna,F,1
+index_2086,Equatorial savanna,A,1
+index_2087,Equatorial savanna,B,1
+index_2088,Equatorial savanna,F,3
+index_2089,Equatorial savanna,C,1
+index_2090,Equatorial savanna,G,1
+index_2091,Equatorial savanna,H,3
+index_2092,Equatorial savanna,B,1
+index_2093,Equatorial savanna,B,1
+index_2094,Equatorial savanna,F,1
+index_2095,Equatorial savanna,F,1
+index_2096,Equatorial savanna,J,3
+index_2097,Equatorial savanna,G,1
+index_2098,Equatorial savanna,F,3
+index_2099,Equatorial savanna,B,1
+index_2100,Equatorial savanna,F,3
+index_2101,Equatorial savanna,I,1
+index_2102,Equatorial savanna,I,3
+index_2103,Equatorial savanna,I,1
+index_2104,Equatorial savanna,A,3
+index_2105,Equatorial savanna,H,3
+index_2106,Equatorial savanna,B,1
+index_2107,Equatorial savanna,G,1
+index_2108,Equatorial savanna,B,1
+index_2109,Equatorial savanna,I,1
+index_2110,Equatorial savanna,G,1
+index_2111,Equatorial savanna,H,1
+index_2112,Equatorial savanna,H,1
+index_2113,Equatorial savanna,F,3
+index_2114,Equatorial savanna,G,1
+index_2115,Equatorial savanna,J,1
+index_2116,Equatorial savanna,J,1
+index_2117,Equatorial savanna,I,1
+index_2118,Equatorial savanna,C,1
+index_2119,Equatorial savanna,G,1
+index_2120,Equatorial savanna,J,3
+index_2121,Equatorial savanna,H,1
+index_2122,Equatorial savanna,E,1
+index_2123,Equatorial savanna,E,1
+index_2124,Equatorial savanna,H,1
+index_2125,Equatorial savanna,J,1
+index_2126,Equatorial savanna,H,1
+index_2127,Equatorial savanna,J,1
+index_2128,Equatorial savanna,I,1
+index_2129,Equatorial savanna,J,1
+index_2130,Equatorial savanna,B,1
+index_2131,Equatorial savanna,I,1
+index_2132,Equatorial savanna,F,1
+index_2133,Equatorial savanna,F,1
+index_2134,Equatorial savanna,I,1
+index_2135,Equatorial savanna,G,1
+index_2136,Equatorial savanna,E,1
+index_2137,Equatorial savanna,F,1
+index_2138,Equatorial savanna,A,1
+index_2139,Equatorial savanna,E,1
+index_2140,Equatorial savanna,J,1
+index_2141,Equatorial savanna,B,1
+index_2142,Equatorial savanna,H,1
+index_2143,Equatorial savanna,D,1
+index_2144,Equatorial savanna,F,3
+index_2145,Equatorial savanna,F,3
+index_2146,Equatorial savanna,H,1
+index_2147,Equatorial savanna,D,1
+index_2148,Equatorial savanna,C,1
+index_2149,Equatorial savanna,J,2
+index_2150,Equatorial savanna,H,3
+index_2151,Equatorial savanna,A,1
+index_2152,Equatorial savanna,H,1
+index_2153,Equatorial savanna,C,1
+index_2154,Equatorial savanna,G,1
+index_2155,Equatorial savanna,H,1
+index_2156,Equatorial savanna,F,1
+index_2157,Equatorial savanna,B,3
+index_2158,Equatorial savanna,H,1
+index_2159,Equatorial savanna,F,3
+index_2160,Equatorial savanna,G,1
+index_2161,Equatorial savanna,F,1
+index_2162,Equatorial savanna,H,1
+index_2163,Equatorial savanna,J,1
+index_2164,Equatorial savanna,F,3
+index_2165,Equatorial savanna,F,1
+index_2166,Equatorial savanna,B,1
+index_2167,Equatorial savanna,C,1
+index_2168,Equatorial savanna,B,1
+index_2169,Equatorial savanna,F,3
+index_2170,Equatorial savanna,F,2
+index_2171,Equatorial savanna,B,1
+index_2172,Equatorial savanna,C,1
+index_2173,Equatorial savanna,B,1
+index_2174,Equatorial savanna,H,1
+index_2175,Equatorial savanna,H,3
+index_2176,Equatorial savanna,J,3
+index_2177,Equatorial savanna,D,1
+index_2178,Equatorial savanna,C,2
+index_2179,Equatorial savanna,E,2
+index_2180,Equatorial savanna,J,1
+index_2181,Equatorial savanna,F,1
+index_2182,Equatorial savanna,B,3
+index_2183,Equatorial savanna,I,3
+index_2184,Equatorial savanna,F,1
+index_2185,Equatorial savanna,E,1
+index_2186,Equatorial savanna,G,1
+index_2187,Equatorial savanna,B,1
+index_2188,Equatorial savanna,J,3
+index_2189,Equatorial savanna,F,1
+index_2190,Equatorial savanna,I,1
+index_2191,Equatorial savanna,J,1
+index_2192,Equatorial savanna,A,2
+index_2193,Equatorial savanna,E,2
+index_2194,Equatorial savanna,I,1
+index_2195,Equatorial savanna,C,1
+index_2196,Equatorial savanna,G,1
+index_2197,Equatorial savanna,E,1
+index_2198,Equatorial savanna,A,1
+index_2199,Equatorial savanna,B,1
+index_2200,Equatorial rainforest,D,1
+index_2201,Equatorial rainforest,I,1
+index_2202,Equatorial rainforest,H,1
+index_2203,Equatorial rainforest,G,1
+index_2204,Equatorial rainforest,G,2
+index_2205,Equatorial rainforest,A,1
+index_2206,Equatorial rainforest,A,1
+index_2207,Equatorial rainforest,C,1
+index_2208,Equatorial rainforest,B,1
+index_2209,Equatorial rainforest,B,1
+index_2210,Equatorial rainforest,E,1
+index_2211,Equatorial rainforest,E,1
+index_2212,Equatorial rainforest,H,1
+index_2213,Equatorial rainforest,G,3
+index_2214,Equatorial rainforest,I,1
+index_2215,Equatorial rainforest,D,3
+index_2216,Equatorial rainforest,C,1
+index_2217,Equatorial rainforest,H,1
+index_2218,Equatorial rainforest,G,3
+index_2219,Equatorial rainforest,D,1
+index_2220,Equatorial rainforest,B,1
+index_2221,Equatorial rainforest,B,1
+index_2222,Equatorial rainforest,J,1
+index_2223,Equatorial rainforest,C,1
+index_2224,Equatorial rainforest,C,1
+index_2225,Equatorial rainforest,D,1
+index_2226,Equatorial rainforest,J,1
+index_2227,Equatorial rainforest,A,1
+index_2228,Equatorial rainforest,D,3
+index_2229,Equatorial rainforest,A,1
+index_2230,Equatorial rainforest,A,1
+index_2231,Equatorial rainforest,H,1
+index_2232,Equatorial rainforest,D,1
+index_2233,Equatorial rainforest,E,1
+index_2234,Equatorial rainforest,E,1
+index_2235,Equatorial rainforest,F,1
+index_2236,Equatorial rainforest,J,1
+index_2237,Equatorial rainforest,I,1
+index_2238,Equatorial rainforest,J,1
+index_2239,Equatorial rainforest,G,3
+index_2240,Equatorial rainforest,H,1
+index_2241,Equatorial rainforest,D,1
+index_2242,Equatorial rainforest,I,1
+index_2243,Equatorial rainforest,C,1
+index_2244,Equatorial rainforest,A,1
+index_2245,Equatorial rainforest,H,3
+index_2246,Equatorial rainforest,H,3
+index_2247,Equatorial rainforest,H,1
+index_2248,Equatorial rainforest,I,3
+index_2249,Equatorial rainforest,C,1
+index_2250,Equatorial rainforest,G,1
+index_2251,Equatorial rainforest,D,2
+index_2252,Equatorial rainforest,B,1
+index_2253,Equatorial rainforest,C,1
+index_2254,Equatorial rainforest,G,1
+index_2255,Equatorial rainforest,C,1
+index_2256,Equatorial rainforest,C,1
+index_2257,Equatorial rainforest,C,1
+index_2258,Equatorial rainforest,D,1
+index_2259,Equatorial rainforest,D,1
+index_2260,Equatorial rainforest,C,1
+index_2261,Equatorial rainforest,A,1
+index_2262,Equatorial rainforest,A,1
+index_2263,Equatorial rainforest,G,1
+index_2264,Equatorial rainforest,E,1
+index_2265,Equatorial rainforest,F,1
+index_2266,Equatorial rainforest,D,2
+index_2267,Equatorial rainforest,J,1
+index_2268,Equatorial rainforest,F,3
+index_2269,Equatorial rainforest,F,3
+index_2270,Equatorial rainforest,E,3
+index_2271,Equatorial rainforest,B,1
+index_2272,Equatorial rainforest,J,3
+index_2273,Equatorial rainforest,B,1
+index_2274,Equatorial rainforest,E,3
+index_2275,Equatorial rainforest,J,1
+index_2276,Equatorial rainforest,F,3
+index_2277,Equatorial rainforest,B,1
+index_2278,Equatorial rainforest,A,1
+index_2279,Equatorial rainforest,J,1
+index_2280,Equatorial rainforest,G,1
+index_2281,Equatorial rainforest,G,3
+index_2282,Equatorial rainforest,E,1
+index_2283,Equatorial rainforest,A,1
+index_2284,Equatorial rainforest,A,1
+index_2285,Equatorial rainforest,A,1
+index_2286,Equatorial rainforest,H,1
+index_2287,Equatorial rainforest,G,1
+index_2288,Equatorial rainforest,J,1
+index_2289,Equatorial rainforest,C,1
+index_2290,Equatorial rainforest,A,1
+index_2291,Equatorial rainforest,E,1
+index_2292,Equatorial rainforest,A,1
+index_2293,Equatorial rainforest,E,1
+index_2294,Equatorial rainforest,J,1
+index_2295,Equatorial rainforest,G,1
+index_2296,Equatorial rainforest,B,1
+index_2297,Equatorial rainforest,I,1
+index_2298,Equatorial rainforest,A,1
+index_2299,Equatorial rainforest,E,1
+index_2300,Equatorial rainforest,F,1
+index_2301,Equatorial rainforest,C,1
+index_2302,Equatorial rainforest,C,1
+index_2303,Equatorial rainforest,H,1
+index_2304,Equatorial rainforest,E,1
+index_2305,Equatorial rainforest,J,1
+index_2306,Equatorial rainforest,I,1
+index_2307,Equatorial rainforest,D,1
+index_2308,Equatorial rainforest,G,1
+index_2309,Equatorial rainforest,I,1
+index_2310,Equatorial rainforest,C,1
+index_2311,Equatorial rainforest,H,1
+index_2312,Equatorial rainforest,A,1
+index_2313,Equatorial rainforest,A,1
+index_2314,Equatorial rainforest,I,2
+index_2315,Equatorial rainforest,C,1
+index_2316,Equatorial rainforest,I,3
+index_2317,Equatorial rainforest,J,1
+index_2318,Equatorial rainforest,C,1
+index_2319,Equatorial rainforest,C,1
+index_2320,Equatorial rainforest,G,1
+index_2321,Equatorial rainforest,C,3
+index_2322,Equatorial rainforest,E,1
+index_2323,Equatorial rainforest,E,1
+index_2324,Equatorial rainforest,E,1
+index_2325,Equatorial rainforest,G,1
+index_2326,Equatorial rainforest,F,2
+index_2327,Equatorial rainforest,I,1
+index_2328,Equatorial rainforest,G,3
+index_2329,Equatorial rainforest,F,1
+index_2330,Equatorial rainforest,A,1
+index_2331,Equatorial rainforest,I,1
+index_2332,Equatorial rainforest,C,1
+index_2333,Equatorial rainforest,I,1
+index_2334,Equatorial rainforest,B,1
+index_2335,Equatorial rainforest,I,1
+index_2336,Equatorial rainforest,B,3
+index_2337,Equatorial rainforest,A,1
+index_2338,Equatorial rainforest,G,3
+index_2339,Equatorial rainforest,F,1
+index_2340,Equatorial rainforest,C,1
+index_2341,Equatorial rainforest,F,3
+index_2342,Equatorial rainforest,A,1
+index_2343,Equatorial rainforest,H,1
+index_2344,Equatorial rainforest,F,1
+index_2345,Equatorial rainforest,D,3
+index_2346,Equatorial rainforest,G,3
+index_2347,Equatorial rainforest,I,1
+index_2348,Equatorial rainforest,J,1
+index_2349,Equatorial rainforest,E,1
+index_2350,Equatorial rainforest,A,1
+index_2351,Equatorial rainforest,C,3
+index_2352,Equatorial rainforest,H,1
+index_2353,Equatorial rainforest,G,1
+index_2354,Equatorial rainforest,D,1
+index_2355,Equatorial rainforest,F,1
+index_2356,Equatorial rainforest,A,1
+index_2357,Equatorial rainforest,E,1
+index_2358,Equatorial rainforest,I,1
+index_2359,Equatorial rainforest,B,1
+index_2360,Equatorial rainforest,J,1
+index_2361,Equatorial rainforest,H,3
+index_2362,Equatorial rainforest,C,1
+index_2363,Equatorial rainforest,H,1
+index_2364,Equatorial rainforest,B,1
+index_2365,Equatorial rainforest,D,1
+index_2366,Equatorial rainforest,F,2
+index_2367,Equatorial rainforest,I,1
+index_2368,Equatorial rainforest,I,1
+index_2369,Equatorial rainforest,G,3
+index_2370,Equatorial rainforest,H,1
+index_2371,Equatorial rainforest,B,1
+index_2372,Equatorial rainforest,A,1
+index_2373,Equatorial rainforest,A,1
+index_2374,Equatorial rainforest,D,1
+index_2375,Equatorial rainforest,C,3
+index_2376,Equatorial rainforest,G,1
+index_2377,Equatorial rainforest,H,1
+index_2378,Equatorial rainforest,E,1
+index_2379,Equatorial rainforest,I,1
+index_2380,Equatorial rainforest,E,3
+index_2381,Equatorial rainforest,G,2
+index_2382,Equatorial rainforest,G,1
+index_2383,Equatorial rainforest,D,1
+index_2384,Equatorial rainforest,G,1
+index_2385,Equatorial rainforest,F,1
+index_2386,Equatorial rainforest,I,2
+index_2387,Equatorial rainforest,F,1
+index_2388,Equatorial rainforest,H,3
+index_2389,Equatorial rainforest,C,1
+index_2390,Equatorial rainforest,J,1
+index_2391,Equatorial rainforest,J,1
+index_2392,Equatorial rainforest,F,1
+index_2393,Equatorial rainforest,F,2
+index_2394,Equatorial rainforest,A,1
+index_2395,Equatorial rainforest,H,1
+index_2396,Equatorial rainforest,B,1
+index_2397,Equatorial rainforest,E,1
+index_2398,Equatorial rainforest,J,1
+index_2399,Equatorial rainforest,D,1
+index_2400,Equatorial rainforest,J,1
+index_2401,Equatorial rainforest,E,1
+index_2402,Equatorial rainforest,C,1
+index_2403,Equatorial rainforest,F,1
+index_2404,Equatorial rainforest,B,1
+index_2405,Equatorial rainforest,I,1
+index_2406,Equatorial rainforest,D,1
+index_2407,Equatorial rainforest,F,1
+index_2408,Equatorial rainforest,D,1
+index_2409,Equatorial rainforest,G,1
+index_2410,Equatorial rainforest,I,1
+index_2411,Equatorial rainforest,D,1
+index_2412,Equatorial rainforest,G,3
+index_2413,Equatorial rainforest,I,1
+index_2414,Equatorial rainforest,F,1
+index_2415,Equatorial rainforest,I,1
+index_2416,Equatorial rainforest,B,1
+index_2417,Equatorial rainforest,H,1
+index_2418,Equatorial rainforest,I,1
+index_2419,Equatorial rainforest,F,3
+index_2420,Equatorial rainforest,B,1
+index_2421,Equatorial rainforest,E,3
+index_2422,Equatorial rainforest,C,2
+index_2423,Equatorial rainforest,A,1
+index_2424,Equatorial rainforest,C,1
+index_2425,Equatorial rainforest,B,1
+index_2426,Equatorial rainforest,I,1
+index_2427,Equatorial rainforest,F,3
+index_2428,Equatorial rainforest,G,1
+index_2429,Equatorial rainforest,A,1
+index_2430,Equatorial rainforest,E,1
+index_2431,Equatorial rainforest,G,1
+index_2432,Equatorial rainforest,J,1
+index_2433,Equatorial rainforest,H,1
+index_2434,Equatorial rainforest,C,1
+index_2435,Equatorial rainforest,F,1
+index_2436,Equatorial rainforest,A,3
+index_2437,Equatorial rainforest,A,1
+index_2438,Equatorial rainforest,E,1
+index_2439,Equatorial rainforest,D,1
+index_2440,Equatorial rainforest,A,3
+index_2441,Equatorial rainforest,C,1
+index_2442,Equatorial rainforest,A,1
+index_2443,Equatorial rainforest,J,1
+index_2444,Equatorial rainforest,G,1
+index_2445,Equatorial rainforest,E,1
+index_2446,Equatorial rainforest,G,3
+index_2447,Equatorial rainforest,B,1
+index_2448,Equatorial rainforest,F,1
+index_2449,Equatorial rainforest,C,3
+index_2450,Equatorial rainforest,H,1
+index_2451,Equatorial rainforest,G,3
+index_2452,Equatorial rainforest,J,1
+index_2453,Equatorial rainforest,H,1
+index_2454,Equatorial rainforest,A,1
+index_2455,Equatorial rainforest,J,3
+index_2456,Equatorial rainforest,C,1
+index_2457,Equatorial rainforest,B,3
+index_2458,Equatorial rainforest,F,1
+index_2459,Equatorial rainforest,C,1
+index_2460,Equatorial monsoon,B,1
+index_2461,Equatorial monsoon,I,1
+index_2462,Equatorial monsoon,C,3
+index_2463,Equatorial monsoon,J,1
+index_2464,Equatorial monsoon,B,1
+index_2465,Equatorial monsoon,E,1
+index_2466,Equatorial monsoon,I,1
+index_2467,Equatorial monsoon,H,1
+index_2468,Equatorial monsoon,A,1
+index_2469,Equatorial monsoon,A,1
+index_2470,Equatorial monsoon,I,1
+index_2471,Equatorial monsoon,J,1
+index_2472,Equatorial monsoon,J,1
+index_2473,Equatorial monsoon,E,2
+index_2474,Equatorial monsoon,C,1
+index_2475,Equatorial monsoon,B,1
+index_2476,Equatorial monsoon,E,2
+index_2477,Equatorial monsoon,H,1
+index_2478,Equatorial monsoon,E,1
+index_2479,Equatorial monsoon,A,1
+index_2480,Equatorial monsoon,I,1
+index_2481,Equatorial monsoon,F,2
+index_2482,Equatorial monsoon,A,1
+index_2483,Equatorial monsoon,A,1
+index_2484,Equatorial monsoon,F,2
+index_2485,Equatorial monsoon,F,1
+index_2486,Equatorial monsoon,B,1
+index_2487,Equatorial monsoon,B,1
+index_2488,Equatorial monsoon,H,1
+index_2489,Equatorial monsoon,C,3
+index_2490,Equatorial monsoon,J,1
+index_2491,Equatorial monsoon,A,1
+index_2492,Equatorial monsoon,F,1
+index_2493,Equatorial monsoon,A,1
+index_2494,Equatorial monsoon,E,3
+index_2495,Equatorial monsoon,I,1
+index_2496,Equatorial monsoon,A,2
+index_2497,Equatorial monsoon,B,1
+index_2498,Equatorial monsoon,G,2
+index_2499,Equatorial monsoon,I,1
+index_2500,Equatorial monsoon,I,1
+index_2501,Equatorial monsoon,H,1
+index_2502,Equatorial monsoon,H,1
+index_2503,Equatorial monsoon,E,3
+index_2504,Equatorial monsoon,B,1
+index_2505,Equatorial monsoon,G,1
+index_2506,Equatorial monsoon,F,1
+index_2507,Equatorial monsoon,I,1
+index_2508,Equatorial monsoon,C,1
+index_2509,Equatorial monsoon,F,1
+index_2510,Equatorial monsoon,D,1
+index_2511,Equatorial monsoon,J,1
+index_2512,Equatorial monsoon,G,1
+index_2513,Equatorial monsoon,F,1
+index_2514,Equatorial monsoon,J,1
+index_2515,Equatorial monsoon,I,1
+index_2516,Equatorial monsoon,F,1
+index_2517,Equatorial monsoon,A,1
+index_2518,Equatorial monsoon,E,1
+index_2519,Equatorial monsoon,C,1
+index_2520,Equatorial monsoon,J,1
+index_2521,Equatorial monsoon,A,1
+index_2522,Equatorial monsoon,G,2
+index_2523,Equatorial monsoon,G,1
+index_2524,Equatorial monsoon,G,1
+index_2525,Equatorial monsoon,C,1
+index_2526,Equatorial monsoon,D,1
+index_2527,Equatorial monsoon,A,1
+index_2528,Equatorial monsoon,G,1
+index_2529,Equatorial monsoon,F,1
+index_2530,Equatorial monsoon,G,1
+index_2531,Equatorial monsoon,F,1
+index_2532,Equatorial monsoon,C,1
+index_2533,Equatorial monsoon,E,1
+index_2534,Equatorial monsoon,F,1
+index_2535,Equatorial monsoon,H,3
+index_2536,Equatorial monsoon,D,1
+index_2537,Equatorial monsoon,E,1
+index_2538,Equatorial monsoon,C,1
+index_2539,Equatorial monsoon,F,1
+index_2540,Equatorial monsoon,G,3
+index_2541,Equatorial monsoon,G,1
+index_2542,Equatorial monsoon,H,1
+index_2543,Equatorial monsoon,B,3
+index_2544,Equatorial monsoon,G,1
+index_2545,Equatorial monsoon,D,1
+index_2546,Equatorial monsoon,J,3
+index_2547,Equatorial monsoon,J,1
+index_2548,Equatorial monsoon,G,1
+index_2549,Equatorial monsoon,I,1
+index_2550,Equatorial monsoon,F,1
+index_2551,Equatorial monsoon,E,1
+index_2552,Equatorial monsoon,H,1
+index_2553,Equatorial monsoon,A,1
+index_2554,Equatorial monsoon,G,1
+index_2555,Equatorial monsoon,E,1
+index_2556,Equatorial monsoon,H,3
+index_2557,Equatorial monsoon,E,1
+index_2558,Equatorial monsoon,I,1
+index_2559,Equatorial monsoon,F,2
+index_2560,Equatorial monsoon,I,1
+index_2561,Equatorial monsoon,J,1
+index_2562,Equatorial monsoon,I,1
+index_2563,Equatorial monsoon,C,1
+index_2564,Equatorial monsoon,B,1
+index_2565,Equatorial monsoon,C,1
+index_2566,Equatorial monsoon,H,1
+index_2567,Equatorial monsoon,F,1
+index_2568,Equatorial monsoon,B,1
+index_2569,Equatorial monsoon,F,3
+index_2570,Equatorial monsoon,B,1
+index_2571,Equatorial monsoon,H,1
+index_2572,Equatorial monsoon,G,1
+index_2573,Equatorial monsoon,D,1
+index_2574,Equatorial monsoon,H,1
+index_2575,Equatorial monsoon,J,1
+index_2576,Equatorial monsoon,E,1
+index_2577,Equatorial monsoon,E,1
+index_2578,Equatorial monsoon,F,1
+index_2579,Equatorial monsoon,G,1
+index_2580,Equatorial monsoon,G,1
+index_2581,Equatorial monsoon,D,1
+index_2582,Equatorial monsoon,H,1
+index_2583,Equatorial monsoon,J,3
+index_2584,Equatorial monsoon,F,1
+index_2585,Equatorial monsoon,B,1
+index_2586,Equatorial monsoon,C,1
+index_2587,Equatorial monsoon,G,3
+index_2588,Equatorial monsoon,J,1
+index_2589,Equatorial monsoon,A,1
+index_2590,Equatorial monsoon,A,3
+index_2591,Equatorial monsoon,A,1
+index_2592,Equatorial monsoon,G,1
+index_2593,Equatorial monsoon,H,1
+index_2594,Equatorial monsoon,F,1
+index_2595,Equatorial monsoon,I,1
+index_2596,Equatorial monsoon,E,1
+index_2597,Equatorial monsoon,I,1
+index_2598,Equatorial monsoon,G,2
+index_2599,Equatorial monsoon,H,1
+index_2600,Equatorial monsoon,H,1
+index_2601,Equatorial monsoon,B,1
+index_2602,Equatorial monsoon,J,3
+index_2603,Equatorial monsoon,E,1
+index_2604,Equatorial monsoon,I,1
+index_2605,Equatorial monsoon,F,1
+index_2606,Equatorial monsoon,D,1
+index_2607,Equatorial monsoon,J,3
+index_2608,Equatorial monsoon,G,2
+index_2609,Equatorial monsoon,D,1
+index_2610,Equatorial monsoon,A,3
+index_2611,Equatorial monsoon,J,1
+index_2612,Equatorial monsoon,A,1
+index_2613,Equatorial monsoon,F,1
+index_2614,Equatorial monsoon,B,1
+index_2615,Equatorial monsoon,A,1
+index_2616,Equatorial monsoon,B,3
+index_2617,Equatorial monsoon,A,1
+index_2618,Equatorial monsoon,H,1
+index_2619,Equatorial monsoon,C,1
+index_2620,Equatorial monsoon,F,1
+index_2621,Equatorial monsoon,G,1
+index_2622,Equatorial monsoon,A,1
+index_2623,Equatorial monsoon,J,3
+index_2624,Equatorial monsoon,J,1
+index_2625,Equatorial monsoon,H,1
+index_2626,Equatorial monsoon,I,2
+index_2627,Equatorial monsoon,A,1
+index_2628,Equatorial monsoon,B,1
+index_2629,Equatorial monsoon,I,1
+index_2630,Equatorial monsoon,C,1
+index_2631,Equatorial monsoon,B,3
+index_2632,Equatorial monsoon,J,1
+index_2633,Equatorial monsoon,A,1
+index_2634,Equatorial monsoon,D,1
+index_2635,Equatorial monsoon,C,1
+index_2636,Equatorial monsoon,E,1
+index_2637,Equatorial monsoon,F,1
+index_2638,Equatorial monsoon,I,1
+index_2639,Equatorial monsoon,J,1
+index_2640,Equatorial monsoon,H,1
+index_2641,Equatorial monsoon,J,1
+index_2642,Equatorial monsoon,E,1
+index_2643,Equatorial monsoon,C,1
+index_2644,Equatorial monsoon,D,3
+index_2645,Equatorial monsoon,B,1
+index_2646,Equatorial monsoon,H,1
+index_2647,Equatorial monsoon,D,1
+index_2648,Equatorial monsoon,J,2
+index_2649,Equatorial monsoon,E,3
+index_2650,Equatorial monsoon,H,3
+index_2651,Equatorial monsoon,E,2
+index_2652,Equatorial monsoon,D,1
+index_2653,Equatorial monsoon,C,1
+index_2654,Equatorial monsoon,C,1
+index_2655,Equatorial monsoon,G,1
+index_2656,Equatorial monsoon,F,1
+index_2657,Equatorial monsoon,A,1
+index_2658,Equatorial monsoon,A,1
+index_2659,Equatorial monsoon,F,1
+index_2660,Equatorial monsoon,E,1
+index_2661,Equatorial monsoon,B,1
+index_2662,Equatorial monsoon,F,1
+index_2663,Equatorial monsoon,H,1
+index_2664,Equatorial monsoon,D,1
+index_2665,Equatorial monsoon,F,1
+index_2666,Equatorial monsoon,C,1
+index_2667,Equatorial monsoon,D,1
+index_2668,Equatorial monsoon,I,2
+index_2669,Equatorial monsoon,F,1
+index_2670,Equatorial monsoon,B,3
+index_2671,Equatorial monsoon,G,1
+index_2672,Equatorial monsoon,G,2
+index_2673,Equatorial monsoon,F,1
+index_2674,Equatorial monsoon,D,1
+index_2675,Equatorial monsoon,J,3
+index_2676,Equatorial monsoon,I,1
+index_2677,Equatorial monsoon,E,2
+index_2678,Equatorial monsoon,J,2
+index_2679,Equatorial monsoon,D,1
+index_2680,Equatorial monsoon,I,1
+index_2681,Equatorial monsoon,B,3
+index_2682,Equatorial monsoon,B,1
+index_2683,Equatorial monsoon,J,1
+index_2684,Equatorial monsoon,D,1
+index_2685,Equatorial monsoon,H,1
+index_2686,Equatorial monsoon,H,1
+index_2687,Equatorial monsoon,A,1
+index_2688,Equatorial monsoon,C,1
+index_2689,Subtropical steppe,J,1
+index_2690,Subtropical steppe,J,1
+index_2691,Subtropical steppe,D,1
+index_2692,Subtropical steppe,G,3
+index_2693,Subtropical steppe,B,1
+index_2694,Subtropical steppe,G,1
+index_2695,Subtropical steppe,D,1
+index_2696,Subtropical steppe,H,3
+index_2697,Subtropical steppe,C,2
+index_2698,Subtropical steppe,J,1
+index_2699,Subtropical steppe,G,3
+index_2700,Subtropical steppe,D,1
+index_2701,Subtropical steppe,B,1
+index_2702,Subtropical steppe,B,1
+index_2703,Subtropical steppe,A,3
+index_2704,Subtropical steppe,E,1
+index_2705,Subtropical steppe,H,1
+index_2706,Subtropical steppe,E,1
+index_2707,Subtropical steppe,F,1
+index_2708,Subtropical steppe,F,1
+index_2709,Subtropical steppe,A,3
+index_2710,Subtropical steppe,J,3
+index_2711,Subtropical steppe,J,1
+index_2712,Subtropical steppe,E,1
+index_2713,Subtropical steppe,D,1
+index_2714,Subtropical steppe,I,2
+index_2715,Subtropical steppe,I,1
+index_2716,Subtropical steppe,A,1
+index_2717,Subtropical steppe,H,1
+index_2718,Subtropical steppe,I,1
+index_2719,Subtropical steppe,C,3
+index_2720,Subtropical steppe,E,3
+index_2721,Subtropical steppe,D,1
+index_2722,Subtropical steppe,A,2
+index_2723,Subtropical steppe,H,3
+index_2724,Subtropical steppe,I,1
+index_2725,Subtropical steppe,H,3
+index_2726,Subtropical steppe,G,1
+index_2727,Subtropical steppe,B,1
+index_2728,Subtropical steppe,B,1
+index_2729,Subtropical steppe,G,3
+index_2730,Subtropical steppe,F,1
+index_2731,Subtropical steppe,H,1
+index_2732,Subtropical steppe,J,1
+index_2733,Subtropical steppe,D,2
+index_2734,Subtropical steppe,B,1
+index_2735,Subtropical steppe,J,1
+index_2736,Subtropical steppe,B,1
+index_2737,Subtropical steppe,I,1
+index_2738,Subtropical steppe,F,1
+index_2739,Subtropical steppe,G,1
+index_2740,Subtropical steppe,E,1
+index_2741,Subtropical steppe,F,1
+index_2742,Subtropical steppe,A,1
+index_2743,Subtropical steppe,J,1
+index_2744,Subtropical steppe,D,1
+index_2745,Subtropical steppe,B,1
+index_2746,Subtropical steppe,C,1
+index_2747,Subtropical steppe,B,1
+index_2748,Subtropical steppe,A,1
+index_2749,Subtropical steppe,G,3
+index_2750,Subtropical steppe,B,1
+index_2751,Subtropical steppe,C,1
+index_2752,Subtropical steppe,B,3
+index_2753,Subtropical steppe,F,1
+index_2754,Subtropical steppe,A,1
+index_2755,Subtropical steppe,B,1
+index_2756,Subtropical steppe,H,1
+index_2757,Subtropical steppe,I,1
+index_2758,Subtropical steppe,D,1
+index_2759,Subtropical steppe,E,1
+index_2760,Subtropical steppe,G,3
+index_2761,Subtropical steppe,E,1
+index_2762,Subtropical steppe,C,1
+index_2763,Subtropical steppe,C,1
+index_2764,Subtropical steppe,J,1
+index_2765,Subtropical steppe,B,3
+index_2766,Subtropical steppe,J,1
+index_2767,Subtropical steppe,F,3
+index_2768,Subtropical steppe,F,1
+index_2769,Subtropical steppe,D,1
+index_2770,Subtropical steppe,E,1
+index_2771,Subtropical steppe,G,3
+index_2772,Subtropical steppe,I,1
+index_2773,Subtropical steppe,I,2
+index_2774,Subtropical steppe,H,1
+index_2775,Subtropical steppe,B,2
+index_2776,Subtropical steppe,I,1
+index_2777,Subtropical steppe,G,1
+index_2778,Subtropical steppe,A,1
+index_2779,Subtropical steppe,C,3
+index_2780,Subtropical steppe,F,1
+index_2781,Subtropical steppe,E,1
+index_2782,Subtropical steppe,B,1
+index_2783,Subtropical steppe,I,1
+index_2784,Subtropical steppe,J,1
+index_2785,Subtropical steppe,B,1
+index_2786,Subtropical steppe,E,1
+index_2787,Subtropical steppe,I,3
+index_2788,Subtropical steppe,C,1
+index_2789,Subtropical steppe,J,1
+index_2790,Subtropical steppe,I,1
+index_2791,Subtropical steppe,C,1
+index_2792,Subtropical steppe,I,1
+index_2793,Subtropical steppe,C,1
+index_2794,Subtropical steppe,J,3
+index_2795,Subtropical steppe,F,1
+index_2796,Subtropical steppe,G,1
+index_2797,Subtropical steppe,H,2
+index_2798,Subtropical steppe,J,1
+index_2799,Subtropical steppe,J,1
+index_2800,Subtropical steppe,J,1
+index_2801,Subtropical steppe,E,1
+index_2802,Subtropical steppe,I,1
+index_2803,Subtropical steppe,A,1
+index_2804,Subtropical steppe,E,1
+index_2805,Subtropical steppe,G,1
+index_2806,Subtropical steppe,F,3
+index_2807,Subtropical steppe,C,1
+index_2808,Subtropical steppe,J,1
+index_2809,Subtropical steppe,J,3
+index_2810,Subtropical steppe,C,1
+index_2811,Subtropical steppe,A,1
+index_2812,Subtropical steppe,F,1
+index_2813,Subtropical steppe,E,1
+index_2814,Subtropical steppe,J,1
+index_2815,Subtropical steppe,A,1
+index_2816,Subtropical steppe,E,1
+index_2817,Subtropical steppe,E,1
+index_2818,Subtropical steppe,J,1
+index_2819,Subtropical steppe,E,3
+index_2820,Subtropical steppe,C,1
+index_2821,Subtropical steppe,I,1
+index_2822,Subtropical steppe,B,1
+index_2823,Subtropical steppe,B,1
+index_2824,Subtropical steppe,F,1
+index_2825,Subtropical steppe,E,3
+index_2826,Subtropical steppe,F,1
+index_2827,Subtropical steppe,B,1
+index_2828,Subtropical steppe,J,3
+index_2829,Subtropical steppe,J,1
+index_2830,Subtropical steppe,E,3
+index_2831,Subtropical steppe,G,3
+index_2832,Subtropical steppe,C,3
+index_2833,Subtropical steppe,B,1
+index_2834,Subtropical steppe,G,1
+index_2835,Subtropical steppe,G,1
+index_2836,Subtropical steppe,C,1
+index_2837,Subtropical steppe,F,1
+index_2838,Subtropical steppe,D,1
+index_2839,Subtropical steppe,H,1
+index_2840,Subtropical steppe,I,3
+index_2841,Subtropical steppe,G,3
+index_2842,Subtropical steppe,F,1
+index_2843,Subtropical steppe,F,1
+index_2844,Subtropical steppe,I,1
+index_2845,Subtropical steppe,I,1
+index_2846,Subtropical steppe,J,1
+index_2847,Subtropical steppe,G,3
+index_2848,Subtropical steppe,C,1
+index_2849,Subtropical steppe,A,1
+index_2850,Subtropical steppe,E,1
+index_2851,Subtropical steppe,A,1
+index_2852,Subtropical steppe,A,1
+index_2853,Subtropical steppe,J,2
+index_2854,Subtropical steppe,D,1
+index_2855,Subtropical steppe,A,1
+index_2856,Subtropical steppe,B,1
+index_2857,Subtropical steppe,B,1
+index_2858,Subtropical steppe,J,1
+index_2859,Subtropical steppe,C,1
+index_2860,Subtropical steppe,A,1
+index_2861,Subtropical steppe,F,1
+index_2862,Subtropical steppe,C,2
+index_2863,Subtropical steppe,A,1
+index_2864,Subtropical steppe,H,3
+index_2865,Subtropical steppe,C,1
+index_2866,Subtropical steppe,I,1
+index_2867,Subtropical steppe,J,1
+index_2868,Subtropical steppe,J,3
+index_2869,Subtropical steppe,B,1
+index_2870,Subtropical steppe,E,1
+index_2871,Subtropical steppe,B,1
+index_2872,Subtropical steppe,G,1
+index_2873,Subtropical steppe,D,1
+index_2874,Subtropical steppe,J,2
+index_2875,Subtropical steppe,C,1
+index_2876,Subtropical steppe,D,1
+index_2877,Subtropical steppe,G,1
+index_2878,Subtropical steppe,G,1
+index_2879,Subtropical steppe,D,3
+index_2880,Subtropical steppe,F,1
+index_2881,Subtropical steppe,A,1
+index_2882,Subtropical steppe,J,1
+index_2883,Subtropical steppe,J,1
+index_2884,Subtropical steppe,F,3
+index_2885,Subtropical steppe,J,1
+index_2886,Subtropical steppe,J,1
+index_2887,Subtropical steppe,I,1
+index_2888,Subtropical steppe,B,1
+index_2889,Subtropical steppe,E,1
+index_2890,Subtropical steppe,C,1
+index_2891,Subtropical steppe,H,3
+index_2892,Subtropical steppe,B,3
+index_2893,Subtropical steppe,F,1
+index_2894,Subtropical steppe,E,3
+index_2895,Subtropical steppe,H,1
+index_2896,Subtropical steppe,E,1
+index_2897,Subtropical steppe,J,1
+index_2898,Subtropical steppe,I,3
+index_2899,Subtropical steppe,H,1
+index_2900,Subtropical steppe,J,1
+index_2901,Subtropical steppe,D,1
+index_2902,Subtropical steppe,D,1
+index_2903,Subtropical steppe,J,1
+index_2904,Subtropical steppe,H,1
+index_2905,Subtropical steppe,B,1
+index_2906,Subtropical steppe,E,1
+index_2907,Subtropical steppe,A,1
+index_2908,Subtropical steppe,A,1
+index_2909,Subtropical steppe,A,1

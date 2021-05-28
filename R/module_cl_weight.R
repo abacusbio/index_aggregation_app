@@ -59,7 +59,7 @@ calWeiModUI <- function(id) {
 #' @param index a reactive function of a data.frame, animal ID by indexes, e.g. val$dt_index        
 #' 
 #' @return val$dt_weight, a data.frame of 3 columns: Index, cluster and weight; and val$dt_ev_agg,
-#'         a data.frame of columns as Index, cluster and traits
+#'         a data.frame of columns as Index, cluster and traits, where Index are new indexes
 calWeiMod <- function(id, val, transpose = T, ...) {
   moduleServer(
     id,

@@ -27,7 +27,7 @@ aggDxModSidebarUI <- function(id) {
       ),
     h4("Plot control"),
     wellPanel(
-      #numericInput(ns("show_n_indexes"), "# indexs to show", 10, 1, 10, 1),
+      # numericInput(ns("show_n_indexes"), "# indexs to show", 10, 1, 10, 1),
       numericInput(ns("font_size"), "Font size", 12, 1, 20, 1)
       ),
     )
@@ -327,7 +327,7 @@ cat("aggDxMod\n")
         })
         names(df_top_n) <- names(df_index_sub)
         tempVar$df_top_n <- df_top_n
-cat("  df_top_n:", class(df_top_n));print(dim(df_index_sub));print(tempVar$df_top_n[[1]][1,])
+# cat("  df_top_n:", class(df_top_n));print(dim(df_index_sub));print(tempVar$df_top_n[[1]][1,])
 # cat("  table_top_n list:")
         table_top_n <- do.call(cbind, lapply(df_top_n, function(i) {
           out <- i[, c("plant", "value")]
@@ -393,7 +393,7 @@ cat("  df_top_n:", class(df_top_n));print(dim(df_index_sub));print(tempVar$df_to
       # Correlation by quantile table
       q_table <- #eventReactive(input$quantile | input$run_heatmap, {
         reactive({
-cat(" eventReactive quantile\n input$quantile: ", input$quantile, "tempVar$corr_df:\n")
+# cat(" eventReactive quantile\n input$quantile: ", input$quantile, "tempVar$corr_df:\n")
 # print(head(tempVar$corr_df))
         req( length(tempVar$corr_df) >1, input$quantile)  # Index aggregated_index correlation id
 
@@ -444,4 +444,155 @@ cat(" eventReactive quantile\n input$quantile: ", input$quantile, "tempVar$corr_
                            # paste0("top_", tempVar$n, "_", input$sel_agg, "_", tempVar$sel_index, 
                                   # "_", tempVar$sel_cluster),
                            # tempVar$df_top_n, T, "csv")
+    })}
+
+
+aggDxModSidebarUI2 <- function(id) {
+  ns <- NS(id)
+  tagList(
+    h4("Main"),
+    wellPanel(
+      selectInput(ns("class_var"), "Choose a classification variable:", "", "") 
+    ),
+    htmltools::HTML(strrep(br(), 35)),
+    h4("Plot control"),
+    wellPanel(
+      selectInput(ns("agg_by"), "Select an index type", "", ""),
+      checkboxInput(ns("use_count"), "Use count", F),
+      # checkboxInput(ns("switch_index_classvar"), 
+                    # "Switch between indexes and classification variables", F) 
+    )
+  )
+}
+
+aggDxModUI2 <- function(id) {
+  ns <- NS(id)
+  tagList(
+    br(),
+    h1("Aggregated index diagnosis - more"),
+    textOutput(ns("error_m")),
+    h2("Classification variable distribution"),
+    renderDtTableModuleUI(ns("classvar_summary")),
+    br(),br(),
+    h2("Bar chart"),
+    plotOutput(ns("classvar_plot"), height = "800px"),
+    downloadPlotModuleUI(ns("dnld_cv_plot"))
+  )
+}
+
+#' Diagnosis tools 2 for aggregated indexes
+#'
+#' @description Show the classVar and Group pattern of different aggregated indexes. 
+#'              The classVar and Group come from the EV file
+#' @param id shiny object id
+#' @param val a reactive value object, containing at least 4 objects: 1) \code{reactive(
+#'        val$dt_index)}, a data.frame of animal by index. If the data is index by animal, 
+#'        then \code{transpose} should be set to \code{T}.
+#'        2) \code{cl}, a list containing \code{cl_obj}, a class "hclust" or "agnes" object,
+#'        and \code{val$cl$clusters}, a cluster assignment vector. e.g. a \code{cutree} 
+#'        output. 4) \code{val$dt_desc_ev_clean}, a data.frame of 2 columns: column_labelling and 
+#'        classifier/ 5) \code{val$dt_ev_filtered}, a data.frame of columns Index, classVar
+#'        (optional) and trait names
+#' @param dt_ev_agg a reactive function of a data.frame of columns Index, cluster and trait names
+#'        assignments
+#' 
+#' @return 
+aggDxMod2 <- function(id, val, transpose = F, clusters = reactive(NULL), 
+                     ...) {
+  moduleServer(
+    id,
+    function(input, output, session) {
+cat("aggDxMod2\n")      
+      # INITIALIZE
+      tempVar <- reactiveValues()
+      
+      output$error_m <- renderText({
+# cat(" erro_m:");print(input$error_m) # always NULL
+# cat("  names val:");print(names(val))
+        validate(need(!is.null(val$dt_desc_ev_clean), "Please upload an EV description file"),
+                 need(!is.null(val$dt_ev_filtered), "Please upload an EV file"),
+                 # need(!is.null(val$dt_index), "Please finish filtering or upload an index table"),
+                 # need(!is.null(clusters()), # val$cl$clusters),
+                 #     "Please finish 'run cluster' or upload a cluster table"),
+                 #need(!is.null(dt_ev_agg()), "Please finish 'Make new weights'"),
+                 need(input$class_var!="",  "Please select a classification variable")
+        )
+      })
+      
+      # update input$class_var
+      observeEvent(!is.null(clusters()), { 
+        req(val$dt_ev_filtered, val$dt_desc_ev_clean)
+
+        class_vars <- val$dt_desc_ev_clean$column_labelling[
+          val$dt_desc_ev_clean$classifier == "ClassVar"]
+
+        updateSelectInput(session, "class_var", choices = c("", class_vars))
+      })
+      
+      classvar_summary <- eventReactive(input$class_var, {
+        req(clusters, val$dt_ev_filtered, val$dt_desc_ev_clean, input$class_var!="")
+# cat(" eventreactive input$class_var\n  input$class_var:", input$class_var, "\n")
+        class_vars <- val$dt_desc_ev_clean$column_labelling[
+          val$dt_desc_ev_clean$classifier == "ClassVar"]
+
+        group_vars <- val$dt_desc_ev_clean$column_labelling[
+          val$dt_desc_ev_clean$classifier == "Group"]
+        group_vars <- c(group_vars, "new_index_by_cluster")
+        
+        # Merge classVar and new index
+        # Index RM State... Group1... new_index_by_cluster 
+        df_cluster <- data.frame(Index = names(clusters()), new_index_by_cluster = clusters())
+        df_index_classvar_group <- dplyr::select(
+          val$dt_ev_filtered, Index, matches(all_of(class_vars)), matches(all_of(group_vars))) %>% 
+          right_join(df_cluster, by = "Index")
+# write.table(df_index_classvar_group, "df_index_classvar_group.txt", quote = F, row.names = F, sep = ",")
+        # calculate summary stat table
+        # aggregated_by, aggregated_index, n, percent
+        df_summary_table <- do.call(rbind, lapply(group_vars, function(group_var) {
+
+          out <- group_by(df_index_classvar_group, across(c(group_var, input$class_var))) %>% 
+            tally() %>% 
+            group_by(.data[[input$class_var]]) %>% 
+            mutate(count = sum(n), percent = n/count) %>% dplyr::select(-count)
+          names(out)[1] <- "aggregated_index"
+          
+          return(data.frame(aggregated_by = group_var, out))
+        }))
+        
+        # select input aggregated_by
+        updateSelectInput(session, "agg_by", choices = c("", df_summary_table$aggregated_by))
+        
+        return(df_summary_table)
+      })
+        
+      renderDtTableModuleServer("classvar_summary", classvar_summary, 
+                                extensions = c("FixedHeader", "FixedColumns"),
+                                downloadName = "class_var_summary_in_agg_index")
+      
+      # # select input aggregated_by
+      # observeEvent(length(df_summary_table()) > 0, {
+      #   updateSelectInput(session, "agg_by", choices = c("", df_summary_table()$aggregated_by))
+      # })
+      
+      # draw percentage plot
+      output$classvar_plot <- renderPlot({
+cat(" classvar_plot\n ", input$switch_index_classvar, class(input$switch_index_classvar), "\n")
+# print(classvar_summary()[1,])
+        req(input$class_var!="", input$agg_by!="")
+
+        width <- session$clientData[[paste0("output_", session$ns("classvar_plot"), "_width")]]
+        df <- classvar_summary() %>% 
+          dplyr::filter(aggregated_by == input$agg_by)
+cat("  df:", class(df))        
+        p <- plotClassvarBar(df, input$class_var, "aggregated_index", input$use_count)
+cat("  p:", class(p));print(p)        
+        downloadPlotModuleServer(
+          "dnld_cv_plot", "classvar_by_index", p,
+          # gridExtra::grid.arrange(grobs = ps,
+                                  # nrow = min(2, length(unique(df$aggregated_index)))),
+          reactive(width))
+        
+        return(p) #gridExtra::grid.arrange(grobs = ps,
+                                       # nrow = min(2, length(unique(df$aggregated_index)))))
+      })
     })}

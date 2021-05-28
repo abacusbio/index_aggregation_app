@@ -12,3 +12,4 @@ LDSR_PUCCPY_BLUP,EV
 LDSR_TARSC_BLUP,EV
 Index,ID
 group,Group
+RM,ClassVar

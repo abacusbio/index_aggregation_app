@@ -19,3 +19,6 @@ test outputs/index-2021-04-19.csv
 test outputs/test.csv
 test.csv
 test.csv
+R/css/bootstrap.min_minty.css
+R/css/bootstrap_minty.css
+R/css/bootstrap_solar.css

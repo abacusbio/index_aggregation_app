@@ -34,6 +34,7 @@ library(pheatmap)
 # library(gplots) # heatmap.2
 library(ggrepel) # geom_text_repel
 library(ggdendro)
+library(ggdendro)
 
 library(cluster)
 library(PMA) # spc
@@ -44,17 +45,18 @@ source("module_preprocess.R", echo = F)
 source("module_clustering.R", echo = F)
 source("module_data_filter.R")
 source("module_dt_viewer.R")
-source("module_cl_diagnosis.R")
+source("module_cl_dx.R")
 source("module_cl_summary.R")
 source("module_cl_weight.R")
-source("module_aggregation.R")
+source("module_aggregation_dx.R")
 source("function_preprocess.R")
 source("function_copied_selindexrevamp.R")
 source("function_clean.R")
 source("function_calculate_index.R")
 source("function_clustering.R")
-source("function_cl_diagnosis.R")
-source("function_aggregation_diag.R")
+source("function_cl_dx.R")
+source("function_cl_dx.R")
+source("function_aggregation_dx.R")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -240,18 +242,24 @@ ui <- fluidPage(
           condition = "input.run_agg == 'tab.agg.2' && input.plant_app == 'tab.agg'",
           aggDxModSidebarUI("agg_dx")
         ),
+        
+        conditionalPanel(
+          condition = "input.run_agg == 'tab.agg.3' && input.plant_app == 'tab.agg'",
+          aggDxModSidebarUI2("agg_dx2")
+        ),
         width = 4), # sidebarPanel
       
       # Show a plot of the generated distribution
       mainPanel(
         tabsetPanel(id = "run_agg", # id can't have .
           tabPanel("Step 1: Make new weights", value = "tab.agg.1",
-                   calWeiModUI("cl_weight")
-                   ),
+                   calWeiModUI("cl_weight")),
                     
           tabPanel("Step 2: Aggregation diagnosis", value = "tab.agg.2",
-                   aggDxModUI("agg_dx")
-                   )
+                   aggDxModUI("agg_dx")),
+          
+          tabPanel("Step3: Aggregation diagnosis - more", value = "tab.agg.3",
+                   aggDxModUI2("agg_dx2"))
         ) # tabsetPanel run_cluster
       ), # mainPanel
       fluid = T) # sidebarLayout fluid = F doesn't work here
@@ -470,6 +478,7 @@ server <- function(input, output, session) {
            reactive(val$dt_index))
   # })
   
+  aggDxMod2("agg_dx2", val, transpose = F, reactive(val$cl$clusters))
 } # server
 
 # options(shiny.reactlog = T) # lzhang April172020
