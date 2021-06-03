@@ -1,3 +1,6 @@
+# Simulate EBV EV and index weights for Bayer corn breeding project
+# Luna Zhang 2021
+
 library(dplyr)
 library(readxl)
 library(corpcor)

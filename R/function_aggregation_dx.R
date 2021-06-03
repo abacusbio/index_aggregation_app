@@ -9,7 +9,8 @@ plotcorrDot <- function(input, output, session,
                         m, agg_index_names = reactive(NULL), font_size = reactive(12),
                         # n = 30, show_n = reactive(10), 
                         ...) {
-  
+# cat("plotCorrDot\n, m:", class(m));print(dim(m));#print(head(m))
+# cat(" agg_index_names:");print(agg_index_names())
   m <- data.frame(m[, agg_index_names(), drop = F]) %>% 
     dplyr::mutate(Index = rownames(m)) %>% 
     dplyr::filter(!Index %in% agg_index_names()) %>% 
@@ -20,24 +21,24 @@ plotcorrDot <- function(input, output, session,
   # ...
   # index1 new_index2      0.9
   # ...
-# cat("plotCorrDot\n, m:", class(m));print(dim(m));print(head(m))
-  
+
   # create an index for sorting
   m <- do.call(rbind, lapply(unique(m$aggregated_index), function(agg_index) {
     df <- dplyr::filter(m, aggregated_index == agg_index) %>% 
       dplyr::arrange(desc(correlation)) %>% 
       mutate(id = dplyr::row_number())
   }))
-# cat(" agg_index_names:"); print(agg_index_names())
   
   p <- ggpubr::ggscatter(m, x = "id", y = "correlation",
-                        color = "aggregated_index", alpha = 0.5, 
-                        palette = "npg",         # npg journal color palett. see ?ggpar
-                        sort.val = "desc",          # Sort the value in dscending order
-                       # sort.by.groups = T,     # Don't sort inside each group
-                        xlab = "sorted original index", 
-                        font.y = c(font_size(), "plain", "black"), # y lab
-                        ...) +
+                         color = "aggregated_index", alpha = 0.5, 
+                         palette = "npg",         # npg journal color palett. see ?ggpar
+                         sort.val = "desc",          # Sort the value in dscending order
+                         # sort.by.groups = T,     # Don't sort inside each group
+                         xlab = "sorted original index",
+                         font.x = c(font_size(), "plain", "black"), # xlab
+                         font.y = c(font_size(), "plain", "black"), # y lab
+                         font.legend = c(font_size(), "plain", "black"),
+                         ...) +
     ggpubr::rremove("x.ticks") + ggpubr::rremove("x.text")
   return(list(p = p, df = m))
 }
@@ -85,7 +86,9 @@ plotTopNdot <- function(input, output, session,
                            sort.val = "desc",          # Sort the value in dscending order
                            # sort.by.groups = T,     # Don't sort inside each group
                            xlab = "sorted original index", 
+                           font.x = c(font_size(), "plain", "black"), # xlab
                            font.y = c(font_size(), "plain", "black"), # y lab
+                           font.legend = c(font_size(), "plain", "black"),
                            ...) +
       ggpubr::rremove("x.ticks") + ggpubr::rremove("x.text")
   
@@ -98,8 +101,8 @@ plotTopNdot <- function(input, output, session,
 #'        classvar_summary() filtered by aggregated_by
 #'
 plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
-cat("plotClassvarBar\n df:", class(df), " x:", class(x), " fill:", class(fill), " use_count:",
-    class(use_count), "\n")  
+# cat("plotClassvarBar\n df:", class(df), " x:", class(x), " fill:", class(fill), " use_count:",
+    # class(use_count), "\n")  
   df$label <- ifelse(use_count, 
                      df$n, paste0(sapply(df$percent, format, digits = 2, nsmall = 0), "%"))
   

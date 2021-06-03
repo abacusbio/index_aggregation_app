@@ -16,3 +16,14 @@ cleanEVplant <- function(desc_ev, dat_ev) {
   
   return(dat_ev)
 }
+
+cleanW <- function(dat_w) {
+# cat("cleanW\n dat_w: ", class(dat_w), "\n");print(head(dat_w)) 
+  if(class(dat_w$Index)!="character") dat_w$Index <- as.character(dat_w$Index)
+  
+  for(i in 2:ncol(dat_w)) {
+    dat_w[,i][which(is.na(dat_w[,i]))] <- 0
+  }
+  
+  return(dat_w)
+}

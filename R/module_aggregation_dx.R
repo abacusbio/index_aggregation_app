@@ -142,8 +142,9 @@ cat("aggDxMod\n")
                 # need(!is.null(clusters()), #val$cl$clusters), 
                  #     "Please finish 'run cluster' or upload a cluster table"),
                  need(!is.null(dt_ev_agg()), "Please finish 'Make new weights'"),
-                 need(length(input$sel_index) + length(input$sel_agg) >= 2, 
-                 "Please select at least 2 indexes")
+                 need(length(input$sel_agg) > 0, "Please select at least 1 aggregated index"),
+                need(length(input$sel_index) >0 || length(input$sel_cluster > 0), 
+                     "Please select at least 1 index or cluster")
         )
       })
       
@@ -157,24 +158,25 @@ cat("aggDxMod\n")
       # })
       
       observeEvent(!is.null(dt_ev_agg()), { 
+# cat(" observe dt_ev_agg: ");print(dim(dt_ev_agg()))
         req(clusters, val$dt_ev_filtered, val$dt_desc_ev_clean)
-        
+# cat("  req satisfied. clusters:");print(head(clusters()))        
         updateSelectInput(session, "sel_index", 
                           choices = c("", paste0(names(clusters()), "{", clusters(), "}")))
         updateSelectInput(session, "sel_agg", choices = dt_ev_agg()$Index)
         
-        if("ClassVar" %in% val$dt_desc_ev_clean$classifier) { # add user defined group into sel_cluster
-          
+        if("Group" %in% val$dt_desc_ev_clean$classifier) { # add user defined group into sel_cluster
+
           group_headers <- val$dt_desc_ev_clean$column_labelling[
-            val$dt_desc_ev_clean$classifier=="ClassVar"]
+            val$dt_desc_ev_clean$classifier=="Group"]
           
-          group_levels <- sapply(val$dt_ev_filtered[,group_headers,drop = F], unique) # list
+          group_levels <- sapply(val$dt_ev_filtered[,group_headers,drop = F], unique, simplify = F)
           group_levels <- append(group_levels, list("cluster" = unique(clusters())))
           
-          updateSelectInput(session, "sel_cluster", c("", group_levels))
-      
+          updateSelectInput(session, "sel_cluster", choices = group_levels)
+
         } else { # use cluster results directly
-          
+# cat("  no user defined group\n  ")       
           updateSelectInput(session, "sel_cluster", choices = c("", unique(clusters())))
         }
       })
@@ -266,10 +268,28 @@ cat("aggDxMod\n")
 
         sel_index <- sapply(strsplit(input$sel_index, "\\{"), head, 1) %>% unlist()
         
-        if(input$sel_cluster[1]!="") {
+        # find indexes that belong to the selected cluster
+        if(input$sel_cluster[1] %in% clusters()) { # clustering result
           sel_cluster <- names(clusters())[grep(input$sel_cluster, clusters())]
-        } else {
+          
+        } else if (input$sel_cluster[1]=="" ) {    # not selected
           sel_cluster <- "#"
+          
+        } else {                                   # user predefined group
+          group_headers <- val$dt_desc_ev_clean$column_labelling[
+            val$dt_desc_ev_clean$classifier=="Group"]
+          
+          group_levels <- sapply(val$dt_ev_filtered[,group_headers,drop = F], unique, simplify = F)
+          
+          if(length(group_headers) > 1) {
+            group_header <- group_headers[sapply(group_levels, match, input$sel_cluster[1]) %>% 
+                                            sapply(sum, na.rm = T) > 0] # should only have 1 TRUE
+          } else {
+            group_header <- group_headers
+          }
+          
+          sel_cluster <- val$dt_ev_filtered$Index[which(val$dt_ev_filtered[, group_header]
+                                                        ==input$sel_cluster)]
         }
         
         tempVar$sel_index <- sel_index
@@ -293,10 +313,10 @@ cat("aggDxMod\n")
         if(!input$percent) {
           n <- input$sel_top_n
         } else {
-          n <- min(round(nrow(df_index_sub)*input$percent/100, 0), nrow(df_index_sub))
+          n <- min(round(nrow(df_index_sub)*input$sel_top_n/100, 0), nrow(df_index_sub))
         }
         tempVar$n <- n
-        
+# cat("  n: ", n, "\n")        
         output$corr_title <- renderText({
           req(input$sel_index!="" || input$sel_cluster!="")
           
@@ -345,26 +365,27 @@ cat("aggDxMod\n")
       # Heatmap or scatter plot
       output$plot_cor <- renderPlot({
         req(length(tempVar$corr) > 1, input$font_size)
-        
+# cat(" renderPlot plot_cor\n")        
         # initial parameters
-        n <- 30
         width  <- session$clientData[[paste0("output_", session$ns("plot_cor"), 
                                                      "_width")]]
         cols <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(10, "RdBu"))(256)
         
         # whent there are too many indexes, draw a bar chart instead of a heatmap
-        if(length(tempVar$corr) < 11) {
-          heat_map <- pheatmap::pheatmap(tempVar$corr, 
-                                         color = rev(cols), 
-                                         # breaks = seq(-1, 1, length.out = 256),
-                                         cluster_cols = F, cluster_rows = F, 
-                                         fontsize = input$font_size)
-          
-        } else {
+        # if(length(tempVar$corr) < 11) { # doesn't print to UI...
+        #   heat_map <- list(p = pheatmap::pheatmap(tempVar$corr, 
+        #                                  color = rev(cols), 
+        #                                  # breaks = seq(-1, 1, length.out = 256),
+        #                                  cluster_cols = F, cluster_rows = F, 
+        #                                  fontsize = input$font_size),
+        #                    df = tempVar$corr)
+        #   
+        # } else {
+          # list(p, df). df cols are Index aggregated_index correlation id
           heat_map <- plotcorrDot(input, output, session,
                                   tempVar$corr, reactive(input$sel_agg),
                                   font_size = reactive(input$font_size))
-        }
+        # }
         
         downloadPlotModuleServer("dnld_heat", 
           name = paste0("heatmap_", 
@@ -376,7 +397,7 @@ cat("aggDxMod\n")
           # width = reactive(width)
           )
         
-        tempVar$corr_df <- heat_map$df  # Index aggregated_index correlation id
+        tempVar$corr_df <- heat_map$df
         
         downloadModuleServer("dnld_cor", 
                              paste0("correlation_", paste0(input$sel_agg, collapse = "_"), "_",
@@ -395,7 +416,7 @@ cat("aggDxMod\n")
         reactive({
 # cat(" eventReactive quantile\n input$quantile: ", input$quantile, "tempVar$corr_df:\n")
 # print(head(tempVar$corr_df))
-        req( length(tempVar$corr_df) >1, input$quantile)  # Index aggregated_index correlation id
+        req("id" %in% colnames(tempVar$corr_df), input$quantile)  # Index aggregated_index correlation id
 
         n <- round(max(tempVar$corr_df$id)*input$quantile/100, 0)
         out <- dplyr::filter(tempVar$corr_df, id == n) %>% 
@@ -414,7 +435,6 @@ cat("aggDxMod\n")
         req(tempVar$df_top_n, input$font_size)
     
         # initial parameters
-        n <- 30
         width_top  <- session$clientData[[paste0("output_", session$ns("plot_top_n"), 
                                                      "_width")]]
         
@@ -512,7 +532,7 @@ cat("aggDxMod2\n")
         validate(need(!is.null(val$dt_desc_ev_clean), "Please upload an EV description file"),
                  need(!is.null(val$dt_ev_filtered), "Please upload an EV file"),
                  # need(!is.null(val$dt_index), "Please finish filtering or upload an index table"),
-                 # need(!is.null(clusters()), # val$cl$clusters),
+                 need(!is.null(clusters()), "Please upload a cluster table"),
                  #     "Please finish 'run cluster' or upload a cluster table"),
                  #need(!is.null(dt_ev_agg()), "Please finish 'Make new weights'"),
                  need(input$class_var!="",  "Please select a classification variable")
@@ -521,13 +541,15 @@ cat("aggDxMod2\n")
       
       # update input$class_var
       observeEvent(!is.null(clusters()), { 
-        req(val$dt_ev_filtered, val$dt_desc_ev_clean)
+# cat(" observeEvent clusters:");print(head(clusters()));print(dim(val$dt_desc_ev_clean))
+# print(val$dt_desc_ev_clean)
+        req(!is.null(val$dt_desc_ev_clean))
 
         class_vars <- val$dt_desc_ev_clean$column_labelling[
           val$dt_desc_ev_clean$classifier == "ClassVar"]
-
+# cat("  class_vars: ");print(class_vars)
         updateSelectInput(session, "class_var", choices = c("", class_vars))
-      })
+      }, ignoreInit = T)
       
       classvar_summary <- eventReactive(input$class_var, {
         req(clusters, val$dt_ev_filtered, val$dt_desc_ev_clean, input$class_var!="")
@@ -576,16 +598,16 @@ cat("aggDxMod2\n")
       
       # draw percentage plot
       output$classvar_plot <- renderPlot({
-cat(" classvar_plot\n ", input$switch_index_classvar, class(input$switch_index_classvar), "\n")
+# cat(" classvar_plot\n ", input$switch_index_classvar, class(input$switch_index_classvar), "\n")
 # print(classvar_summary()[1,])
         req(input$class_var!="", input$agg_by!="")
 
         width <- session$clientData[[paste0("output_", session$ns("classvar_plot"), "_width")]]
         df <- classvar_summary() %>% 
           dplyr::filter(aggregated_by == input$agg_by)
-cat("  df:", class(df))        
+# cat("  df:", class(df))        
         p <- plotClassvarBar(df, input$class_var, "aggregated_index", input$use_count)
-cat("  p:", class(p));print(p)        
+# cat("  p:", class(p));print(p)        
         downloadPlotModuleServer(
           "dnld_cv_plot", "classvar_by_index", p,
           # gridExtra::grid.arrange(grobs = ps,

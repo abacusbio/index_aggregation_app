@@ -5,9 +5,12 @@ clusteringModSidebarUI <- function(id) {
     actionButton(ns("run_cluster"), "Run clustering", icon("running"), 
                  class = "btn btn-primary"),
     br(),br(),
-    checkboxInput(ns("find_k_agg"), 
-                  strong("Find the optimal # of clusters and agglomeration method"), 
-                  value = F),
+    h4("Parameter tuning"),
+    wellPanel(
+      checkboxInput(ns("find_k_agg"), 
+                    strong("Find the optimal # of clusters and agglomeration method"), 
+                    value = F) 
+    ),
     shinyjs::hidden(
       div(id = ns("tune"),
           wellPanel(
@@ -66,7 +69,7 @@ clusteringModUI <- function(id) {
           )),
     h2("Final Clustering"),
     plotOutput(ns("plot_dendro"), width = "100%", height = "800px"),
-    downloadModuleUI(ns("dnld_dendro")),
+    downloadPlotModuleUI(ns("dnld_dendro")),
     downloadModuleUI(ns("dnld_cl"), "Download the cluster object"),
     downloadModuleUI(ns("dnld_cluster"), "Download the clusters table")
   )

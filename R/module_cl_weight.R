@@ -208,7 +208,7 @@ cat("calWeiMod\n")
           })
         }
         
-        val$dt_w_clean <- w_user()
+        val$dt_w_clean <- cleanW(w_user())
       })
       
       output$error_m <- renderText({
@@ -267,6 +267,7 @@ cat("calWeiMod\n")
       # get the variance of each index in its sub-group, divide by sum of their variances?
       index_w <- reactive({
 # cat(" reactive index_w\n  input$choose_w == ", input$choose_w, "\n")
+# cat("  name val:");print(names(val))
         req(length(input$error_m)==0, 
             !is.null(val$dt_index), !is.null(val$cl$clusters),
             input$choose_w!="")

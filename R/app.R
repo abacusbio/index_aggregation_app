@@ -42,9 +42,10 @@ library(factoextra) # silouette, wss
 
 source("modules.R", echo = F)
 source("module_preprocess.R", echo = F)
-source("module_clustering.R", echo = F)
-source("module_data_filter.R")
 source("module_dt_viewer.R")
+source("module_data_filter.R")
+source("module_sum_stat.R")
+source("module_clustering.R", echo = F)
 source("module_cl_dx.R")
 source("module_cl_summary.R")
 source("module_cl_weight.R")
@@ -101,12 +102,22 @@ ui <- fluidPage(
          ),
          
          conditionalPanel(
+           condition = "input.upload == 'tab.ebv.sumstat' && input.plant_app == 'tab.upload'",
+           sumstatModSidebarUI("sumstat_ebv")
+         ),
+         
+         conditionalPanel(
            condition = "input.upload == 'tab.step3' && input.plant_app == 'tab.upload'",
            dataViewerModuleSidebarUI("ev_filter", defaultName = "filtered_ev"),
            stefanFilterModUI("stfn_ev"),
            checkboxInput("ev_na_0", "Treat missing EV as 0 (Otherwise this trait will drop from 
                          index)", value = F),
            span(textOutput("stefan_filter_error_message_ev"), style = "color:salmon")
+         ),
+         
+         conditionalPanel(
+           condition = "input.upload == 'tab.ev.sumstat' && input.plant_app == 'tab.upload'",
+           sumstatModSidebarUI("sumstat_ev")
          ),
          
          conditionalPanel(
@@ -130,7 +141,8 @@ ui <- fluidPage(
            ),
            
            tabPanel("EBV summary statistics", value = "tab.ebv.sumstat",
-             br()
+             br(),
+             sumstatModUI("sumstat_ebv")
            ),
            
            tabPanel("Step 3: Filter EV", value = "tab.step3",
@@ -139,7 +151,8 @@ ui <- fluidPage(
            ),
            
            tabPanel("EV summary statistics", value = "tab.ev.sumstat",
-             br()
+             br(),
+             sumstatModUI("sumstat_ev")
            ),
            
            tabPanel("Step 4: Combine highly correlated indexes", value = "tab.step4",
@@ -170,7 +183,8 @@ ui <- fluidPage(
            tabPanel("View index", value = "tab.index1",
              # renderDtTableModuleUI("index1") # too long
              downloadModuleUI("dnld_index", "Download the index table"),
-             downloadModuleUI("dnld_index_group", "Download the index and group table")
+             downloadModuleUI("dnld_index_group", 
+                              "Download the index and group table for your own record")
              )
                      
          ) # tabsetPanel view_index
@@ -289,16 +303,22 @@ server <- function(input, output, session) {
                         quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
                         strip.white = T)
   dat_ev <- read.table("data/sire_ev.csv", 
-                       colClasses = c("character", rep("double", 11), "character"),
+                       colClasses = c("character", rep("double", 11), rep("character", 2)),
                        header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
                        quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
                        strip.white = T)
+  dat_w <- read.table("data/index_weight.csv",
+                      colClasses = c("character", "double"),
+                      header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
+                      quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
+                      strip.white = T)
   
   observeEvent(input$demo, {
     val$desc_ebv <- desc_ebv # column_labelling, classifier; ID, ClassVar, EBV, (Group, Order, Unit)
     val$desc_ev <- desc_ev # column_labelling, classifer; ID, ClassVar, EV, (Group, )
     val$dat_ebv <- dat_ebv # ID, (sex, RM, ...), trait1, trait2, ... (trait1_ACC, trait2_ACC...)
     val$dat_ev <- dat_ev # ID, (line, group1), ... trait1, trait2, ...
+    val$dat_w <- dat_w # Index weight (weight2) ...
 # cat("observe input$demo val"); print(sapply(reactiveValuesToList(isolate(val)), head)    )
   })
   
@@ -311,7 +331,7 @@ server <- function(input, output, session) {
   observeEvent(input$upload == 'tab.step2' || input$upload == 'tab.step3', {
 # cat("observe tab.step2\n"); print(names(val));print(length(val));# val is not a list
 # print(length(reactiveValuesToList(val))); print(sapply(reactiveValuesToList(isolate(val)), length))
-    req(length(reactiveValuesToList(val)) <= 5 && length(reactiveValuesToList(val)) >=4) # if uploaded new files after calculations, won't react
+    req(length(reactiveValuesToList(val)) <= 5 && length(reactiveValuesToList(val)) >= 4) # if uploaded new files after calculations, won't react
     req(length(val$desc_ebv) > 0 && length(val$desc_ev) > 0 && 
           length(val$dat_ebv) > 0 && length(val$dat_ev) > 0)
 # cat(" req2 satisfied\n")
@@ -321,7 +341,7 @@ server <- function(input, output, session) {
     val$dt_ev_clean <- cleanEVplant(val$dt_desc_ev_clean, val$dat_ev)
     
     if("dat_w" %in% names(val)) {
-      val$dt_w_clean <- cleanW(val$dt_w_clean) 
+      val$dt_w_clean <- cleanW(val$dat_w) 
     }
   })
     
@@ -361,6 +381,9 @@ server <- function(input, output, session) {
                          na_include = reactive(input$ebv_na_0), na_to_0 = reactive(input$ebv_na_0)
   )
   
+  ## SUMMARY STATISTICS EBV ##
+  sumstatMod("sumstat_ebv", reactive(val$dt_ebv_filtered))
+  
   ## FILTER EV ##
   # NA filter is on the UI (ebv_na, acc_na)
   
@@ -397,15 +420,18 @@ server <- function(input, output, session) {
                          na_include = reactive(input$ev_na_0), na_to_0 = reactive(input$ev_na_0)
   )
   
+  ## SUMMARY STATISTICS EBV ##
+  sumstatMod("sumstat_ev", reactive(val$dt_ev_filtered))
+  
   ## CALCULATE INDEX ##
   
   observeEvent(input$plant_app, { # react when change to other tabs as well
-# cat("dt_sub_index_ids\n");print(names(val))
+# cat("observe plant_app dt_sub_index_ids\n");print(names(val))
     req(input$plant_app == 'tab.index' && input$view_index == "tab.index1")
-    req(length(reactiveValuesToList(val)) <= 10 && 
-          length(reactiveValuesToList(val)) >=8) # avoid re-calculate when downstream analysis is aready triggered
+    req(length(reactiveValuesToList(val)) <= 12 && 
+          length(reactiveValuesToList(val)) >=11) # avoid re-calculate when downstream analysis is aready triggered
     req(val$dt_ev_filtered, val$dt_ebv_filtered, val$dt_description_clean, val$dt_desc_ev_clean)
-# cat(" req satisified\n")
+
     # ID, sex, ..., trait1, trait2, ... index1, index2, ...
     val$dt_sub_ebv_index_ids <- calculateIndividualBW(input, output, session,
                           val$dt_ebv_filtered, val$dt_ev_filtered, val$dt_description_clean,
@@ -421,6 +447,7 @@ server <- function(input, output, session) {
     val$dt_index <- dplyr::select(val$dt_sub_index_ids, matches(val$dt_ev_filtered$Index)) 
     # %>% t() %>% data.frame()
     # names(val$dt_index) <- val$dt_sub_index_ids$ID # rownames auto get from original colnames
+# cat("observe plant_app, val$dt_index:");print(dim(val$dt_index    ))
   })
   
   ## INDEX STATISTICS ##
@@ -466,18 +493,18 @@ server <- function(input, output, session) {
   ## AGGREGATION ##
   
   # CREATE INDEX WEIGHT GIVEN CLUSTERING RESULTS #
-  # need to upload val$dt_index,  val$cl, val$dt_ev_filtered, val$dt_desc_ev_clean (for user group)
+  # need val$dt_index,  val$cl, val$dt_ev_filtered, val$dt_desc_ev_clean (for user group)
   # create val$dt_weight (data.frame), a data.frame of 3 columns: Index, cluster and weight; and 
   # val$dt_ev_agg, a data.frame of columns as Index, cluster and traits
   calWeiMod("cl_weight", val, transpose = F)
   
   # AGGREGATED INDEX DIAGNOSIS #
-#  observeEvent(val$dt_ev_agg, {
-# cat("observe val$dt_ev_agg\n")
+  # look at correlations among new and old indexes, and top individual overlap among them
+  # need val$dt_ev_agg, val$dt_ebv_filtered, val$dt_description_clean
   aggDxMod("agg_dx", val, transpose = F, reactive(val$cl$clusters), reactive(val$dt_ev_agg),
            reactive(val$dt_index))
-  # })
   
+  # look at classVar pattern among indexes
   aggDxMod2("agg_dx2", val, transpose = F, reactive(val$cl$clusters))
 } # server
 

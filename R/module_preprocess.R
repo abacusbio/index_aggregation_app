@@ -149,15 +149,15 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
       })
       
       ## EV weight file
-      dat_wt <- uploadTableModuleServer("dat_wt", sheet = sheet, skip = skip)
+      dat_w <- uploadTableModuleServer("dat_wt", sheet = sheet, skip = skip)
       
       output$error_m_5 <- renderText({
         validate(need(
-          class(dat_wt())!="try-error",
-          attr(dat_wt(), "condition")$message))
+          class(dat_w())!="try-error",
+          attr(dat_w(), "condition")$message))
       })
       
-      observeEvent(length(dat_wt()) > 0, { 
+      observeEvent(length(dat_w()) > 0, { 
 #cat("preprocessMod\n observe desc_ebv ");cat(length(desc_ebv()), "\n")
         output$sanity_message <- renderText({
           if(!"desc_ev" %in% names(val)) {
@@ -166,10 +166,10 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
             "Please upload an economic value file first."
           }
         })
-        txt <- sanityCheckWt(dat_wt(), desc_ev(), dat_ev())
+        txt <- sanityCheckWt(dat_w(), desc_ev(), dat_ev())
         output$sanity_message <- renderText({ txt })
         if(is.null(txt)) {
-          val$dat_wt <- dat_wt()
+          val$dat_w <- dat_w()
         } else {
           flag <- T
           shinyjs::delay(30000, stopApp())

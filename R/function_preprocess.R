@@ -9,7 +9,7 @@ sanityCheckEBVdesc <- function(df_description) {
     out <- paste0("Breeding values: file description error:\n",
                   " Illegal header. Please use 'column_labelling' and 'classifier'.\n",
                   " Your header is ", paste0(colnames(df_description), collapse = ", "),
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                  "\n Please reload and try again.")
     return(out) # This will be assigned to flag variable
   }
   
@@ -18,7 +18,7 @@ sanityCheckEBVdesc <- function(df_description) {
     out <- paste0("Breeding values: file description error:\n",
              " Duplicated headers ",
              colnames(df_description)[duplicated(colnames(df_description))],
-             "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+             "\n Please reload and try again.")
     return(out)
   }
     
@@ -26,7 +26,7 @@ sanityCheckEBVdesc <- function(df_description) {
   if(!"ID" %in% df_description$column_labelling) {
     out <- paste0("Breeding values: file description error:\n",
                   "At least one unique ID header has to be 'ID'.\n",
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                  "\n Please reload and try again.")
     return(out)
   }
   
@@ -36,7 +36,7 @@ sanityCheckEBVdesc <- function(df_description) {
     out <- paste0("Economic values: file description error:\n",
                   " Missing classifier:\n",
                   paste0(df_description$classifier[which(is.na(m))], collapse = ", "),
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                  "\n Please reload and try again.")
     return(out)
   }
   
@@ -46,7 +46,7 @@ sanityCheckEBVdesc <- function(df_description) {
     out <- paste0("Economic values: file description error:\n",
                   " Unknown classifier:\n",
                   paste0(df_description$classifier[m], collapse = ", "),
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                  "\n Please reload and try again.")
     return(out)
   }
   
@@ -68,7 +68,7 @@ sanityCheckEBVdesc <- function(df_description) {
                        traits))) > 0) {
       out <- paste0("Breeding values: file description error:\n",
                " Accuracy names do not match trait names.
-               \n The app will sleep in 30,000 seconds. Please reload and try again.")
+               \n Please reload and try again.")
     }
     return(out)
   }
@@ -80,7 +80,7 @@ sanityCheckEBVdesc <- function(df_description) {
       out <- paste0("Breeding values: file description error:\n",
                " Warning: there are identical order numbers.\n The program will run
                as it is but you can change your order if that matters.\n 
-               The app will sleep in 30,000 seconds. Please reload and try again.")
+               Please reload and try again.")
       return(out)
     }
     
@@ -91,7 +91,7 @@ sanityCheckEBVdesc <- function(df_description) {
                " Missing order for trait(s)\n",
                paste0(df_description$column_labelling[df_description$classifier=="EBV"][is.na(m)],
                       collapse = ", "),
-               "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+               "\n Please reload and try again.")
       return(out)
     }
   } # if order exists
@@ -104,7 +104,7 @@ sanityCheckEBVdesc <- function(df_description) {
                " Missing group for trait(s) ",
                paste0(df_description$column_labelling[df_description$classifier=="EBV"][is.na(m)],
                       collapse = ", "),
-               "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+               "\n Please reload and try again.")
      return(out)
     }
   } # if group exists
@@ -123,7 +123,7 @@ sanityCheckEVdesc <- function(df_description, desc_ebv = NULL) {
     out <- paste0("Economic values: file description error:\n",
                   " Illegal header. Please use 'column_labelling' and 'classifier'.\n",
                   " Your header is ", paste0(colnames(df_description), collapse = ", "),
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                  "\n Please reload and try again.")
     return(out)
   }
   
@@ -132,7 +132,7 @@ sanityCheckEVdesc <- function(df_description, desc_ebv = NULL) {
     out <- paste0("Economic values: file description error:\n",
                   " Duplicated headers ",
                   colnames(df_description)[duplicated(colnames(df_description))],
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                  "\n Please reload and try again.")
     return(out)
   }
   
@@ -140,7 +140,7 @@ sanityCheckEVdesc <- function(df_description, desc_ebv = NULL) {
   if(!"Index" %in% df_description$column_labelling) {
     out <- paste0("Economic values: file description error:\n",
                   "At least one unique ID header has to be 'Index'.",
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                  "\n Please reload and try again.")
     return(out)
   }
   
@@ -150,7 +150,7 @@ sanityCheckEVdesc <- function(df_description, desc_ebv = NULL) {
     out <- paste0("Economic values: file description error:\n",
                   " Missing classifier:\n",
                   paste0(df_description$classifier[which(is.na(m))], collapse = ", "),
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                  "\n Please reload and try again.")
     return(out)
   }
   
@@ -160,7 +160,7 @@ sanityCheckEVdesc <- function(df_description, desc_ebv = NULL) {
     out <- paste0("Economic values: file description error:\n",
                   " Unknown classifier:\n",
                   paste0(df_description$classifier[m], collapse = ", "),
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                  "\n Please reload and try again.")
     return(out)
   }
   
@@ -172,7 +172,7 @@ sanityCheckEVdesc <- function(df_description, desc_ebv = NULL) {
     out <- paste0("Economic values: file description error:\n",
                   " Trait(s) in EV description doesn't exist in EBV description:\n",
                   paste0(df_description$column_labelling[which(is.na(m))], collapse = ", "),
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                  "\n Please reload and try again.")
     return(out)
   }
 }
@@ -185,7 +185,7 @@ sanityCheckEBV <- function(df_ebv, df_description = NULL) {
     out <- paste0("Breeding values: data error:\n",
                   " Duplicated headers ",
                   paste0(colnames(df_ebv)[duplicated(colnames(df_ebv))], collapse = ", "),
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again."
+                  "\n Please reload and try again."
     )
     return(out)
     }
@@ -198,7 +198,7 @@ sanityCheckEBV <- function(df_ebv, df_description = NULL) {
                      paste0(df_description$column_labelling, collapse = ", "),
                      "\n'Breeding values: data' column headers are:\n",
                      paste0(colnames(df_ebv), collapse = ", "),
-                     "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                     "\n Please reload and try again.")
     return(out)
     }
   
@@ -209,7 +209,7 @@ sanityCheckEBV <- function(df_ebv, df_description = NULL) {
              " header(s) ",
              paste0(colnames(df_ebv)[which(is.na(m))], collapse = ", "),
              " does not exist in description file.\n
-           The app will sleep in 30,000 seconds. Please reload and try again.")
+           Please reload and try again.")
     return(out)
     }
   
@@ -227,7 +227,7 @@ sanityCheckEBV <- function(df_ebv, df_description = NULL) {
              " Character strings detected in\n",
              paste0(c(traits, accs)[which(!classes %in% c("numeric", "double", "integer"))],
                     collapse = ", "),
-             "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+             "\n Please reload and try again.")
     return(out)
   }
   
@@ -242,7 +242,7 @@ sanityCheckEV <- function(df_econval, df_description) {
   if(colnames(df_econval)[ 1 ]!="Index") {
     out <- paste0("Economic values: data error:\n",
              " First column name should be 'Index'.\n 
-      The app will sleep in 30,000 seconds. Please reload and try again.")
+      Please reload and try again.")
     return(out)
   }
   
@@ -251,7 +251,7 @@ sanityCheckEV <- function(df_econval, df_description) {
     out <- paste0("Economic values: data error:\n",
                   " Duplicated headers ",
                   paste0(colnames(df_econval)[duplicated(colnames(df_econval))], collapse = ", "),
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again."
+                  "\n Please reload and try again."
     )
     return(out)
   }
@@ -264,7 +264,7 @@ sanityCheckEV <- function(df_econval, df_description) {
                      paste0(df_description$column_labelling, collapse = ", "),
                      "\n'Economic values: data' column header(s) is:\n",
                      paste0(colnames(df_econval), collapse = ", "),
-                     "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                     "\n Please reload and try again.")
     return(out)
   }
   
@@ -275,7 +275,7 @@ sanityCheckEV <- function(df_econval, df_description) {
                   " header(s) ",
                   paste0(colnames(df_econval)[which(is.na(m))], collapse = ", "),
                   " does not exist in description file.\n
-           The app will sleep in 30,000 seconds. Please reload and try again.")
+           Please reload and try again.")
     return(out)
     }
   }
@@ -298,7 +298,7 @@ sanityCheckWt <- function(df_wt, desc_ev = NULL, df_econval = NULL) {
     out <- paste0("Aggregation weight: data error:\n",
                   " Index name(s) does not exist in economic value files:\n",
                   paste0(w[which(is.na(m))], collapse = ", "),
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                  "\n Please reload and try again.")
     return(out)
   }
   
@@ -313,8 +313,14 @@ sanityCheckWt <- function(df_wt, desc_ev = NULL, df_econval = NULL) {
                   " Character strings detected in\n",
                   paste0(w[which(!classes %in% c("numeric", "double", "integer"))],
                          collapse = ", "),
-                  "\n The app will sleep in 30,000 seconds. Please reload and try again.")
+                  "\n Please reload and try again.")
     return(out)
+  }
+  
+  if(any(is.na(df_wt[,w]))) {
+    out <- paste0("Aggregation weight: data warning:\n",
+    "NA detected, convert to 0. If you don't want them to be converted to 0 please stop the
+    app and modify your file.")
   }
 }
 
