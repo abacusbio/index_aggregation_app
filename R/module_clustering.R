@@ -9,15 +9,14 @@ clusteringModSidebarUI <- function(id) {
     wellPanel(
       checkboxInput(ns("find_k_agg"), 
                     strong("Find the optimal # of clusters and agglomeration method"), 
-                    value = F) 
-    ),
+                    value = F),
     shinyjs::hidden(
       div(id = ns("tune"),
-          wellPanel(
             # h4("Parameter tuning"),
             checkboxInput(ns("wss"), "Try within-cluster SS measurement (can be slow)", F),
             checkboxInput(ns("sil"), "Try Silhouette value measurement (can be slow)", F)
-        ))),
+        ))
+    ),
    h4("Main"),
    wellPanel(
      selectInput(ns("which_data"), "Choose input data", 
@@ -152,7 +151,7 @@ cat("clusteringMod\n")
           }) # textoutput
     
           updateSelectInput(session, "agg_method", selected = cl$best_method)
-
+t <- Sys.time()
           # Find best k
           # list(k_h, k_tss, k_sil, h, p_tss, p_sil)
           op_cut <- reactive({
@@ -160,7 +159,7 @@ cat("clusteringMod\n")
                            dt, cl$cluster_obj, hc_method = input$agg_method, 
                            wss = reactive(input$wss), silhouette = reactive(input$sil))
           })
-cat(" Done findoptimalcut\n")
+cat(" Done findoptimalcut ");print(Sys.time()-t)
           output$message_h <- renderPrint({
             paste0("The best k is ", op_cut()$k_h, " at the largest height change of ", op_cut()$h)
           })

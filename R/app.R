@@ -182,6 +182,7 @@ ui <- fluidPage(
          tabsetPanel(id = "view_index", # id can't have .
            tabPanel("View index", value = "tab.index1",
              # renderDtTableModuleUI("index1") # too long
+             span(textOutput("index_view_warn"), style = "color:orange"),
              downloadModuleUI("dnld_index", "Download the index table"),
              downloadModuleUI("dnld_index_group", 
                               "Download the index and group table for your own record")
@@ -425,6 +426,7 @@ server <- function(input, output, session) {
   
   ## CALCULATE INDEX ##
   
+  # Create val$dt_index
   observeEvent(input$plant_app, { # react when change to other tabs as well
 # cat("observe plant_app dt_sub_index_ids\n");print(names(val))
     req(input$plant_app == 'tab.index' && input$view_index == "tab.index1")
@@ -432,6 +434,8 @@ server <- function(input, output, session) {
           length(reactiveValuesToList(val)) >=11) # avoid re-calculate when downstream analysis is aready triggered
     req(val$dt_ev_filtered, val$dt_ebv_filtered, val$dt_description_clean, val$dt_desc_ev_clean)
 
+    output$index_view_warn <- renderText({"Creating index, please wait..."}) # never showed
+    
     # ID, sex, ..., trait1, trait2, ... index1, index2, ...
     val$dt_sub_ebv_index_ids <- calculateIndividualBW(input, output, session,
                           val$dt_ebv_filtered, val$dt_ev_filtered, val$dt_description_clean,
@@ -452,6 +456,12 @@ server <- function(input, output, session) {
   
   ## INDEX STATISTICS ##
   # takes long time to load
+  observeEvent(val$dt_index, { #"dt_index" %in% names(val), {
+# cat("observe dt_index, val: ");print(names(val))
+    req(!is.null(val$dt_index))
+    output$index_view_warn <- renderText({
+    "Index calculated. Now you can download and go to the next steps."})
+  })
   # renderDtTableModuleServer("index1", reactive(val$dt_sub_index_ids), T, downloadName = "index")
   downloadModuleServer("dnld_index", "index", 
                        data.frame(ID = rownames(val$dt_index), val$dt_index), F, "csv")
