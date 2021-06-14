@@ -7,6 +7,18 @@
 dataViewerModuleSidebarUI <- function(id, defaultName = "") {
   ns <- NS(id)
   tagList(
+    #  tags$td(
+    actionButton(ns("view_store"), "Filter and save", icon = icon("pen"),
+                 class = "btn-success"), #style = "padding-top:20px;")),
+    downloadModuleUI(ns("download_1")),
+    downloadModuleUI(ns("download_2"), "Download the filter records"),
+    #， help_and_report(
+    #   "View", "view",
+    #   inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/view.md")) %>%
+    #   gsub("`", "", .),
+    #   lic = "by-sa"
+    # )
+    br(),br(),
     h4("Variable display controller"),
     wellPanel(
       #   actionLink(ns("view_clear"), "Clear settings", icon = icon("refresh"), style = "color:black"),
@@ -16,18 +28,7 @@ dataViewerModuleSidebarUI <- function(id, defaultName = "") {
       #tags$table(
       #  tags$td(
       textInput(ns("view_name"), "Rename new data as:", defaultName,
-                          placeholder = "Provide data name"),#),
-      #  tags$td(
-      actionButton(ns("view_store"), "Filter and save", icon = icon("pen"),
-                             class = "btn-success"), #style = "padding-top:20px;")),
-      downloadModuleUI(ns("download_1")),
-      downloadModuleUI(ns("download_2"), "Download the filter records")
-      #， help_and_report(
-      #   "View", "view",
-      #   inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/view.md")) %>%
-      #   gsub("`", "", .),
-      #   lic = "by-sa"
-      # )
+                          placeholder = "Provide data name")#),
     )#, # wellPanel
   )
 }
