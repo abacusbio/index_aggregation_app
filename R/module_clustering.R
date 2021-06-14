@@ -139,7 +139,8 @@ cat("clusteringMod\n")
         if(input$find_k_agg) { # Maybe change to warning message
           
           # Find optimal agglomeriative method
-          cl <- runCluster(dt, cor_mat, input$absolute, input$scale, input$center, n_core = 4)
+          cl <- runCluster(dt, cor_mat, input$absolute, input$scale, input$center, 
+                           n_core = max(2, parallel::detectCores()-2))
           # !!! takes very long time with 2999 indexes
 
           # cl$cluster_obj

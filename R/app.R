@@ -290,7 +290,10 @@ server <- function(input, output, session) {
   # allow file sizes up to 100MB
   options(shiny.maxRequestSize = 100 * 1024 ^ 2  , shiny.trace = F
           , shiny.error = NULL #browser
+          
   )
+  print(Sys.getenv())
+  cat("N cores:", parallel::detectCores(), "\n")
   
   ## INITIALIZE, load demo ##
   val <- reactiveValues()

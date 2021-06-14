@@ -68,11 +68,11 @@ cat("runCluster\n dim dat:");print(dim(dat)) # 999, 2909
     ac <- function(x) cluster::agnes(t(dat), method = x)$ac # same as agnes(daisy(t(dat)), diss = T)
   }
 cat(" try agglo methods\n"); t <- Sys.time()
-#  af <- purrr::map(m, ac) # no error should run in 1.104345 s
+ # af <- purrr::map(m, ac) # no error should run in 1.104345 s
    # af <- lapply(m, function(i) { print(i); return(ac(i))})
    # af <- lapply(m, ac) 
-   # for Domino  
-   af <- parallel::mclapply(m, ac, mc.cores = n_core) 
+   
+   af <- parallel::mclapply(m, ac, mc.cores = n_core) # for Domino
 cat(" done trying agglo methods in "); print(Sys.time() - t) # 6min 2090 obs 999 features
   best_method <- names(which.min(1-abs(unlist(af))))
 
