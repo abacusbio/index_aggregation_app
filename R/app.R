@@ -298,12 +298,12 @@ server <- function(input, output, session) {
   desc_ebv <- readxl::read_xlsx("data/description_bv.xlsx", col_names = T)
   desc_ev <- read.csv2("data/description_ev.csv", sep = ",", 
                        col.names = c("column_labelling", "classifier"))
-  dat_ebv <- read.table("data/sire_bv.csv", 
+  dat_ebv <- read.table("data/bv.csv", 
                         colClasses = c(rep("character", 2), rep("double", 14)),
                         header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
                         quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
                         strip.white = T)
-  dat_ev <- read.table("data/sire_ev.csv", 
+  dat_ev <- read.table("data/ev.csv", 
                        colClasses = c("character", rep("double", 11), rep("character", 2)),
                        header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
                        quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
@@ -352,7 +352,7 @@ server <- function(input, output, session) {
   # character/factor filter
   stefanFilterMod("stfn_ebv", dt = reactive(val$dt_ebv_clean))
   
-  filter_levels <- eventReactive(input$`stfn_ebv-stefan_button`, {
+  filter_levels <- eventReactive(input$`stfn_ebv-apply`, {
     # print("event reactive stefan button")
     req(val$dt_ebv_clean)
 # cat("event reactive stefan button\n")
@@ -379,7 +379,8 @@ server <- function(input, output, session) {
                          filter_dat_name = "dt_ebv_filtered",
                          filter_cols = reactive(input$`stfn_ebv-filter_col`),
                          filter_levels = filter_levels,
-                         na_include = reactive(input$ebv_na_0), na_to_0 = reactive(input$ebv_na_0)
+                         na_include = reactive(input$ebv_na_0), na_to_0 = reactive(input$ebv_na_0),
+                         apply = reactive(input$`stfn_ebv-apply`)
   )
   
   ## SUMMARY STATISTICS EBV ##
@@ -391,7 +392,7 @@ server <- function(input, output, session) {
   # character/factor filter
   stefanFilterMod("stfn_ev", dt = reactive(val$dt_ev_clean))
   
-  filter_levels_ev <- eventReactive(input$`stfn_ebv-stefan_button`, {
+  filter_levels_ev <- eventReactive(input$`stfn_ev-apply`, {
     # print("event reactive stefan button")
     req(val$dt_ev_clean)
     # cat("event reactive stefan button\n")
@@ -418,7 +419,8 @@ server <- function(input, output, session) {
                          filter_dat_name = "dt_ev_filtered",
                          filter_cols = reactive(input$`stfn_ev-filter_col`),
                          filter_levels = filter_levels_ev,
-                         na_include = reactive(input$ev_na_0), na_to_0 = reactive(input$ev_na_0)
+                         na_include = reactive(input$ev_na_0), na_to_0 = reactive(input$ev_na_0),
+                         apply = reactive(input$`stfn_ev-apply`)
   )
   
   ## SUMMARY STATISTICS EBV ##

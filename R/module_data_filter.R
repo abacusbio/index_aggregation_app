@@ -10,7 +10,7 @@ stefanFilterModUI <- function(id) {
                    class = "btn btn-outline-primary"),
       uiOutput(ns("filter_col_UI")), # Stefan's filter Col selector
       uiOutput(ns("data_filters")), # Stefan's filter level selector for each col selected above
-      actionButton(ns("stefan_button"), label = "Apply filter", icon = icon("hand-point-right")
+      actionButton(ns("apply"), label = "Apply filter", icon = icon("hand-point-right")
                    , class = "btn btn-outline-primary")
     )
   )

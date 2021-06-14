@@ -50,6 +50,7 @@ dataViewerModuleTabUI <- function(id) {
 #'        e.g. \object{input$filter_col}
 #' @param filter_levels A reactive function. The list of unique column levels in stefanFilterModUI
 #'        e.g. \object{input$data_filters}
+#' @param apply A reactive function. The apply filter button in stefanFilterModuleUI.
 #'
 #' @details Modules can't read input directly. Have to create arguments for input and set them as
 #'          reactive functions.
@@ -60,9 +61,10 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
                                    filter_dat_name = "test_filtered",
                                    filter_cols = reactive(NULL),
                                    filter_levels = reactive(NULL),
-                                   na_include = reactive(F), na_to_0 = reactive(F) # 6april2021
+                                   na_include = reactive(F), na_to_0 = reactive(F), # 6april2021
+                                   apply = reactive(NULL) # 14june2021
                                    # vars = reactive(NULL), download = T
-) {
+                                   ) {
   moduleServer(
     id,
     function(input, output, session){
@@ -133,9 +135,10 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
       # # })
       
       tmp <- reactiveValues(dat = NULL, stefan_filter = NULL)
-      observeEvent(!is.null(filter_levels()), { # only apply filter when filter_levels are selected
-        # print("!is.null filter_levels")
-        if (!is.null(filter_cols())) {
+      observeEvent(apply(), { # have to use () otherwise it doesn't react
+# cat("dataViewerModuleServer\n observe apply:");print(apply())
+# cat(" filter_cols:");print(filter_cols());cat(" is.null(filter_cols)", is.null(filter_cols()), "\n")
+        if (!is.null(filter_cols())) { # filter_cols exists
           dat_new <- datt()
           for(i in 1:length(filter_cols())) {
             # print(filter_cols()[ i ]) # print(filter_levels()[[ i ]])
@@ -146,6 +149,10 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
           tmp$dat <- dat_new                                   # save filtered data frame
           tmp$stefan_filter <- data.frame(var = filter_cols(), # save filter records 10feb2021
                                           level = sapply(filter_levels(), paste0, collapse = ";"))
+          
+        } else {                      # filter_cols are cleared 14june2021
+          tmp$dat <- datt()
+          tmp$stefan_filter <- data.frame(var = "", level = "")
         }
       })
       
@@ -154,9 +161,7 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
         withProgress(
           message = "Generating view table", value = 1,
           {
-            req(!is.null(datt()))
-            req(input$view_vars)
-            req(filter_cols)
+            req(!is.null(datt()), input$view_vars)
             # print("dataViewerModuleServer")
             
             ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
@@ -190,9 +195,6 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
             isDbl <- sapply(dat, is.double)
             dec <- input$view_dec %>% {ifelse(length(.)==0 || . < 0, 3, round(., 0))}
             
-            # withProgress(
-            #   message = "Generating view table", value = 1,
-            #   {
             dt_output <- DT::datatable(
               dat,
               filter = fbox,
