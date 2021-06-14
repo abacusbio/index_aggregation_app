@@ -292,8 +292,8 @@ server <- function(input, output, session) {
           , shiny.error = NULL #browser
           
   )
-  print(Sys.getenv())
-  cat("N cores:", parallel::detectCores(), "\n")
+  # print(Sys.getenv())
+  cat("N cores:", parallel::detectCores(), "\n") # rsconnect.nonprod... 8 cores/processor
   
   ## INITIALIZE, load demo ##
   val <- reactiveValues()

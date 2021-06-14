@@ -22,3 +22,5 @@ test.csv
 R/css/bootstrap.min_minty.css
 R/css/bootstrap_minty.css
 R/css/bootstrap_solar.css
+R/data/ev_more data.csv
+R/data/index_weight_more data.csv
