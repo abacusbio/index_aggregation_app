@@ -6,8 +6,8 @@ sumstatModSidebarUI <- function(id) {
     uiOutput(ns("ui_vars")),
     uiOutput(ns("ui_group")),
     selectInput(ns("functions"), "Apply function(s):",
-                c("n_obs", "mean", "sd", "min", "max", "n_missing", "prop"),
-                c("n_obs", "mean", "sd", "min", "max", "n_missing"),
+                c("mean", "sd", "min", "max", "n_missing", "n_obs","prop"),
+                c("mean", "sd", "min", "max", "n_obs","n_missing"),
                 multiple = T),
     numericInput(ns("view_dec"), "Decimals:", value = 2, min = 0),
     br(),
@@ -24,7 +24,8 @@ sumstatModUI <- function(id) {
     renderDtTableModuleUI(ns("stat_num"), "Numeric sum stats"),
     br(),br(),
     h2("String variable summary statistics"),
-    renderDtTableModuleUI(ns("stat_chr"), "String sum stats")
+    renderDtTableModuleUI(ns("stat_chr"), "String sum stats"),
+	  br(),br(),
     # h2("Mult-choice variable frequency table"),
     # renderDtTableModuleUI(ns("stat_lst"), "N choice stats")
     # level conversion table for rating vars
@@ -166,7 +167,7 @@ sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
           # cat("vars_num exists --> stat_num lapply\n")
           df_num <- select_at(tempVar$dat, vars(all_of(group_vars), all_of(vars_num)))
           stat_num <- lapply(vars_num, function(var_num) {
-            #cat(" var_num", var_num, "\n")
+            # cat(" var_num", var_num, "\n")
             if(class(df_num[[var_num]]) == "list") {
               df <- tidyr::unnest_longer(df_num, var_num)
             } else {
@@ -185,27 +186,26 @@ sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
             }
             
             if("n_missing" %in% input$functions) {
-              # print(" if n_missing")
               miss <- df %>% select_at(vars(all_of(group_vars), all_of(var_num))) %>%
                 group_by_at(vars(all_of(group_vars), all_of(var_num))) %>%
                 tally() %>%
                 filter_at(vars(all_of(var_num)), any_vars(is.na(.))) %>%
                 select_at(vars(-var_num))
-              # print(dim(miss))
+
               if(nrow(miss) == 0) {
                 miss <- df %>% select_at(vars(all_of(group_vars))) %>%
                   group_by_at(vars(all_of(group_vars))) %>%
                   mutate(variable = var_num, n_missing = 0)
                 # cat("nrow miss == 0"); print(dim(miss))
               } else {
+
                 miss <- miss %>% mutate(variable = var_num)
                 names(miss)[ncol(miss)-1] <- "n_missing"
-                #  cat("nrow miss > 0"); print(dim(miss))
               }
               
               stats <- left_join(stats, miss, by = c(all_of(group_vars), "variable")) %>%
                 mutate(n_missing = as.character(n_missing))
-              #cat("stats"); print(dim(stats))
+              stats$n_missing[which(is.na(stats$n_missing))] <- "0" # 14june2021
             } # n_missing
             
             return(stats)
@@ -213,18 +213,17 @@ sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
           
           # variable   mean    sd   min   max n_missing
           stat_num <- stat_num %>% purrr::reduce(full_join) %>% distinct()
-          
           if("n_obs" %in% input$functions) {
             if(!is.null(group_vars)) {
               ns <- df_num %>% group_by_at(vars(all_of(group_vars))) %>%
-                summarise(n_obs = n())
+                summarise(n = n())
               
             } else {
-              ns <- data.frame(n_obs = nrow(df_num))
+              ns <- data.frame(n = nrow(df_num))
             }
-            
+ 
             if("prop" %in% input$functions) { # not by group
-              ns <- ns %>% mutate(prop = n_obs/sum(n_obs))
+              ns <- ns %>% mutate(prop = n/sum(n))
             }
             
             if(length(vars_num) == 1) { # input$vars is one numeric var
@@ -237,12 +236,19 @@ sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
                 return(out)
               }))
             }
-            
             # print(head(stat_num)); print(head(ns))
-            stat_num <- full_join(stat_num, ns) %>% distinct()  %>%
-              mutate(n_obs = as.character(n_obs)) # %>%
-            # filter(n_obs != n_missing)
-          }
+            
+            # variable   mean    sd   min   max n_missing n prop
+            stat_num <- full_join(stat_num, ns) %>% distinct()
+            
+            if("n_missing" %in% names(stat_num)) { # 14/6/2021
+              stat_num <- mutate(stat_num, n_missing = as.integer(n_missing),
+                                 n_obs = as.character(n - n_missing)) %>% 
+                mutate(n_missing = as.integer(n_missing)) # %>%
+            # filter(n != n_missing)
+            }
+            stat_num  <- mutate(stat_num, n = as.character(n))
+          } # if n_obs in input$functions
           
           # output
           renderDtTableModuleServer("stat_num", reactive(stat_num), T,
@@ -269,31 +275,32 @@ sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
               group_by_at(vars(all_of(group_vars), all_of(vars_chr))) %>%
               tally() %>%
               mutate(variable = var_chr)
-            names(stats)[ncol(stats)-1] <- "n_obs"
-            # cat("   1 stats\n"); print(head(stats))
-            stats <- select_at(stats, vars(all_of(group_vars), "variable", all_of(var_chr),
-                                           "n_obs"))
+# cat("sumStatMod\n   1 stats\n"); print(head(stats))
+            stats <- select_at(stats, vars(all_of(group_vars), "variable", all_of(var_chr), "n"))
             
             if("prop" %in% input$functions) { # not by group
-              stats <- stats %>% mutate(prop = n_obs/sum(n_obs))
+              stats <- stats %>% mutate(prop = n/sum(n))
             }
             
-            stats$n_obs <- as.character(stats$n_obs)
-            if("n_missing" %in% input$functions) {
-              stats$n_missing <- "0"
+            if("n_missing" %in% input$functions) {       
+              stats$n_missing <- 0
               idx <- which(is.na(stats[[var_chr]]))
-              stats$n_missing[idx] <- stats$n_obs[idx]
+              stats$n_missing[idx] <- stats$n[idx]
               # cat("   if n_missing\n"); print(head(stats))
+              stats$n_obs <- stats$n - stats$n_missing # 14june2021
+              stats$n_missing <- as.character(stats$n_missing)
+              stats$n <- as.character(stats$n)
+              stats$n_obs <- as.character(stats$n_obs)
             }
             
             names(stats)[which(names(stats)==var_chr)] <- "level"
             
             return(stats)
           })
-          
-          # group_var variable level n_obs prop n_missing
+
+          # group_var variable level n prop n_missing
           stat_chr <- stat_chr %>% purrr::reduce(full_join) %>% distinct()
-          # cat("\n  stat_chr"); print(head(stat_chr))
+# cat("  2 stat_chr\n"); print(head(stat_chr))
           renderDtTableModuleServer("stat_chr", reactive(stat_chr), T,
                                     c("FixedHeader", "FixedColumns"),
                                     digits = reactive(input$view_dec),
