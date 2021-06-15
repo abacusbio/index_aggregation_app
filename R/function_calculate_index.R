@@ -7,16 +7,15 @@
 #' @return a data.frame which columns as ID trait1 trait2... index1 index2...
 calculateIndividualBW <- function (input, output, session,
                                    df_ebv_select, df_econval, desc_ebv, desc_ev) {
-  
+cat("calculateIndividualBW\n df_econval:");print(dim(df_econval))
   df_ebv_select <- df_ebv_select[complete.cases(df_ebv_select),] # remove NA rows
   
   # subset traits existing in dt_econval() only
   idx_ev <- which(colnames(df_econval) %in% desc_ev$column_labelling[desc_ev$classifier=="EV"])
-# cat("calculateIndividualBW\n")
   idx <- match(colnames(df_ebv_select), colnames(df_econval))
   idx <- idx[idx %in% idx_ev]
   traits <- colnames(df_econval)[sort(idx)]
-# cat(" traits:"); print(traits)  
+# cat(" traits:"); print(traits)
   sub_ebv <- dplyr::select(df_ebv_select,  all_of(traits)) %>% 
     # replace(., is.na(.), 0) %>% # 5june2020
     as.matrix() # animal x trait
@@ -33,12 +32,12 @@ calculateIndividualBW <- function (input, output, session,
   
   indexes <- sub_ebv %*% econval # animal x index
   colnames(indexes) <- df_econval$Index
-  
+# cat(" indexes animal x index:");print(dim(indexes))  
   if(sum(is.na(indexes)) > 0) stop("calculateIndividualBW indexes has NA")
 
   ids <- desc_ebv$column_labelling[grep("ID|ClassVar", desc_ebv$classifier)]
 # cat("calculateIndividualBW\n ids:");print(ids);cat(" df_ebv_select:\n");print(head(df_ebv_select))  
-  out <- data.frame(df_ebv_select[,ids], sub_ebv, indexes)
-  
+  out <- data.frame(df_ebv_select[,ids], sub_ebv, indexes, check.names = F)
+# cat(" out:");print(dim(out))  
   return(out)
 }

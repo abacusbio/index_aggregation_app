@@ -176,7 +176,7 @@ cat("clusterSumStatMod\n")
       
       # observeEvent(input$run_heatmap, {
       sth <- reactive({
-cat("clusterSumStatMod\n reactive sth\n")
+# cat("clusterSumStatMod\n reactive sth\n")
         req(length(input$error_m)==0, 
             !is.null(val$dt_index), !is.null(val$cl$cluster_obj), !is.null(val$cl$clusters))
         
@@ -188,8 +188,12 @@ cat("clusterSumStatMod\n reactive sth\n")
 # cat("  index_cor:");print(dim(index_cor));print(index_cor[1:3,1:3])
 # cat("  clusters:", length(val$cl$clusters));print(head(val$cl$clusters))
         df_cor <- do.call(rbind, lapply(unique(val$cl$clusters), function( i ){
+          
           idx <- match(names(val$cl$clusters)[grep(i, val$cl$clusters)], colnames(index_cor))
           cor_sub <- index_cor[idx, idx][upper.tri(index_cor[idx, idx])]
+          if(length(cor_sub)==0) { # only 1 obs in this cluster
+            cor_sub <- 1
+          }
           return(data.frame(cor = cor_sub, cluster = i))
         }))
 

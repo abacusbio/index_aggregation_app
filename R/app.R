@@ -292,7 +292,7 @@ server <- function(input, output, session) {
           , shiny.error = NULL #browser
           
   )
-  print(Sys.getenv())
+  # print(Sys.getenv())
   cat("N cores:", parallel::detectCores(), "\n") # rsconnect.nonprod... 8 cores/processor
   
   ## INITIALIZE, load demo ##
@@ -433,30 +433,31 @@ server <- function(input, output, session) {
   
   # Create val$dt_index
   observeEvent(input$plant_app, { # react when change to other tabs as well
-# cat("observe plant_app dt_sub_index_ids\n");print(names(val))
+cat("observe plant_app\n");#print(names(val))
     req(input$plant_app == 'tab.index' && input$view_index == "tab.index1")
     req(length(reactiveValuesToList(val)) <= 12 && 
           length(reactiveValuesToList(val)) >=10) # avoid re-calculate when downstream analysis is aready triggered
     req(val$dt_ev_filtered, val$dt_ebv_filtered, val$dt_description_clean, val$dt_desc_ev_clean)
-
+# cat(" dt_ev_filtered:");print(val$dt_ev_filtered$Index)
     output$index_view_warn <- renderText({"Creating index, please wait..."}) # never showed
     
     # ID, sex, ..., trait1, trait2, ... index1, index2, ...
     val$dt_sub_ebv_index_ids <- calculateIndividualBW(input, output, session,
                           val$dt_ebv_filtered, val$dt_ev_filtered, val$dt_description_clean,
                           val$dt_desc_ev_clean)
-    
+
     # ID, sex, ... index1, index2...
     val$dt_sub_index_ids <- 
       val$dt_sub_ebv_index_ids[,!names(val$dt_sub_ebv_index_ids) 
                                %in% val$dt_description_clean$column_labelling[
                                  val$dt_description_clean$classifier=="EBV"] ]
-    
+# cat(" dt_sub_index_ids:");print(tail(colnames(val$dt_sub_index_ids), -2))    
     # animal ID x Index
-    val$dt_index <- dplyr::select(val$dt_sub_index_ids, matches(val$dt_ev_filtered$Index)) 
+    val$dt_index <- dplyr::select(val$dt_sub_index_ids, matches(val$dt_ev_filtered$Index))
     # %>% t() %>% data.frame()
     # names(val$dt_index) <- val$dt_sub_index_ids$ID # rownames auto get from original colnames
-# cat("observe plant_app, val$dt_index:");print(dim(val$dt_index    ))
+# print(match(names(val$dt_sub_index_ids), val$dt_ev_filtered$Index))
+# cat("observe plant_app, dim val$dt_index:");print(dim(val$dt_index))
   })
   
   ## INDEX STATISTICS ##
