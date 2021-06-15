@@ -33,6 +33,7 @@ preprocessUploadModUI <- function(id) {
 #'@param clean logic. If True then apply cleaning function. Default is \code{False}.
 #'@param type A string. Options are "survey", "1000minds" or "rank". This determines the cleaning
 #'       function to apply to the input data. Only use when \code{clean} == \code{True}.
+#'@return val$desc_ebv, val$desc_ev, val$dat_ebv, val$dat_ev and/or val$dat_w
 #'
 preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type = "survey",
                                 sheet = 1, skip = 0, desc_ebv = reactive(NULL),
@@ -74,7 +75,7 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
           output$demo_message <- renderText({ "You are using uploaded data now" })
         } else {
           flag <- T
-          shinyjs::delay(30000, stopApp()) # 30 seconds
+        #  shinyjs::delay(30000, stopApp()) # 30 seconds
         }
       })
       
@@ -96,7 +97,7 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
           val$desc_ev <- desc_ev()
         } else {
           flag <- T
-          shinyjs::delay(30000, stopApp())
+       #   shinyjs::delay(30000, stopApp())
         }
       })
       
@@ -112,7 +113,9 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
       observeEvent(length(dat_ebv()) > 0, { 
 # cat(" observe dat_ebv\n")
         output$sanity_message <- renderText({
-          if(!"desc_ebv" %in% names(val)) "Please upload an EBV description file first."
+          if(!"desc_ebv" %in% names(val)) {
+            "Need to upload an EBV description file first. Please reload the app and try again."
+          }
         })
         txt <- sanityCheckEBV(dat_ebv(), desc_ebv())
         output$sanity_message <- renderText({ txt })
@@ -120,7 +123,7 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
           val$dat_ebv <- dat_ebv()
         } else {
           flag <- T
-          shinyjs::delay(30000, stopApp())
+      #    shinyjs::delay(30000, stopApp())
         }
       })
       
@@ -134,17 +137,20 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
       })
       
       observeEvent(length(dat_ev()) > 0, { 
-#cat("preprocessMod\n observe desc_ebv ");cat(length(desc_ebv()), "\n")
+# cat("preprocessMod\n observe desc_ebv ");cat(length(desc_ebv()), "\n")
         output$sanity_message <- renderText({
-          if(!"desc_ev" %in% names(val)) "Please upload an EBV description file first."
+          if(!"desc_ev" %in% names(val))  {
+            "Need to upload an EV description file first. Please reload the app and try again."
+          }
         })
         txt <- sanityCheckEV(dat_ev(), desc_ev())
         output$sanity_message <- renderText({ txt })
+        
         if(is.null(txt)) {
           val$dat_ev <- dat_ev()
         } else {
           flag <- T
-          shinyjs::delay(30000, stopApp())
+      #    shinyjs::delay(30000, stopApp())
         }
       })
       
@@ -161,9 +167,9 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
 #cat("preprocessMod\n observe desc_ebv ");cat(length(desc_ebv()), "\n")
         output$sanity_message <- renderText({
           if(!"desc_ev" %in% names(val)) {
-            "Please upload an EV description file first."
+            "Need to upload an EV description file first. Please reload the app and try again."
           } else if (!"dat_ev" %in% names(val)) {
-            "Please upload an economic value file first."
+            "Need to upload an EV file first. Please reload the app and try again."
           }
         })
         txt <- sanityCheckWt(dat_w(), desc_ev(), dat_ev())
@@ -172,21 +178,21 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
           val$dat_w <- dat_w()
         } else {
           flag <- T
-          shinyjs::delay(30000, stopApp())
+      #    shinyjs::delay(30000, stopApp())
         }
       })
       
-      observeEvent(length(desc_ebv()) > 0 && length(desc_ev()) > 0 && 
-                   length(dat_ebv()) > 0 && length(dat_ev()) > 0, {
+      observeEvent(length(val$desc_ebv) > 0 && length(val$desc_ev) > 0 && 
+                   length(val$dat_ebv) > 0 && length(val$dat_ev) > 0, {
         
-        req(#length(desc_ebv()) > 0, length(desc_ev()) > 0, 
-            #length(dat_ebv()) > 0, length(dat_ev()) > 0,
+        req(length(val$desc_ebv) > 0 && length(val$desc_ev) > 0 && 
+              length(val$dat_ebv) > 0 && length(val$dat_ev) > 0,
             is.null(input$sanity_message))
         
         output$sanity_message <- renderText({
         "All good. Now you can move to Results, or Filter if you want to subset your inputs."
         })
       })
-# cat("preprocessMod\n flag", flag, "\n")  
+
      # return(flag)
     })}

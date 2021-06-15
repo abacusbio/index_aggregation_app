@@ -332,9 +332,8 @@ cat("aggDxMod\n")
         output$top_n_title <- renderText({
           req(n)
 
-          return(
-            paste0("Top ", n, ifelse(input$percent, "%", ""), " individual agreement among indexes")
-          )
+          return(paste0("Top ", input$sel_top_n, ifelse(input$percent, "%", ""),
+                   " individual agreement among indexes"))
         })
         
         # ranking agreement

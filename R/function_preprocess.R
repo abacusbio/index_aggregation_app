@@ -259,7 +259,7 @@ sanityCheckEV <- function(df_econval, df_description) {
   m <- match(df_description$column_labelling,
              unlist(gsub("EV", "", colnames(df_econval), ignore.case = T)))
   if(sum(is.na(m)) > 0) {
-    output <- paste0("Economic value column header do not match file description:\n",
+    out <- paste0("Economic value column header do not match file description:\n",
                      "'Economic values: file description' column_labelling(s) is:\n",
                      paste0(df_description$column_labelling, collapse = ", "),
                      "\n'Economic values: data' column header(s) is:\n",

@@ -292,7 +292,7 @@ server <- function(input, output, session) {
           , shiny.error = NULL #browser
           
   )
-  # print(Sys.getenv())
+  print(Sys.getenv()[["OS"]])
   cat("N cores:", parallel::detectCores(), "\n") # rsconnect.nonprod... 8 cores/processor
   
   ## INITIALIZE, load demo ##
@@ -327,7 +327,7 @@ server <- function(input, output, session) {
   })
   
   ## UPLOAD DATA ##
-  # flag_upload <- 
+  # return val$desc_ebv, val$desc_ev, val$dat_ebv, val$dat_ev and/or val$dat_w
   preprocessUploadMod("step1", val) # reactive(val))
   
   ## CLEAN DATA ##
@@ -433,10 +433,10 @@ server <- function(input, output, session) {
   
   # Create val$dt_index
   observeEvent(input$plant_app, { # react when change to other tabs as well
-# cat("observe plant_app dt_sub_index_ids\n");print(names(val))
+cat("observe plant_app dt_sub_index_ids\n");print(names(val))
     req(input$plant_app == 'tab.index' && input$view_index == "tab.index1")
     req(length(reactiveValuesToList(val)) <= 12 && 
-          length(reactiveValuesToList(val)) >=11) # avoid re-calculate when downstream analysis is aready triggered
+          length(reactiveValuesToList(val)) >=10) # avoid re-calculate when downstream analysis is aready triggered
     req(val$dt_ev_filtered, val$dt_ebv_filtered, val$dt_description_clean, val$dt_desc_ev_clean)
 
     output$index_view_warn <- renderText({"Creating index, please wait..."}) # never showed

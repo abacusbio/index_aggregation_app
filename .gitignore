@@ -4,23 +4,15 @@
 .Ruserdata
 *.Rproj
 *.dcf
-simulation/sire_bv.csv
 SimulatedTraits.R
 SimulatedPrice.R
 desktop.ini
 simulation/input/ebvs_hist.png
 simulation/input/path_hist.png
 simulation/input/perf_hist.png
-simulation/input/sire_bv.csv
-simulation/input/trait stats.xlsx
 test outputs/cluster_object-2021-04-19.RData
-test outputs/clusters-2021-04-19.csv
-test outputs/index-2021-04-19.csv
 test outputs/test.csv
-test.csv
 test.csv
 R/css/bootstrap.min_minty.css
 R/css/bootstrap_minty.css
 R/css/bootstrap_solar.css
-R/data/ev_more data.csv
-R/data/index_weight_more data.csv
