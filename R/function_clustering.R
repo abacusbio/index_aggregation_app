@@ -68,7 +68,7 @@ cat("runCluster\n dim dat:");print(dim(dat)) # 999, 2909
     ac <- function(x) cluster::agnes(t(dat), method = x)$ac # same as agnes(daisy(t(dat)), diss = T)
   }
 cat(" try agglo methods\n"); t <- Sys.time()
- if(grepl("windows", Sys.getenv()[["OS"]], ignore.case = T)) {
+ if(any(grepl("windows", Sys.getenv(), ignore.case = T))) {
    af <- purrr::map(m, ac) # no error should run in 1.104345 s
    # af <- lapply(m, function(i) { print(i); return(ac(i))})
    # af <- lapply(m, ac) 
