@@ -183,7 +183,7 @@ cat(" Done findoptimalcut ");print(Sys.time()-t)
                                 scale = input$scale, center = input$center, k = input$k_slider,
                                 best_method = input$agg_method)
           val$cl <- cl # 20april2021
-cat(" else runFinalCluster\n  val$cl:");print(names(val$cl))          
+# cat(" else runFinalCluster\n  val$cl:");print(names(val$cl))          
           # dendrograph
           output$plot_dendro <- renderPlot({
             tempVar$width  <- session$clientData[[paste0("output_", session$ns("plot_dendro"), 

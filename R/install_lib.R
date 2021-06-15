@@ -1,14 +1,14 @@
 
-# get the list of installed packages and save it in data
-test <- sessionInfo()
-
-m <- cbind(unlist(lapply(test$otherPkgs, `[[`, "Package")), 
-           unlist(lapply(test$otherPkgs, `[[`, "Version")))
-
-m1 <- cbind(unlist(lapply(test$loadedOnly, `[[`, "Package")), 
-           unlist(lapply(test$loadedOnly, `[[`, "Version")))
-
-write.table(rbind(m, m1), "R/data/lib_list.txt", row.names = F)
+# # get the list of installed packages and save it in data
+# test <- sessionInfo()
+# 
+# m <- cbind(unlist(lapply(test$otherPkgs, `[[`, "Package")), 
+#            unlist(lapply(test$otherPkgs, `[[`, "Version")))
+# 
+# m1 <- cbind(unlist(lapply(test$loadedOnly, `[[`, "Package")), 
+#            unlist(lapply(test$loadedOnly, `[[`, "Version")))
+# 
+# write.table(rbind(m, m1), "R/data/lib_list.txt", row.names = F)
 
 # read the lib list and install it in Domino
 if(!"devtools" %in% installed.packages()[,"Package"]) {

@@ -160,7 +160,7 @@ cat("aggDxMod\n")
       observeEvent(!is.null(dt_ev_agg()), { 
 # cat(" observe dt_ev_agg: ");print(dim(dt_ev_agg()))
         req(clusters, val$dt_ev_filtered, val$dt_desc_ev_clean)
-# cat("  req satisfied. clusters:");print(head(clusters()))        
+# cat("  req satisfied. clusters:");print(head(clusters()))
         updateSelectInput(session, "sel_index", 
                           choices = c("", paste0(names(clusters()), "{", clusters(), "}")))
         updateSelectInput(session, "sel_agg", choices = dt_ev_agg()$Index)
@@ -183,7 +183,7 @@ cat("aggDxMod\n")
       
       observeEvent(!is.null(dt_index()) | !is.null(val$dt_index), {
 # cat(" observe val$dt_index: ", class(dt_index()));print(dim(dt_index()))
-# cat(class(val$dt_index));print(dim(val$dt_index))
+# cat("  ", class(val$dt_index));print(dim(val$dt_index))
         # req(!is.null(dt_index()))
 # cat("  req met\n")
         updateSliderInput(session, "sel_top_n", 
@@ -244,7 +244,7 @@ cat("aggDxMod\n")
 
           # update
           # ID sex new_index_1 ... new_index_3, index_1 ... index_3000
-          dt_sub_index_ids_orig <- data.frame(ID = rownames(index), index)
+          dt_sub_index_ids_orig <- data.frame(ID = rownames(index), index, check.names = F)
 
           val$dt_sub_index_ids <- left_join(dt_sub_index_ids, dt_sub_index_ids_orig, by = "ID")
 
@@ -257,11 +257,11 @@ cat("aggDxMod\n")
       
       # CALCULATE
       observeEvent(input$run_heatmap,{
-# cat(" observe run_heatmap val$dt_index:");print(dim(val$dt_index))
+cat(" observe run_heatmap val$dt_index_new");print(dim(val$dt_index_new));print(head(val$dt_index_new))
 # cat("  sel_agg:");print(input$sel_agg);cat("  sel_index:", input$sel_index, " sel_cluster:",
 # input$sel_cluster, " sel_top_n:", input$sel_top_n, " percent:", input$percent, " dt_ev_agg: ");
 # print(dim(dt_ev_agg()))
-# cat("  clusters:", class(clusters()), length(clusters()), " ncol dt_index:", ncol(val$dt_index),
+# cat("  clusters:", class(clusters()), length(clusters()), " ncol dt_index_new:", ncol(val$dt_index_new),
     # " len dt_ev_agg$Index:", length(dt_ev_agg()$Index), "\n")
         req(input$sel_agg!="", input$sel_top_n, # input$percent, # doesn't work if ==F
             ncol(val$dt_index_new)>=length(clusters())+length(dt_ev_agg()$Index))
@@ -294,14 +294,14 @@ cat("aggDxMod\n")
         
         tempVar$sel_index <- sel_index
         tempVar$sel_cluster <- sel_cluster
-# cat("  sel_index:");print(sel_index);cat("  sel_cluster:");print(sel_cluster)        
+# cat("  sel_index:");print(sel_index);cat("  sel_cluster:");print(sel_cluster)
         if(sel_cluster[1]!="#") {
           df_index_sub <- dplyr::select(val$dt_index_new, dplyr::any_of(c(input$sel_agg, sel_cluster)))
           
         } else {
           df_index_sub <- dplyr::select(val$dt_index_new, dplyr::any_of(c(input$sel_agg, sel_index)))
         }
-# cat("  df_index_sub:");print(dim(df_index_sub));print(head(df_index_sub))
+cat("  df_index_sub:");print(dim(df_index_sub));print(head(df_index_sub))
         
         # correlation
         if(ncol(df_index_sub) >= 2) { # only calculate corrlations when >=2 vars are selected
@@ -316,7 +316,7 @@ cat("aggDxMod\n")
           n <- min(round(nrow(df_index_sub)*input$sel_top_n/100, 0), nrow(df_index_sub))
         }
         tempVar$n <- n
-# cat("  n: ", n, "\n")        
+# cat("  n: ", n, "\n")
         output$corr_title <- renderText({
           req(input$sel_index!="" || input$sel_cluster!="")
           
@@ -341,7 +341,8 @@ cat("aggDxMod\n")
           
           idx <- order(df_index_sub[,i], decreasing = T)
           out <- data.frame(order = 1:length(idx), Index = rep(i, length(idx)),
-                            plant = rownames(df_index_sub)[idx], value = df_index_sub[idx,i])
+                            plant = rownames(df_index_sub)[idx], value = df_index_sub[idx,i], 
+                            check.names = F)
           return(head(out, n))
         })
         names(df_top_n) <- names(df_index_sub)
@@ -364,7 +365,7 @@ cat("aggDxMod\n")
       # Heatmap or scatter plot
       output$plot_cor <- renderPlot({
         req(length(tempVar$corr) > 1, input$font_size)
-# cat(" renderPlot plot_cor\n")        
+# cat(" renderPlot plot_cor\n")
         # initial parameters
         width  <- session$clientData[[paste0("output_", session$ns("plot_cor"), 
                                                      "_width")]]
@@ -562,7 +563,8 @@ cat("aggDxMod2\n")
         
         # Merge classVar and new index
         # Index RM State... Group1... new_index_by_cluster 
-        df_cluster <- data.frame(Index = names(clusters()), new_index_by_cluster = clusters())
+        df_cluster <- data.frame(Index = names(clusters()), new_index_by_cluster = clusters(),
+                                 check.names = F)
         df_index_classvar_group <- dplyr::select(
           val$dt_ev_filtered, Index, matches(all_of(class_vars)), matches(all_of(group_vars))) %>% 
           right_join(df_cluster, by = "Index")
