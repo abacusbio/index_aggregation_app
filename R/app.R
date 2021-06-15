@@ -433,7 +433,7 @@ server <- function(input, output, session) {
   
   # Create val$dt_index
   observeEvent(input$plant_app, { # react when change to other tabs as well
-cat("observe plant_app dt_sub_index_ids\n");print(names(val))
+# cat("observe plant_app dt_sub_index_ids\n");print(names(val))
     req(input$plant_app == 'tab.index' && input$view_index == "tab.index1")
     req(length(reactiveValuesToList(val)) <= 12 && 
           length(reactiveValuesToList(val)) >=10) # avoid re-calculate when downstream analysis is aready triggered
