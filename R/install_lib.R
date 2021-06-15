@@ -15,13 +15,26 @@ if(!"devtools" %in% installed.packages()[,"Package"]) {
   install.packages("devtools")
 }
 
-setwd("/repo/index_aggregation_app/")
+setwd("/repos/index_aggregation_app/")
 test <- read.table("R/data/lib_list.txt", header = T)
 
-test$lib <- paste(test$V1, test$V2, sep = "_") # libs needed
-old_lib <- paste(installed.packages()[,"Package"], installed.packages()[, "Version"], sep = "_")
+library(dplyr)
 
-idx <- which(is.na(match(test$lib, old_lib))) # find missing libs to install
+test$lib <- paste(test$V1, test$V2, sep = "_") # libs needed
+old_lib <- data.frame(V1 = installed.packages()[,"Package"],
+                      V2 = installed.packages()[,"Version"],
+                      lib = paste(installed.packages()[,"Package"], installed.packages()[, "Version"], sep = "_"),
+                      LibPath = installed.packages()[,"LibPath"]
+) %>% arrange(V1, V2) # sort by version old to new
+idx <- which(duplicated(old_lib$V1, fromLast = T)) # remove older version duplicates
+if(length(idx) > 0) old_lib <- old_lib[-idx,]
+
+idx <- which(is.na(match(test$lib, old_lib$lib))) # find missing libs to install
+idx_v_ck <- which(!is.na(match(test$V1, old_lib$V1))) # same lib can be different version
+
+if(length(idx) > 0 && length(idx_v_ck) > 0) {
+  
+}
 
 if(length(idx) > 0) {
   lapply(idx, function( i ) {
