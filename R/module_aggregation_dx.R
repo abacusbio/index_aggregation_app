@@ -218,11 +218,11 @@ cat("aggDxMod\n")
         !is.null(dt_ev_agg()) && !is.null(val$dt_ebv_filtered) && !is.null(val$dt_description_clean),
         {
 # cat(" observe 3 data\n")#, names val: ");print(names(val))
-# cat("  dt_ev_agg:");print(dim(dt_ev_agg()))
+# cat("  dt_ev_agg:");print(dim(dt_ev_agg()));print(dt_ev_agg())
 # cat("  ebv_filtered:");print(dim(val$dt_ebv_filtered))
 # cat("  description_clean:");print(dim(val$dt_description_clean))
 # cat("  desc_ev_clean:");print(dim(val$dt_desc_ev_clean))
-# cat("  dt_index:");print(dim(val$dt_index))
+# cat("  dt_index:");print(dim(val$dt_index));print(names(val$dt_index))
           req(!is.null(dt_ev_agg()), !is.null(val$dt_ebv_filtered), !is.null(clusters()),
               !is.null(val$dt_description_clean),
               !is.null(val$dt_desc_ev_clean), !is.null(dt_index()))
@@ -250,7 +250,7 @@ cat("aggDxMod\n")
 
           # update
           # animal ID x Index
-          val$dt_index <- dplyr::select(
+          val$dt_index_new <- dplyr::select(
             val$dt_sub_index_ids, dplyr::any_of(c(dt_ev_agg()$Index, val$dt_ev_filtered$Index)))
 # cat("  val$dt_index dim: ");print(dim(val$dt_index))
       }, ignoreInit = T) # observe 3 datasets
@@ -264,7 +264,7 @@ cat("aggDxMod\n")
 # cat("  clusters:", class(clusters()), length(clusters()), " ncol dt_index:", ncol(val$dt_index),
     # " len dt_ev_agg$Index:", length(dt_ev_agg()$Index), "\n")
         req(input$sel_agg!="", input$sel_top_n, # input$percent, # doesn't work if ==F
-            ncol(val$dt_index)>=length(clusters())+length(dt_ev_agg()$Index))
+            ncol(val$dt_index_new)>=length(clusters())+length(dt_ev_agg()$Index))
 
         sel_index <- sapply(strsplit(input$sel_index, "\\{"), head, 1) %>% unlist()
         
@@ -296,10 +296,10 @@ cat("aggDxMod\n")
         tempVar$sel_cluster <- sel_cluster
 # cat("  sel_index:");print(sel_index);cat("  sel_cluster:");print(sel_cluster)        
         if(sel_cluster[1]!="#") {
-          df_index_sub <- dplyr::select(val$dt_index, dplyr::any_of(c(input$sel_agg, sel_cluster)))
+          df_index_sub <- dplyr::select(val$dt_index_new, dplyr::any_of(c(input$sel_agg, sel_cluster)))
           
         } else {
-          df_index_sub <- dplyr::select(val$dt_index, dplyr::any_of(c(input$sel_agg, sel_index)))
+          df_index_sub <- dplyr::select(val$dt_index_new, dplyr::any_of(c(input$sel_agg, sel_index)))
         }
 # cat("  df_index_sub:");print(dim(df_index_sub));print(head(df_index_sub))
         
@@ -505,7 +505,7 @@ aggDxModUI2 <- function(id) {
 #'              The classVar and Group come from the EV file
 #' @param id shiny object id
 #' @param val a reactive value object, containing at least 4 objects: 1) \code{reactive(
-#'        val$dt_index)}, a data.frame of animal by index. If the data is index by animal, 
+#'        val$dt_index_new)}, a data.frame of animal by index. If the data is index by animal, 
 #'        then \code{transpose} should be set to \code{T}.
 #'        2) \code{cl}, a list containing \code{cl_obj}, a class "hclust" or "agnes" object,
 #'        and \code{val$cl$clusters}, a cluster assignment vector. e.g. a \code{cutree} 
@@ -530,7 +530,7 @@ cat("aggDxMod2\n")
 # cat("  names val:");print(names(val))
         validate(need(!is.null(val$dt_desc_ev_clean), "Please upload an EV description file"),
                  need(!is.null(val$dt_ev_filtered), "Please upload an EV file"),
-                 # need(!is.null(val$dt_index), "Please finish filtering or upload an index table"),
+                 # need(!is.null(val$dt_index_new), "Please finish filtering or upload an index table"),
                  need(!is.null(clusters()), "Please upload a cluster table"),
                  #     "Please finish 'run cluster' or upload a cluster table"),
                  #need(!is.null(dt_ev_agg()), "Please finish 'Make new weights'"),

@@ -432,12 +432,15 @@ server <- function(input, output, session) {
   ## CALCULATE INDEX ##
   
   # Create val$dt_index
-  observeEvent(input$plant_app, { # react when change to other tabs as well
-cat("observe plant_app\n");#print(names(val))
+ observeEvent(input$plant_app, { # react when change to other tabs as well
+  # observeEvent( length(val$dt_ev_filtered)>0 && length(val$dt_ebv_filtered) > 0, {
+# cat("observe plant_app\n len val:", length(reactiveValuesToList(val)),"\n");#print(names(val))
+# cat(" plant_app:", input$plant_app, "\n")
     req(input$plant_app == 'tab.index' && input$view_index == "tab.index1")
     req(length(reactiveValuesToList(val)) <= 12 && 
           length(reactiveValuesToList(val)) >=10) # avoid re-calculate when downstream analysis is aready triggered
     req(val$dt_ev_filtered, val$dt_ebv_filtered, val$dt_description_clean, val$dt_desc_ev_clean)
+# cat(" reqs satisfied\n")
 # cat(" dt_ev_filtered:");print(val$dt_ev_filtered$Index)
     output$index_view_warn <- renderText({"Creating index, please wait..."}) # never showed
     
@@ -512,11 +515,12 @@ cat("observe plant_app\n");#print(names(val))
   # need val$dt_index,  val$cl, val$dt_ev_filtered, val$dt_desc_ev_clean (for user group)
   # create val$dt_weight (data.frame), a data.frame of 3 columns: Index, cluster and weight; and 
   # val$dt_ev_agg, a data.frame of columns as Index, cluster and traits
-  calWeiMod("cl_weight", val, transpose = F)
+  calWeiMod("cl_weight", val, transpose = F) # 15june2021 this occurred twice. 2nd time new_index_1 are NAs
   
   # AGGREGATED INDEX DIAGNOSIS #
   # look at correlations among new and old indexes, and top individual overlap among them
   # need val$dt_ev_agg, val$dt_ebv_filtered, val$dt_description_clean
+  # create val$dt_index_new. The same as dt_index but with new_index in it.
   aggDxMod("agg_dx", val, transpose = F, reactive(val$cl$clusters), reactive(val$dt_ev_agg),
            reactive(val$dt_index))
   

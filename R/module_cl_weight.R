@@ -311,11 +311,12 @@ cat("calWeiMod\n")
       
       # make aggregated index
       # make aggregated EW
-      ew_new <- reactive({
-# cat(" reactive index_w\n")
+      ew_new <- reactive({ # 15june2021 reacted twice...
+# cat("\n reactive ew_new\n")
         req(length(input$error_m)==0, index_w, 
             !is.null(val$dt_desc_ev_clean), !is.null(val$dt_ev_filtered))
-        
+# cat("  dt_ev_filtered:");print(dim(val$dt_ev_filtered))
+# cat("  dt_desc_ev_clean:");print(dim(val$dt_desc_ev_clean))     
         idx_trait <- which(names(val$dt_ev_filtered) %in% 
                              val$dt_desc_ev_clean$column_labelling[
                                val$dt_desc_ev_clean$classifier=="EV"])
@@ -330,7 +331,7 @@ cat("calWeiMod\n")
 # cat("  index_new: i =", i, ", class", class(index_new), ", length");print(length(index_new));print(head(index_new))
           return(data.frame(Index = paste0("new_index_", i), cluster = i, t(index_new)))
         }))
-        
+# cat("  ews_new: ");print(dim(ews_new));print(ews_new)
         val$dt_ev_agg <- ews_new
         return(ews_new)
       })

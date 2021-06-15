@@ -7,7 +7,7 @@
 #' @return a data.frame which columns as ID trait1 trait2... index1 index2...
 calculateIndividualBW <- function (input, output, session,
                                    df_ebv_select, df_econval, desc_ebv, desc_ev) {
-cat("calculateIndividualBW\n df_econval:");print(dim(df_econval))
+# cat("\ncalculateIndividualBW\n df_econval:");print(dim(df_econval))
   df_ebv_select <- df_ebv_select[complete.cases(df_ebv_select),] # remove NA rows
   
   # subset traits existing in dt_econval() only
@@ -27,13 +27,18 @@ cat("calculateIndividualBW\n df_econval:");print(dim(df_econval))
     as.matrix() %>% t() # trait x index
 
   if(sum(apply(econval, 2, class) %in% c("character", "factor")) > 0) {
-    stop("calculateIndividualBW econval isn't a numeric matrix")
+    stop("Error: calculateIndividualBW econval isn't a numeric matrix")
   }
   
   indexes <- sub_ebv %*% econval # animal x index
   colnames(indexes) <- df_econval$Index
 # cat(" indexes animal x index:");print(dim(indexes))  
-  if(sum(is.na(indexes)) > 0) stop("calculateIndividualBW indexes has NA")
+  if(sum(is.na(indexes)) > 0) {
+    print("Error: calculateIndividualBW indexes has NA")
+    if(sum(is.na(econval)) > 0) cat(sum(is.na(econval)), " NAs in econval\n")
+    if(sum(is.na(sub_ebv)) > 0) cat(sum(is.na(econval)), " NAs in sub_ebv\n")
+    stop()
+  }
 
   ids <- desc_ebv$column_labelling[grep("ID|ClassVar", desc_ebv$classifier)]
 # cat("calculateIndividualBW\n ids:");print(ids);cat(" df_ebv_select:\n");print(head(df_ebv_select))  

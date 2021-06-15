@@ -36,7 +36,7 @@ cat("plotHeatmap\n")
   # Reorder because Rowv or Colv as dendrogram objects in heatmap.2 do not reorder
   new_order <- findObsOrder(cl_obj, k = max(clusters))
   new_cl <- as.hclust(reorder(as.dendrogram(cl_obj), new_order)) # new_cl$label==cl_obj$labels==colnames(x)
-cat(" x_mat ", class(x_mat));print(dim(x_mat))
+# cat(" x_mat ", class(x_mat));print(dim(x_mat))
 # cat(" new_order ", class(new_order), length(new_order), "\n")
 # cat(" new_cl");plot(new_cl)
 cat(" start zClust", t <- Sys.time(), "\n")
