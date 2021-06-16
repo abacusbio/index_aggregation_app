@@ -102,7 +102,13 @@ plotTopNdot <- function(input, output, session,
 #'
 plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
 # cat("plotClassvarBar\n df:", class(df), " x:", class(x), " fill:", class(fill), " use_count:",
-    # class(use_count), "\n")  
+    # class(use_count), "\n")
+  for(i in c(x, fill)) {
+    if(class(df[,i])[1] %in% c("numeric", "integer", "double", "float")) {
+      df[,i] <- as.factor(df[,i])
+    }
+  }
+
   df$label <- ifelse(use_count, 
                      df$n, paste0(sapply(df$percent, format, digits = 2, nsmall = 0), "%"))
   

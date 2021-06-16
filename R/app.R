@@ -458,9 +458,9 @@ server <- function(input, output, session) {
     # animal ID x Index
     val$dt_index <- dplyr::select(val$dt_sub_index_ids, matches(val$dt_ev_filtered$Index))
     # %>% t() %>% data.frame()
-    # names(val$dt_index) <- val$dt_sub_index_ids$ID # rownames auto get from original colnames
+    rownames(val$dt_index) <- val$dt_sub_index_ids$ID # rownames may not auto get from original colnames
 # print(match(names(val$dt_sub_index_ids), val$dt_ev_filtered$Index))
-# cat("observe plant_app, dim val$dt_index:");print(dim(val$dt_index))
+# cat("observe plant_app, dim val$dt_index:");print(dim(val$dt_index));print(val$dt_index[1:3,1:3])
   })
   
   ## INDEX STATISTICS ##

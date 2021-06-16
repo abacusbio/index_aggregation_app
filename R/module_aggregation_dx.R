@@ -222,14 +222,16 @@ cat("aggDxMod\n")
 # cat("  ebv_filtered:");print(dim(val$dt_ebv_filtered))
 # cat("  description_clean:");print(dim(val$dt_description_clean))
 # cat("  desc_ev_clean:");print(dim(val$dt_desc_ev_clean))
-# cat("  dt_index:");print(dim(val$dt_index));print(names(val$dt_index))
+# cat("  dt_index:");print(dim(val$dt_index));print(val$dt_index[1:3,1:3]);print(names(val$dt_index))
           req(!is.null(dt_ev_agg()), !is.null(val$dt_ebv_filtered), !is.null(clusters()),
               !is.null(val$dt_description_clean),
               !is.null(val$dt_desc_ev_clean), !is.null(dt_index()))
           
           if(transpose) {
             index <- t(dt_index())
-            } else { index <- dt_index() }
+          } else { index <- dt_index() }
+         # if(rownames(index)[1]=="1") rownames(index) <- colnames(index)
+         # if(colnames(index)[1]=="V1") colnames(index) <- rownames(index)
 # cat("  index: ", class(index));print(dim(index));print(index[1:3,1:3])
           # dt_ev_agg: Index, cluster and traits
           dt_sub_ebv_index_ids <- 
@@ -241,23 +243,23 @@ cat("aggDxMod\n")
             dt_sub_ebv_index_ids[,!names(dt_sub_ebv_index_ids) 
                                      %in% val$dt_description_clean$column_labelling[
                                        val$dt_description_clean$classifier=="EBV"] ]
-
+# cat("  dt_sub_index_ids:");print(dim(dt_sub_index_ids));print(head(dt_sub_index_ids))
           # update
           # ID sex new_index_1 ... new_index_3, index_1 ... index_3000
           dt_sub_index_ids_orig <- data.frame(ID = rownames(index), index, check.names = F)
-
+# cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(head(dt_sub_index_ids_orig))
           val$dt_sub_index_ids <- left_join(dt_sub_index_ids, dt_sub_index_ids_orig, by = "ID")
-
+# cat("  dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(head(val$dt_sub_index_ids))
           # update
           # animal ID x Index
           val$dt_index_new <- dplyr::select(
             val$dt_sub_index_ids, dplyr::any_of(c(dt_ev_agg()$Index, val$dt_ev_filtered$Index)))
-# cat("  val$dt_index dim: ");print(dim(val$dt_index))
+# cat("  val$dt_index_new dim: ");print(dim(val$dt_index_new));print(head(val$dt_index_new))
       }, ignoreInit = T) # observe 3 datasets
       
       # CALCULATE
       observeEvent(input$run_heatmap,{
-cat(" observe run_heatmap val$dt_index_new");print(dim(val$dt_index_new));print(head(val$dt_index_new))
+# cat(" observe run_heatmap val$dt_index_new");print(dim(val$dt_index_new));print(head(val$dt_index_new))
 # cat("  sel_agg:");print(input$sel_agg);cat("  sel_index:", input$sel_index, " sel_cluster:",
 # input$sel_cluster, " sel_top_n:", input$sel_top_n, " percent:", input$percent, " dt_ev_agg: ");
 # print(dim(dt_ev_agg()))
@@ -301,7 +303,7 @@ cat(" observe run_heatmap val$dt_index_new");print(dim(val$dt_index_new));print(
         } else {
           df_index_sub <- dplyr::select(val$dt_index_new, dplyr::any_of(c(input$sel_agg, sel_index)))
         }
-cat("  df_index_sub:");print(dim(df_index_sub));print(head(df_index_sub))
+# cat("  df_index_sub:");print(dim(df_index_sub));print(head(df_index_sub))
         
         # correlation
         if(ncol(df_index_sub) >= 2) { # only calculate corrlations when >=2 vars are selected
@@ -599,16 +601,15 @@ cat("aggDxMod2\n")
       
       # draw percentage plot
       output$classvar_plot <- renderPlot({
-# cat(" classvar_plot\n ", input$switch_index_classvar, class(input$switch_index_classvar), "\n")
-# print(classvar_summary()[1,])
+# cat(" classvar_plot\n class_var:", input$class_var, "\n"); print(classvar_summary()[1,])
         req(input$class_var!="", input$agg_by!="")
 
         width <- session$clientData[[paste0("output_", session$ns("classvar_plot"), "_width")]]
         df <- classvar_summary() %>% 
           dplyr::filter(aggregated_by == input$agg_by)
-# cat("  df:", class(df))        
+# cat("  df:", class(df), "\n");print(sapply(df, class))
         p <- plotClassvarBar(df, input$class_var, "aggregated_index", input$use_count)
-# cat("  p:", class(p));print(p)        
+# cat("  p:", class(p),"\n");#print(p)
         downloadPlotModuleServer(
           "dnld_cv_plot", "classvar_by_index", p,
           # gridExtra::grid.arrange(grobs = ps,
