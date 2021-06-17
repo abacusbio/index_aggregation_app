@@ -4,7 +4,7 @@ calWeiModSidebarUI <- function(id) {
     h4("Upload files (optional)"),
     wellPanel(
       uploadTableModuleUI(ns("upload_ev_desc"), "EV description file"),
-      span(textOutput(ns("error_m_0")), style = "color:text-danger"),
+      span(textOutput(ns("error_m_0")), class = "text-danger"),
       uploadTableModuleUI(ns("upload_ev"), "EV file"),
       span(textOutput(ns("error_m_4")), style = "color:salmon"),
       uploadTableModuleUI(ns("upload_w"), "EV weight file (optional)"),
@@ -27,7 +27,7 @@ calWeiModUI <- function(id) {
     helpText("Based on clusters"),
     div(textOutput(ns("warn_m")), class = "text-warning"),
     div(textOutput(ns("error_m")), class = "text-danger"),
-    # shinyjs::hidden(span(id = ns("wait"), p("Calculating...please wait..."), style = "color:orange")),
+    # shinyjs::hidden(span(id = ns("wait"), p("Calculating...please wait..."), class = "text-danger"")),
     # column(6,
     #     h2("Cluster weights"),
     #     renderDtTableModuleUI(ns("cluster_w"))  
@@ -290,15 +290,18 @@ cat("calWeiMod\n")
           #   out <- data.frame(Index = colnames(index_cov)[idx], cluster = i, weight = out)
             
           } else { # user chosen variable
-            idx_row <- match(colnames(index_cov), val$dt_w_clean$Index)
-            w_col <- which(input$choose_w %in% names(val$dt_w_clean))
-            
+            idx_row <- match(colnames(index_cov)[idx], val$dt_w_clean$Index)
+            w_col <- match(input$choose_w, names(val$dt_w_clean))
+# cat("  choose_w:", input$choose_w, "val$dt_w_clean:");print(names(val$dt_w_clean))
+# cat("  w_col:", class(w_col), w_col, " idx_row len:", length(idx_row), " idx len:", length(idx),
+    # "\n")
             out <- rowSums(val$dt_w_clean[idx_row,w_col,drop = F]/length(w_col), na.rm = T)
+# cat("  out len:", length(out), "\n")            
             out <- data.frame(Index = colnames(index_cov)[idx], cluster = i, weight = out,
                               val$dt_w_clean[idx_row,w_col,drop = F]/length(w_col))
           }
           
-          out$weight <- out$weight*100
+         # out$weight <- out$weight*100
           return(out)
         }))
         
@@ -327,7 +330,7 @@ cat("calWeiMod\n")
           row_idx <- match(index_names, val$dt_ev_filtered$Index)
           ew_table <- sweep(val$dt_ev_filtered[row_idx, idx_trait], 1, index_wei, "*") # row1*index_w[1], row2*index_w[2]...
 # cat("  ew_table: dim");print(dim(ew_table));print(ew_table[1:3,1:3])          
-          index_new <- colSums(ew_table, na.rm = F)/100 # vector
+          index_new <- colSums(ew_table, na.rm = F) #/100 # vector
 # cat("  index_new: i =", i, ", class", class(index_new), ", length");print(length(index_new));print(head(index_new))
           return(data.frame(Index = paste0("new_index_", i), cluster = i, t(index_new)))
         }))

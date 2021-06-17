@@ -44,7 +44,7 @@ clusteringModUI <- function(id) {
   tagList(
     br(),
     h1("Clustering formation "),
-    shinyjs::hidden(span(id = ns("wait"), p("Running...please wait..."), style = "color:orange")),
+    shinyjs::hidden(span(id = ns("wait"), p("Running...please wait..."), class = "text-danger")),
     shinyjs::hidden(
       div(id = ns("parameters"),
           h2("Choose parameters by their performance"),

@@ -96,9 +96,13 @@ ui <- fluidPage(
            # checkboxInput("ebv_na", "Include missing EBV (individuals with missing EBV will not have
                          # index values"),
            stefanFilterModUI("stfn_ebv"),
-           checkboxInput("ebv_na_0", "Treat missing EBV as 0 (Otherwise animals with missing EBV
+           span(textOutput("stefan_filter_error_message"), style = "color:salmon"),
+           checkboxInput("ebv_na_0", "Treat missing EBV as 0 (Otherwise individuals with missing EBV
                      will not have index values)", value = F),
-           span(textOutput("stefan_filter_error_message"), style = "color:salmon")
+           shinyjs::hidden(
+             span(id = "warn_ebv_0", 
+                  p("Please be sure all your EBV are distributed around 0 before ticking this box"), 
+                  class = "text-danger"))
          ),
          
          conditionalPanel(
@@ -110,9 +114,9 @@ ui <- fluidPage(
            condition = "input.upload == 'tab.step3' && input.plant_app == 'tab.upload'",
            dataViewerModuleSidebarUI("ev_filter", defaultName = "filtered_ev"),
            stefanFilterModUI("stfn_ev"),
+           span(textOutput("stefan_filter_error_message_ev"), style = "color:salmon"),
            checkboxInput("ev_na_0", "Treat missing EV as 0 (Otherwise this trait will drop from 
-                         index)", value = F),
-           span(textOutput("stefan_filter_error_message_ev"), style = "color:salmon")
+                         index)", value = F)
          ),
          
          conditionalPanel(
@@ -182,7 +186,7 @@ ui <- fluidPage(
          tabsetPanel(id = "view_index", # id can't have .
            tabPanel("View index", value = "tab.index1",
              # renderDtTableModuleUI("index1") # too long
-             span(textOutput("index_view_warn"), style = "color:orange"),
+             span(textOutput("index_view_warn"), class = "text-success"),
              downloadModuleUI("dnld_index", "Download the index table"),
              downloadModuleUI("dnld_index_group", 
                               "Download the index and group table for your own record")
@@ -262,19 +266,27 @@ ui <- fluidPage(
           condition = "input.run_agg == 'tab.agg.3' && input.plant_app == 'tab.agg'",
           aggDxModSidebarUI2("agg_dx2")
         ),
+        
+        conditionalPanel(
+          condition = "input.run_agg == 'tab.agg.4' && input.plant_app == 'tab.agg'",
+          aggDxModSidebarUI3("agg_dx3")
+        ),
         width = 4), # sidebarPanel
       
       # Show a plot of the generated distribution
       mainPanel(
         tabsetPanel(id = "run_agg", # id can't have .
-          tabPanel("Step 1: Make new weights", value = "tab.agg.1",
+          tabPanel("Step 1: Make new indexes", value = "tab.agg.1",
                    calWeiModUI("cl_weight")),
                     
-          tabPanel("Step 2: Aggregation diagnosis", value = "tab.agg.2",
+          tabPanel("Step 2: Aggregation diagnosis-correlation", value = "tab.agg.2",
                    aggDxModUI("agg_dx")),
           
-          tabPanel("Step3: Aggregation diagnosis - more", value = "tab.agg.3",
-                   aggDxModUI2("agg_dx2"))
+          tabPanel("Step 3: Aggregation diagnosis-top individual", value = "tab.agg.3",
+                   aggDxModUI2("agg_dx2")),
+          
+          tabPanel("Step4: Aggregation diagnosis-variable pattern", value = "tab.agg.4",
+                   aggDxModUI3("agg_dx3"))
         ) # tabsetPanel run_cluster
       ), # mainPanel
       fluid = T) # sidebarLayout fluid = F doesn't work here
@@ -385,6 +397,14 @@ server <- function(input, output, session) {
                          na_include = reactive(input$ebv_na_0), na_to_0 = reactive(input$ebv_na_0),
                          apply = reactive(input$`stfn_ebv-apply`)
   )
+  
+  observeEvent(input$ebv_na_0, {
+    if(input$ebv_na_0) {
+      shinyjs::show("warn_ebv_0")
+    } else {
+      shinyjs::hide("warn_ebv_0")
+    }
+  })
   
   ## SUMMARY STATISTICS EBV ##
   sumstatMod("sumstat_ebv", reactive(val$dt_ebv_filtered))
@@ -518,14 +538,22 @@ server <- function(input, output, session) {
   calWeiMod("cl_weight", val, transpose = F) # 15june2021 this occurred twice. 2nd time new_index_1 are NAs
   
   # AGGREGATED INDEX DIAGNOSIS #
+  
   # look at correlations among new and old indexes, and top individual overlap among them
   # need val$dt_ev_agg, val$dt_ebv_filtered, val$dt_description_clean
   # create val$dt_index_new. The same as dt_index but with new_index in it.
-  aggDxMod("agg_dx", val, transpose = F, reactive(val$cl$clusters), reactive(val$dt_ev_agg),
-           reactive(val$dt_index))
+  dt_index_sub <- aggDxMod("agg_dx", val, transpose = F, reactive(val$cl$clusters), 
+                           reactive(val$dt_ev_agg), reactive(val$dt_index))
+  
+  # top individual overlap/agreement
+  aggDxMod2("agg_dx2", val, transpose = F, 
+            reactive(val$cl$clusters), dt_index_sub, reactive(val$dt_index),
+           reactive(input$`agg_dx-sel_index`), reactive(input$`agg_dx-sel_agg`),
+           reactive(input$`agg_dx-sel_cluster`) 
+          )
   
   # look at classVar pattern among indexes
-  aggDxMod2("agg_dx2", val, transpose = F, reactive(val$cl$clusters))
+  aggDxMod3("agg_dx3", val, transpose = F, reactive(val$cl$clusters))
 } # server
 
 # options(shiny.reactlog = T) # lzhang April172020

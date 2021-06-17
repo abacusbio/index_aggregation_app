@@ -79,7 +79,7 @@ clusterDxModUI <- function(id) {
           original data (recommend). If you want to swap the input for clustering, please go back 
           and re-run clustering analyses"
     ),
-    shinyjs::hidden(span(id = ns("wait"), p("Plotting...please wait..."), style = "color:orange")),
+    shinyjs::hidden(span(id = ns("wait"), p("Plotting...please wait..."), class = "text-danger")),
     div(textOutput(ns("warn_m")), class = "text-warning"),
     plotOutput(ns("plot_heat"), width = "100%", height = "800px"),
     tags$table(

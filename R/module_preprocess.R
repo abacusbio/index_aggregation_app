@@ -23,7 +23,7 @@ preprocessUploadModsidebarUI <- function(id, title = "Step 1 file uploads") {
 preprocessUploadModUI <- function(id) {
   ns <- NS(id)
   tagList(
-    span(textOutput(ns("demo_message")), style = "color:orange"),
+    span(textOutput(ns("demo_message")), class = "text-danger"),
     # textOutput(ns("demo_message")),
     verbatimTextOutput(ns("sanity_message")) 
   )
