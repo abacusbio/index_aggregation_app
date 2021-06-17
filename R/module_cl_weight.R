@@ -292,13 +292,13 @@ cat("calWeiMod\n")
           } else { # user chosen variable
             idx_row <- match(colnames(index_cov)[idx], val$dt_w_clean$Index)
             w_col <- match(input$choose_w, names(val$dt_w_clean))
+            w_percent <- val$dt_w_clean[idx_row,w_col,drop = F]/colSums(val$dt_w_clean[idx_row,w_col,drop = F])
 # cat("  choose_w:", input$choose_w, "val$dt_w_clean:");print(names(val$dt_w_clean))
 # cat("  w_col:", class(w_col), w_col, " idx_row len:", length(idx_row), " idx len:", length(idx),
     # "\n")
-            out <- rowSums(val$dt_w_clean[idx_row,w_col,drop = F]/length(w_col), na.rm = T)
+            out <- rowSums(w_percent/length(w_col), na.rm = T)
 # cat("  out len:", length(out), "\n")            
-            out <- data.frame(Index = colnames(index_cov)[idx], cluster = i, weight = out,
-                              val$dt_w_clean[idx_row,w_col,drop = F]/length(w_col))
+            out <- data.frame(Index = colnames(index_cov)[idx], cluster = i, weight = out)
           }
           
          # out$weight <- out$weight*100

@@ -29,7 +29,6 @@ aggDxModUI <- function(id) {
   tagList(
     br(),
     h1("Index correlations"),
-    textOutput(ns("error_m")),
     h2("Distribution of correlations between within-cluster indexes and their aggregated index"),
     h3("Scatter plot"),
     plotOutput(ns("plot_cor_default")),
@@ -39,6 +38,7 @@ aggDxModUI <- function(id) {
     ),
     br(),br(),
     h2(textOutput(ns("corr_title"))),
+    textOutput(ns("error_m")),
     h3("Scatter plot"), #"Scatter/heatmap plot"),
     plotOutput(ns("plot_cor")),# height = "800px"),
     tags$table(
@@ -212,12 +212,13 @@ cat("aggDxMod\n")
           # animal ID x Index
           val$dt_index_new <- dplyr::select(
             val$dt_sub_index_ids, dplyr::any_of(c(dt_ev_agg()$Index, val$dt_ev_filtered$Index)))
-# cat("  val$dt_index_new dim: ");print(dim(val$dt_index_new));#print(head(val$dt_index_new))
+# cat("  val$dt_index_new dim: ");print(dim(val$dt_index_new));print(val$dt_index_new[3:5,dt_ev_agg()$Index])
       }, ignoreInit = T) # observe 3 datasets
       
       # CALCULATE DEFAULT CORRELATION
       cor_default <- eventReactive(length(val$dt_index_new) > 0, {
 # cat("event reactive val$dt_index_new\n")
+# cat("  dt_index_new:");print(dim(val$dt_index_new));print(val$dt_index_new[1:3, dt_ev_agg()$Index])
         req(!is.null(clusters()), !is.null(dt_ev_agg()))
         
         by_cluster <- do.call(rbind, lapply(unique(clusters()), function(i) {
