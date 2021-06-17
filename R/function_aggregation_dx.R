@@ -1,15 +1,12 @@
-#' Plot the correlation as sorted dots
+#' Convert a correlation matrix to a longer table for plotting
+#' 
 #' @param m the correlation matrix, numeric
 #' @param agg_index_names a reactive object within which a string scalar or vector, the aggregated
 #'        index name(s)
-#' @param n an integer, the number of bars per single plot  
-#' @param show_n an integer, the total number of bars to show      
-#' @return either a ggplot object or a list of ggplot object
-plotcorrDot <- function(input, output, session,
-                        m, agg_index_names = reactive(NULL), font_size = reactive(12),
-                        # n = 30, show_n = reactive(10), 
-                        ...) {
-# cat("plotCorrDot\n, m:", class(m));print(dim(m));#print(head(m))
+#' @return a data.frame with columns Index, aggregated_index, correlation, ID
+makeLongCor <- function(input, output, session,
+                        m, agg_index_names = reactive(NULL)) {
+# cat("makeLongCor\n, m:", class(m));print(dim(m));#print(head(m))
 # cat(" agg_index_names:");print(agg_index_names())
   m <- data.frame(m[, agg_index_names(), drop = F]) %>% 
     dplyr::mutate(Index = rownames(m)) %>% 
@@ -21,25 +18,41 @@ plotcorrDot <- function(input, output, session,
   # ...
   # index1 new_index2      0.9
   # ...
-
+  
   # create an index for sorting
+  # Index aggregated_index correlation ID
   m <- do.call(rbind, lapply(unique(m$aggregated_index), function(agg_index) {
     df <- dplyr::filter(m, aggregated_index == agg_index) %>% 
       dplyr::arrange(desc(correlation)) %>% 
       mutate(id = dplyr::row_number())
   }))
   
+  return(m)
+}
+
+#' Plot the correlation as sorted dots
+#' @param m the long correlation data.frame from \code{makeLongCor}. Columns are Index, 
+#'        aggregated_index, correlation, ID
+#' @param n an integer, the number of bars per single plot  
+#' @param show_n an integer, the total number of bars to show      
+#' @return either a ggplot object or a list of ggplot object
+plotcorrDot <- function(input, output, session,
+                        m, font_size = reactive(12),
+                        # n = 30, show_n = reactive(10), 
+                        ...) {
+# cat("plotCorrDot\n, m:", class(m));print(dim(m));#print(head(m))
   p <- ggpubr::ggscatter(m, x = "id", y = "correlation",
                          color = "aggregated_index", alpha = 0.5, 
                          palette = "npg",         # npg journal color palett. see ?ggpar
                          sort.val = "desc",          # Sort the value in dscending order
                          # sort.by.groups = T,     # Don't sort inside each group
+                         ylim = c(0, 1),
                          xlab = "sorted original index",
                          font.x = c(font_size(), "plain", "black"), # xlab
                          font.y = c(font_size(), "plain", "black"), # y lab
                          font.legend = c(font_size(), "plain", "black"),
-                         ...) +
-    ggpubr::rremove("x.ticks") + ggpubr::rremove("x.text")
+                         ...) # +
+   # ggpubr::rremove("x.ticks") + ggpubr::rremove("x.text")
   return(list(p = p, df = m))
 }
 

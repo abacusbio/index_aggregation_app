@@ -546,8 +546,8 @@ server <- function(input, output, session) {
                            reactive(val$dt_ev_agg), reactive(val$dt_index))
   
   # top individual overlap/agreement
-  aggDxMod2("agg_dx2", val, transpose = F, 
-            reactive(val$cl$clusters), dt_index_sub, reactive(val$dt_index),
+  aggDxMod2("agg_dx2", transpose = F, 
+           dt_index_sub, reactive(val$dt_index),
            reactive(input$`agg_dx-sel_index`), reactive(input$`agg_dx-sel_agg`),
            reactive(input$`agg_dx-sel_cluster`) 
           )
