@@ -172,7 +172,7 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
             "Need to upload an EV file first. Please reload the app and try again."
           }
         })
-        txt <- sanityCheckWt(dat_w(), desc_ev(), dat_ev())
+        txt <- sanityCheckWt(dat_w(), dat_ev())
         output$sanity_message <- renderText({ txt })
         if(is.null(txt)) {
           val$dat_w <- dat_w()

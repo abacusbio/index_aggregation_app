@@ -534,7 +534,7 @@ server <- function(input, output, session) {
   # CREATE INDEX WEIGHT GIVEN CLUSTERING RESULTS #
   # need val$dt_index,  val$cl, val$dt_ev_filtered, val$dt_desc_ev_clean (for user group)
   # create val$dt_weight (data.frame), a data.frame of 3 columns: Index, cluster and weight; and 
-  # val$dt_ev_agg, a data.frame of columns as Index, cluster and traits
+  # val$dt_ev_agg, a data.frame of columns as Index, cluster and traits (EVs)
   calWeiMod("cl_weight", val, transpose = F) # 15june2021 this occurred twice. 2nd time new_index_1 are NAs
   
   # AGGREGATED INDEX DIAGNOSIS #

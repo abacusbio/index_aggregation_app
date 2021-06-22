@@ -6,9 +6,16 @@ aggDxModSidebarUI <- function(id) {
       uploadTableModuleUI(ns("upload_ebv_desc"), "EBV description file"),
       div(textOutput(ns("error_m_0")), class = "text-danger"),
       uploadTableModuleUI(ns("upload_ebv"), "EBV file"),
-      textOutput(ns("error_m_1"))
+      div(textOutput(ns("error_m_1")), class = "text-danger"),
+      uploadTableModuleUI(ns("upload_benchmark"), "Benchmark index EV file (optional)"),
+      div(textOutput(ns("error_m_2")), class = "text-danger")
     ),
-    h4("Main"),
+    h4("All index"),
+    wellPanel(
+      selectInput(ns("sel_benchmark"), "Select a benchmark index", 
+                  choice = c("", "average"))
+    ),
+    h4("User select indexes"),
     wellPanel(
       selectInput(ns("sel_agg"), "Select an aggregated index", choice = "", multiple = T),
       selectInput(ns("sel_index"), "Select an original index", choices = ""),
@@ -31,6 +38,7 @@ aggDxModUI <- function(id) {
     h1("Index correlations"),
     h2("Distribution of correlations between within-cluster indexes and their aggregated index"),
     h3("Scatter plot"),
+    textOutput(ns("error_m")),
     plotOutput(ns("plot_cor_default")),
     tags$table(
       tags$td(downloadPlotModuleUI(ns("dnld_heat_default"))),
@@ -38,8 +46,8 @@ aggDxModUI <- function(id) {
     ),
     br(),br(),
     h2(textOutput(ns("corr_title"))),
-    textOutput(ns("error_m")),
     h3("Scatter plot"), #"Scatter/heatmap plot"),
+    textOutput(ns("erro_m_a")),
     plotOutput(ns("plot_cor")),# height = "800px"),
     tags$table(
       tags$td(downloadPlotModuleUI(ns("dnld_heat"))),
@@ -118,24 +126,52 @@ cat("aggDxMod\n")
             "You are going to re-write the EV table by your uploaded file."
           })
         }
-        req(length(input$warn_m)==0)
         
         val$dt_ebv_filtered <- cleanEbvData(val$dt_description_clean, ebv_user())
       })
       
+      bnchmrk_user <- uploadTableModuleServer("upload_benchmark", 1, 0)
+      
+      output$error_m_2 <- renderText({
+        validate(
+          need(class(bnchmrk_user())!="try-error", attr(bnchmrk_user(), "condition")$message),
+          need(names(bnchmrk_user())[1]=="Index",
+               "Benchmark EV file headers should be 'Index' and trait names")
+        )
+      })
+      
+      observeEvent(length(bnchmrk_user())>0, {
+        req(class(bnchmrk_user())=="data.frame", !is.null(val$dt_description_clean),
+            names(bnchmrk_user())[1]=="Index")
+        if("dt_bnchmrk_ev_cleaned" %in% names(val)) {
+          output$warn_m <- renderText({
+            "You are going to re-write the benchmark EV table by your uploaded file."
+          })
+        }
+        
+        val$dt_bnchmrk_ev_cleaned <- sanityCheckEV(val$dt_desc_ev_clean, bnchmrk_user())
+        updateSelectInput(session, "sel_benchmark", choices = c("", "average", "upload"))
+      })
+      
+      # show on top
       output$error_m <- renderText({
 # cat(" erro_m:");print(input$error_m) # always NULL
 # cat("  names val:");print(names(val))
         validate(need(!is.null(val$dt_desc_ev_clean), "Please upload an EV description file"),
                  need(!is.null(val$dt_description_clean), "Please upload an EBV description file"),
                  need(!is.null(val$dt_ebv_filtered), "Please upload an EBV file"),
-                 # need(!is.null(val$dt_index), "Please finish filtering or upload an index table"),
-                # need(!is.null(clusters()), #val$cl$clusters), 
+                 need(!is.null(val$dt_index), "Please finish filtering or upload an index table"),
+                 # need(!is.null(clusters()), #val$cl$clusters), 
                  #     "Please finish 'run cluster' or upload a cluster table"),
-                 need(!is.null(dt_ev_agg()), "Please finish 'Make new weights'"),
-                 need(length(input$sel_agg) > 0, "Please select at least 1 aggregated index"),
-                need(length(input$sel_index) >0 || length(input$sel_cluster > 0), 
-                     "Please select at least 1 index or cluster")
+                 need(!is.null(dt_ev_agg()), "Please finish 'Make new weights'")
+        )
+      })
+      
+      # show mid-page
+      output$error_m_a <- renderText({
+        validate(need(length(input$sel_agg) > 0, "Please select at least 1 aggregated index"),
+                 need(length(input$sel_index) >0 || length(input$sel_cluster > 0), 
+                      "Please select at least 1 index or cluster")
         )
       })
       
@@ -186,40 +222,47 @@ cat("aggDxMod\n")
               !is.null(val$dt_description_clean),
               !is.null(val$dt_desc_ev_clean), !is.null(dt_index()))
           
-          if(transpose) {
-            index <- t(dt_index())
-          } else { index <- dt_index() }
-         
+          # avoid recalculation
+          if(sum(!is.na(match(dt_ev_agg()$Index, colnames(val$dt_index_new)))) == 0) {
+            
+            if(transpose) {
+              index <- t(dt_index())
+            } else { index <- dt_index() }
 # cat("  index: ", class(index));print(dim(index));print(index[1:3,1:3])
-          # dt_ev_agg: Index, cluster and traits
-          dt_sub_ebv_index_ids <- 
-            calculateIndividualBW(input, output, session,
-                                  val$dt_ebv_filtered, dt_ev_agg(), val$dt_description_clean,
-                                  val$dt_desc_ev_clean)
-
-          dt_sub_index_ids <- # ID sex new_index_1 ...
-            dt_sub_ebv_index_ids[,!names(dt_sub_ebv_index_ids) 
-                                     %in% val$dt_description_clean$column_labelling[
-                                       val$dt_description_clean$classifier=="EBV"] ]
+            # dt_ev_agg: Index, cluster and traits
+            dt_sub_ebv_index_ids <- 
+              calculateIndividualBW(input, output, session,
+                                    val$dt_ebv_filtered, dt_ev_agg(), val$dt_description_clean,
+                                    val$dt_desc_ev_clean)
+            
+            dt_sub_index_ids <- # ID sex new_index_1 ...
+              dt_sub_ebv_index_ids[,!names(dt_sub_ebv_index_ids) 
+                                   %in% val$dt_description_clean$column_labelling[
+                                     val$dt_description_clean$classifier=="EBV"] ]
 # cat("  dt_sub_index_ids:");print(dim(dt_sub_index_ids));print(head(dt_sub_index_ids))
-          # update
-          # ID sex new_index_1 ... new_index_3, index_1 ... index_3000
-          dt_sub_index_ids_orig <- data.frame(ID = rownames(index), index, check.names = F)
+            # update
+            # ID sex new_index_1 ... new_index_3, index_1 ... index_3000
+            dt_sub_index_ids_orig <- data.frame(ID = rownames(index), index, check.names = F)
 # cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(head(dt_sub_index_ids_orig))
-          val$dt_sub_index_ids <- left_join(dt_sub_index_ids, dt_sub_index_ids_orig, by = "ID")
+            val$dt_sub_index_ids <- left_join(dt_sub_index_ids, dt_sub_index_ids_orig, by = "ID")
 # cat("  dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(head(val$dt_sub_index_ids))
-          # update
-          # animal ID x Index
-          val$dt_index_new <- dplyr::select(
-            val$dt_sub_index_ids, dplyr::any_of(c(dt_ev_agg()$Index, val$dt_ev_filtered$Index)))
+            # update
+            # animal ID x Index
+            val$dt_index_new <- dplyr::select(
+              val$dt_sub_index_ids, dplyr::any_of(c(dt_ev_agg()$Index, val$dt_ev_filtered$Index)))
 # cat("  val$dt_index_new dim: ");print(dim(val$dt_index_new));print(val$dt_index_new[3:5,dt_ev_agg()$Index])
-      }, ignoreInit = T) # observe 3 datasets
+          } # if new_index? not in val$dt_index_new
+        }, ignoreInit = T) # observe 3 datasets
       
       # CALCULATE DEFAULT CORRELATION
-      cor_default <- eventReactive(length(val$dt_index_new) > 0, {
-# cat("event reactive val$dt_index_new\n")
+      cor_default <- eventReactive(
+        {length(val$dt_index_new) > 0
+          input$sel_benchmark
+          }, 
+        {
+cat("event reactive val$dt_index_new\n")
 # cat("  dt_index_new:");print(dim(val$dt_index_new));print(val$dt_index_new[1:3, dt_ev_agg()$Index])
-        req(!is.null(clusters()), !is.null(dt_ev_agg()))
+        req(!is.null(clusters()), !is.null(dt_ev_agg()), !is.null(val$dt_index))
         
         by_cluster <- do.call(rbind, lapply(unique(clusters()), function(i) {
           
@@ -229,8 +272,58 @@ cat("aggDxMod\n")
                                         dplyr::any_of(c(sel_agg, sel_cluster)))
           m <- cor(df_index_sub, use = "pairwise.complete.obs")
           out <- makeLongCor(input, output, session,
-                             m, reactive(sel_agg)) # Index aggregated_index correlation ID
+                             m, reactive(sel_agg)) # Index aggregated_index correlation id
+          return(out)
         }))
+        
+        by_cluster <- dplyr::arrange(by_cluster, desc(correlation)) %>% 
+          mutate(id = dplyr::row_number())  # sort the id differently
+                 # index_type = "aggregation")
+        
+        # add an average index as a benchmark
+        if("average" %in% input$sel_benchmark) {
+          index_ave <- rowSums(val$dt_index[,-1]) # , na.rm = T)
+          df <- data.frame(avg = index_ave, val$dt_index)
+          by_ave <- makeLongCor(input, output, session,
+                                cor(df, use = "pairwise.complete.obs"), reactive("avg"))
+          by_cluster <- rbind(by_cluster, by_ave)
+cat("  average computed\n")          
+        }
+        
+        # add uploaded indexes as benchmarks
+        if("upload" %in% input$sel_benchmark) {
+cat("  upload in sel_benchmark\n")          
+          if(is.null(val$dt_bnchmrk_ev_cleaned)) return(by_cluster)
+cat("  req satsified\n")          
+          dt_sub_ebv_index_ids <- calculateIndividualBW(input, output, session, 
+                                val$dt_ebv_filtered, val$dt_bnchmrk_ev_cleaned, 
+                                val$dt_description_clean, val$dt_desc_ev_clean)
+          
+          dt_sub_index_ids <- # ID sex bnchmrk_index ...
+            dt_sub_ebv_index_ids[,!names(dt_sub_ebv_index_ids) 
+                                 %in% val$dt_description_clean$column_labelling[
+                                   val$dt_description_clean$classifier=="EBV"] ]
+# cat("  dt_sub_index_ids:");print(dim(dt_sub_index_ids));print(head(dt_sub_index_ids))
+          
+          index <- dplyr::select(val$dt_index_new, !matches("new_index_"))
+          # ID sex bnchmrk_index, index_1 ... index_3000
+          dt_sub_index_ids_orig <- data.frame(ID = rownames(index), index, check.names = F)
+# cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(head(dt_sub_index_ids_orig))
+          val$dt_sub_index_ids <- left_join(dt_sub_index_ids, dt_sub_index_ids_orig, by = "ID")
+# cat("  dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(head(val$dt_sub_index_ids))
+          
+          # animal ID x Index
+          dt_index_bnchmrk <- dplyr::select(
+            val$dt_sub_index_ids, 
+            dplyr::any_of(c(val$dt_bnchmrk_ev_cleaned$Index, val$dt_ev_filtered$Index)))
+# cat("  val$dt_index_new dim: ");print(dim(val$dt_index_new));print(val$dt_index_new[3:5,dt_ev_agg()$Index])
+          
+          by_bnchmrk <- makeLongCor(input, output, session,
+                                    cor(dt_index_bnchmrk, use = "pairwise.complete.obs"),
+                                    reactive(val$dt_bnchmrk_ev_cleaned$Index))
+          by_cluster <- rbind(by_cluster, by_bnchmrk)
+cat("  upload computed\n   by_cluster:");print(head(by_cluster))     
+        } # if "upload" in input$sel_benchmark
         return(by_cluster)
       })
       

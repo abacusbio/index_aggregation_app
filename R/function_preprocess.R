@@ -244,6 +244,16 @@ sanityCheckEV <- function(df_econval, df_description) {
              " First column name should be 'Index'.\n 
       Please reload and try again.")
     return(out)
+    
+  } else {
+    ## duplicated index
+    if(sum(duplicated(df_econval$Index)) > 0) {
+      out <- paste0("Economic values: file description error:\n",
+                    " Duplicated indexes ",
+                    df_econval$Index[duplicated(df_econval$Index)],
+                    "\n Please reload and try again.")
+      return(out)
+    }
   }
   
   ## duplicated header
@@ -280,14 +290,16 @@ sanityCheckEV <- function(df_econval, df_description) {
     }
   }
 
-sanityCheckWt <- function(df_wt, desc_ev = NULL, df_econval = NULL) {
-  # if(is.null(df_econval)) {
-  #   return("Please upload an economic value file first.")
-  # }
-  # 
-  # if(is.null(desc_ev)) {
-  #   return("Please upload an economic value description file first.")
-  # }
+sanityCheckWt <- function(df_wt, df_econval = NULL) {
+
+  ## Duplicated index
+  if(sum(duplicated(df_wt$Index)) > 0) {
+    out <- paste0("Aggregation weight: data error:\n",
+                  " Duplicated indexes ",
+                  df_wt$Index[duplicated(df_wt$Index)],
+                  "\n Please reload and try again.")
+    return(out)
+  }
   
   ## Names do not match
   index_ev <- df_econval$Index
