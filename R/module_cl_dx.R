@@ -6,15 +6,15 @@ clusterDxModSidebarUI <- function(id) {
     #   tags$td(checkboxInput(ns("center"), "Center columns (features)", T)),
     #   tags$td(checkboxInput(ns("scale"), "Scale columns (features)", T))
     # ),
-    h4("Upload files (optional)"),
-    wellPanel(
-      uploadTableModuleUI(ns("upload_index"), "Upload an index table (only has ID and index cols)"),
-      span(textOutput(ns("error_m_1")), style = "color:salmon"),
-      uploadTableModuleUI(ns("upload_cl_obj"), "Upload a cluster object .RData file"),
-      span(textOutput(ns("error_m_2")), style = "color:salmon"),
-      uploadTableModuleUI(ns("upload_clusters"), "Upload a cluster table"),
-      span(textOutput(ns("error_m_3")), style = "color:salmon")
-    ),
+    # h4("Upload files (optional)"),
+    # wellPanel(
+    #   uploadTableModuleUI(ns("upload_index"), "Upload an index table (only has ID and index cols)"),
+    #   span(textOutput(ns("error_m_1")), style = "color:salmon"),
+    #   uploadTableModuleUI(ns("upload_cl_obj"), "Upload a cluster object .RData file"),
+    #   span(textOutput(ns("error_m_2")), style = "color:salmon"),
+    #   uploadTableModuleUI(ns("upload_clusters"), "Upload a cluster table"),
+    #   span(textOutput(ns("error_m_3")), style = "color:salmon")
+    # ),
     # h4("Index & cluster corr"),
     # uiOutput(ns("ui_sel_index")),
     # uiOutput(ns("ui_sel_clusters")),
@@ -25,8 +25,7 @@ clusterDxModSidebarUI <- function(id) {
       checkboxInput(ns("bi_clust"), "Also cluster plant", value = F),
       actionButton(ns("run_heatmap"), "Show heatmap", icon("running"),
                    class = "btn btn-outline-primary")
-    ),
-    
+    )
     # shinyjs::hidden(
     #   div(id = ns("tune"),
     #       h4("Parameter tuning"),      
@@ -70,7 +69,7 @@ clusterDxModUI <- function(id) {
     #       )
     #   )),
     # h2("Index and cluster correlations"),
-    br(),
+    # br(),
     h2("Heatmap"),
     helpText(
       div("Warning:", class = "text-warning"), #style = "color:orange"),
@@ -113,78 +112,78 @@ cat("clusterDxMod\n")
       
       observeEvent(input$show_corr, { shinyjs::toggle(id = "bi_clust", condition = !input$show_corr) })
       
-      # when user starts the app from this step,
-      # upload intermediate files to replace reactive(val$dt_index), cl()$cluster_obj, cl()$clusters
-      index_user <- uploadTableModuleServer("upload_index", 1, 0)
-      
-      output$error_m_1 <- renderText({
-        validate(
-          need(class(index_user())!="try-error", attr(index_user(), "condition")$message),
-          need(names(index_user())[1]=="ID", "Index file first column should be ID (for plant)")
-        )
-      })
-      
-      observeEvent(length(index_user()) > 0, { # if use index_user, only observe once...
-# cat(" observe index_user\n  val names:");print(names(val))
-        req(class(index_user())=="data.frame") # error_m_1 initial value is NULL, so doesn't work
-        if("dt_index" %in% names(val)) {
-          output$warn_m <- renderText({
-            "You are going to re-write the index table by your uploaded file."
-          })
-        }
-        out <- index_user()[,-1]
-        rownames(out) <- index_user()$ID
-        val$dt_index <- out
-      })
-      
-      cl_obj_user <- uploadTableModuleServer("upload_cl_obj") # RData
-      
-      output$error_m_2 <- renderText({
-        validate(
-          need(class(cl_obj_user())!="try-error", attr(cl_obj_user(), "condition")$message),
-          need(class(cl_obj_user())[1] %in% c("hclust", "agnes"), "Please upload a cluster object")
-        )
-      })
-      
-      observeEvent(length(cl_obj_user()) > 0, {
-# cat(" observe cl_obj_user\n  val names:");print(names(val))        
-        if(!"cl" %in% names(val)) {
-          val$cl <- NULL
-          
-        } else if("cl_obj" %in% names(val$cl)) {
-          output$warn_m <- renderText({
-            "You are going to re-write the clustering object by your uploaded file."
-          })
-        }
-        
-        val$cl$cluster_obj <- cl_obj_user()
-      })
-      
-      clusters_user <- uploadTableModuleServer("upload_clusters", 1, 0)
-      
-      output$error_m_3 <- renderText({
-        validate(
-          need(class(clusters_user())!="try-error", attr(clusters_user(), "condition")$message),
-          need(names(clusters_user())[1]=="Index" && names(clusters_user())[2]=="cluster",
-               "Cluster file headers should be 'Index' 'cluster'")
-        )
-      })
-      
-      observeEvent(length(clusters_user())>0, {
-# cat(" observe clusters_user\n  val names:");print(names(val))        
-        if(!"cl" %in% names(val)) {
-          val$cl <- NULL
-          
-        } else if("clusters" %in% names(val$cl)) {
-          output$warn_m <- renderText({
-            "You are going to re-write the cluster table by your uploaded file."
-          })
-        }
-        
-        out <- clusters_user()[,-1,drop = T]
-        names(out) <- clusters_user()$Index
-        val$cl$clusters <- out
-      })
+#       # when user starts the app from this step,
+#       # upload intermediate files to replace reactive(val$dt_index), cl()$cluster_obj, cl()$clusters
+#       index_user <- uploadTableModuleServer("upload_index", 1, 0)
+#       
+#       output$error_m_1 <- renderText({
+#         validate(
+#           need(class(index_user())!="try-error", attr(index_user(), "condition")$message),
+#           need(names(index_user())[1]=="ID", "Index file first column should be ID (for plant)")
+#         )
+#       })
+#       
+#       observeEvent(length(index_user()) > 0, { # if use index_user, only observe once...
+# # cat(" observe index_user\n  val names:");print(names(val))
+#         req(class(index_user())=="data.frame") # error_m_1 initial value is NULL, so doesn't work
+#         if("dt_index" %in% names(val)) {
+#           output$warn_m <- renderText({
+#             "You are going to re-write the index table by your uploaded file."
+#           })
+#         }
+#         out <- index_user()[,-1]
+#         rownames(out) <- index_user()$ID
+#         val$dt_index <- out
+#       })
+#       
+#       cl_obj_user <- uploadTableModuleServer("upload_cl_obj") # RData
+#       
+#       output$error_m_2 <- renderText({
+#         validate(
+#           need(class(cl_obj_user())!="try-error", attr(cl_obj_user(), "condition")$message),
+#           need(class(cl_obj_user())[1] %in% c("hclust", "agnes"), "Please upload a cluster object")
+#         )
+#       })
+#       
+#       observeEvent(length(cl_obj_user()) > 0, {
+# # cat(" observe cl_obj_user\n  val names:");print(names(val))        
+#         if(!"cl" %in% names(val)) {
+#           val$cl <- NULL
+#           
+#         } else if("cl_obj" %in% names(val$cl)) {
+#           output$warn_m <- renderText({
+#             "You are going to re-write the clustering object by your uploaded file."
+#           })
+#         }
+#         
+#         val$cl$cluster_obj <- cl_obj_user()
+#       })
+#       
+#       clusters_user <- uploadTableModuleServer("upload_clusters", 1, 0)
+#       
+#       output$error_m_3 <- renderText({
+#         validate(
+#           need(class(clusters_user())!="try-error", attr(clusters_user(), "condition")$message),
+#           need(names(clusters_user())[1]=="Index" && names(clusters_user())[2]=="cluster",
+#                "Cluster file headers should be 'Index' 'cluster'")
+#         )
+#       })
+#       
+#       observeEvent(length(clusters_user())>0, {
+# # cat(" observe clusters_user\n  val names:");print(names(val))        
+#         if(!"cl" %in% names(val)) {
+#           val$cl <- NULL
+#           
+#         } else if("clusters" %in% names(val$cl)) {
+#           output$warn_m <- renderText({
+#             "You are going to re-write the cluster table by your uploaded file."
+#           })
+#         }
+#         
+#         out <- clusters_user()[,-1,drop = T]
+#         names(out) <- clusters_user()$Index
+#         val$cl$clusters <- out
+#       })
       
       # # Index and cluster correlations UI
       # output$ui_sel_index <- renderUI({

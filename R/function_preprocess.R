@@ -248,7 +248,7 @@ sanityCheckEV <- function(df_econval, df_description) {
   } else {
     ## duplicated index
     if(sum(duplicated(df_econval$Index)) > 0) {
-      out <- paste0("Economic values: file description error:\n",
+      out <- paste0("Economic values: data error:\n",
                     " Duplicated indexes ",
                     df_econval$Index[duplicated(df_econval$Index)],
                     "\n Please reload and try again.")
@@ -269,10 +269,10 @@ sanityCheckEV <- function(df_econval, df_description) {
   m <- match(df_description$column_labelling,
              unlist(gsub("EV", "", colnames(df_econval), ignore.case = T)))
   if(sum(is.na(m)) > 0) {
-    out <- paste0("Economic value column header do not match file description:\n",
-                     "'Economic values: file description' column_labelling(s) is:\n",
+    out <- paste0("Economic value: file description column headers do not match data file:\n",
+                     "'Economic values: file description' column_labellings are:\n",
                      paste0(df_description$column_labelling, collapse = ", "),
-                     "\n'Economic values: data' column header(s) is:\n",
+                     "\n'Economic values: data' column headers are:\n",
                      paste0(colnames(df_econval), collapse = ", "),
                      "\n Please reload and try again.")
     return(out)
@@ -287,9 +287,54 @@ sanityCheckEV <- function(df_econval, df_description) {
                   " does not exist in description file.\n
            Please reload and try again.")
     return(out)
+  }
+}
+
+#' Note that this is a transpose of the EV file in index testing app.
+#' @param df_evbench a string, the EV benchmark file name
+#' @param df_econval a string, the EV file name
+sanityCheckEVbenchmark <- function(df_evbench, df_econval) {
+  
+  if(colnames(df_evbench)[ 1 ]!="Index") {
+    out <- paste0("Economic values: benchmark error:\n",
+                  " First column name should be 'Index'.\n 
+      Please reload and try again.")
+    return(out)
+    
+  } else {
+    ## duplicated index
+    if(sum(duplicated(df_evbench$Index)) > 0) {
+      out <- paste0("Economic values: benchmark error:\n",
+                    " Duplicated indexes ",
+                    df_evbench$Index[duplicated(df_evbench$Index)],
+                    "\n Please reload and try again.")
+      return(out)
     }
   }
-
+  
+  ## duplicated header
+  if(sum(duplicated(colnames(df_evbench))) > 0) {
+    out <- paste0("Economic values: benchmark error:\n",
+                  " Duplicated headers ",
+                  paste0(colnames(df_evbench)[duplicated(colnames(df_evbench))], collapse = ", "),
+                  "\n Please reload and try again."
+    )
+    return(out)
+  }
+  
+  m <- match(colnames(df_evbench),
+             unlist(gsub("EV", "", colnames(df_econval), ignore.case = T)))
+  if(sum(is.na(m)) > 0) {
+    out <- paste0("Economic value: benchmark column headers do not match data file:\n",
+                  "'Economic values: benchmark' column_labellings are:\n",
+                  paste0(df_evbench$column_labelling, collapse = ", "),
+                  "\n'Economic values: data' column headers are:\n",
+                  paste0(colnames(df_econval), collapse = ", "),
+                  "\n Please reload and try again.")
+    return(out)
+  }
+}
+  
 sanityCheckWt <- function(df_wt, df_econval = NULL) {
 
   ## Duplicated index

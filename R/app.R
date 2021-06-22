@@ -157,13 +157,13 @@ ui <- fluidPage(
            tabPanel("EV summary statistics", value = "tab.ev.sumstat",
              br(),
              sumstatModUI("sumstat_ev")
-           ),
+           ) #,
            
-           tabPanel("Step 4: Combine highly correlated indexes", value = "tab.step4",
-             br(),
-             h2("Combine highly correlated indexes"),
-             helpText("automatically, without diagnosis.")
-           )
+           # tabPanel("Step 4: Combine highly correlated indexes", value = "tab.step4",
+           #   br(),
+           #   h2("Combine highly correlated indexes"),
+           #   helpText("automatically, without diagnosis.")
+           # )
                      
          ) # tabsetPanel upload
        ),# class = "bg-light"), # mainPanel

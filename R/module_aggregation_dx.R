@@ -38,7 +38,8 @@ aggDxModUI <- function(id) {
     h1("Index correlations"),
     h2("Distribution of correlations between within-cluster indexes and their aggregated index"),
     h3("Scatter plot"),
-    textOutput(ns("error_m")),
+    textOutput(ns("error_m")), # input file missing
+    textOutput(ns("warn_m")), # input file format wrong
     plotOutput(ns("plot_cor_default")),
     tags$table(
       tags$td(downloadPlotModuleUI(ns("dnld_heat_default"))),
@@ -104,6 +105,10 @@ cat("aggDxMod\n")
           output$warn_m <- renderText({
             "You are going to re-write the EBV description table by your uploaded file."
           })
+        } else {
+          output$warn_m <- renderText({
+            sanityCheckEBVdesc(ebv_desc_user())
+          })
         }
         val$dt_description_clean <- ebv_desc_user()
       })
@@ -124,6 +129,10 @@ cat("aggDxMod\n")
         if("dt_ebv_filtered" %in% names(val)) {
           output$warn_m <- renderText({
             "You are going to re-write the EV table by your uploaded file."
+          })
+        } else {
+          output$warn_m <- renderText({
+            sanityCheckEBV(ebv_user())
           })
         }
         
@@ -147,9 +156,13 @@ cat("aggDxMod\n")
           output$warn_m <- renderText({
             "You are going to re-write the benchmark EV table by your uploaded file."
           })
+        } else {
+          output$warn_m <- renderText({
+            sanityCheckEVbenchmark(bnchmrk_user(), val$dt_ev_filtered)
+          })
         }
         
-        val$dt_bnchmrk_ev_cleaned <- sanityCheckEV(val$dt_desc_ev_clean, bnchmrk_user())
+        val$dt_bnchmrk_ev_cleaned <- cleanEVplant(val$dt_desc_ev, bnchmrk_user())
         updateSelectInput(session, "sel_benchmark", choices = c("", "average", "upload"))
       })
       
@@ -157,12 +170,13 @@ cat("aggDxMod\n")
       output$error_m <- renderText({
 # cat(" erro_m:");print(input$error_m) # always NULL
 # cat("  names val:");print(names(val))
-        validate(need(!is.null(val$dt_desc_ev_clean), "Please upload an EV description file"),
-                 need(!is.null(val$dt_description_clean), "Please upload an EBV description file"),
+        validate(need(!is.null(val$dt_description_clean), "Please upload an EBV description file"),
+                 need(!is.null(val$dt_desc_ev_clean), "Please upload an EV description file"),
                  need(!is.null(val$dt_ebv_filtered), "Please upload an EBV file"),
+                 need(!is.null(val$dt_ev_filtered), "Please upload an EV file"),
                  need(!is.null(val$dt_index), "Please finish filtering or upload an index table"),
-                 # need(!is.null(clusters()), #val$cl$clusters), 
-                 #     "Please finish 'run cluster' or upload a cluster table"),
+                 need(!is.null(clusters()), #val$cl$clusters),
+                     "Please finish 'run cluster' or upload a cluster table"),
                  need(!is.null(dt_ev_agg()), "Please finish 'Make new weights'")
         )
       })
@@ -243,9 +257,9 @@ cat("aggDxMod\n")
             # update
             # ID sex new_index_1 ... new_index_3, index_1 ... index_3000
             dt_sub_index_ids_orig <- data.frame(ID = rownames(index), index, check.names = F)
-# cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(head(dt_sub_index_ids_orig))
+# cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(dt_sub_index_ids_orig[3:5,3:5])
             val$dt_sub_index_ids <- left_join(dt_sub_index_ids, dt_sub_index_ids_orig, by = "ID")
-# cat("  dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(head(val$dt_sub_index_ids))
+# cat("  dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(val$dt_sub_index_ids[3:5,3:5])
             # update
             # animal ID x Index
             val$dt_index_new <- dplyr::select(
@@ -260,7 +274,7 @@ cat("aggDxMod\n")
           input$sel_benchmark
           }, 
         {
-cat("event reactive val$dt_index_new\n")
+# cat("event reactive val$dt_index_new\n")
 # cat("  dt_index_new:");print(dim(val$dt_index_new));print(val$dt_index_new[1:3, dt_ev_agg()$Index])
         req(!is.null(clusters()), !is.null(dt_ev_agg()), !is.null(val$dt_index))
         
@@ -287,14 +301,15 @@ cat("event reactive val$dt_index_new\n")
           by_ave <- makeLongCor(input, output, session,
                                 cor(df, use = "pairwise.complete.obs"), reactive("avg"))
           by_cluster <- rbind(by_cluster, by_ave)
-cat("  average computed\n")          
+# cat("  average computed\n")          
         }
         
         # add uploaded indexes as benchmarks
         if("upload" %in% input$sel_benchmark) {
-cat("  upload in sel_benchmark\n")          
+# cat("  upload in sel_benchmark\n   val$dt_bnchmrk_ev_cleaned:\n")
+print(head(val$dt_bnchmrk_ev_cleaned))
           if(is.null(val$dt_bnchmrk_ev_cleaned)) return(by_cluster)
-cat("  req satsified\n")          
+# cat("  req satsified\n")          
           dt_sub_ebv_index_ids <- calculateIndividualBW(input, output, session, 
                                 val$dt_ebv_filtered, val$dt_bnchmrk_ev_cleaned, 
                                 val$dt_description_clean, val$dt_desc_ev_clean)
@@ -308,28 +323,28 @@ cat("  req satsified\n")
           index <- dplyr::select(val$dt_index_new, !matches("new_index_"))
           # ID sex bnchmrk_index, index_1 ... index_3000
           dt_sub_index_ids_orig <- data.frame(ID = rownames(index), index, check.names = F)
-# cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(head(dt_sub_index_ids_orig))
+# cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(dt_sub_index_ids_orig[3:5,3:5])
           val$dt_sub_index_ids <- left_join(dt_sub_index_ids, dt_sub_index_ids_orig, by = "ID")
-# cat("  dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(head(val$dt_sub_index_ids))
+# cat("  dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(val$dt_sub_index_ids[3:5,3:5])
           
           # animal ID x Index
           dt_index_bnchmrk <- dplyr::select(
             val$dt_sub_index_ids, 
             dplyr::any_of(c(val$dt_bnchmrk_ev_cleaned$Index, val$dt_ev_filtered$Index)))
-# cat("  val$dt_index_new dim: ");print(dim(val$dt_index_new));print(val$dt_index_new[3:5,dt_ev_agg()$Index])
+# cat("  dt_index_bnchmrk dim: ");print(dim(dt_index_bnchmrk));print(dt_index_bnchmrk[3:5,3:5])
           
           by_bnchmrk <- makeLongCor(input, output, session,
                                     cor(dt_index_bnchmrk, use = "pairwise.complete.obs"),
                                     reactive(val$dt_bnchmrk_ev_cleaned$Index))
           by_cluster <- rbind(by_cluster, by_bnchmrk)
-cat("  upload computed\n   by_cluster:");print(head(by_cluster))     
+# cat("  upload computed\n   by_cluster:");print(head(by_cluster))     
         } # if "upload" in input$sel_benchmark
         return(by_cluster)
       })
       
       # Heatmap or scatter plot
       output$plot_cor_default <- renderPlot({
-        req(length(cor_default())>0, input$font_size)
+        req(cor_default, input$font_size)
 # cat(" renderPlot plot_cor_default\n")
 # cat("  cor_default:");print(head(cor_default()))
         # initial parameters

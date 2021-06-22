@@ -46,6 +46,7 @@ runFinalCluster <- function(dat, cor_mat = F, cor_absolute, cluster_object = NUL
 #'        if \code{cor_mat} == T
 #' @param stand logical, whether to standardise dat. The arg will be ignored when \code{cor_mat} is 
 #'       \code{TRUE}
+#' @references https://stats.stackexchange.com/questions/9988/can-cluster-analysis-cluster-variables-that-both-positively-and-negatively-corre       
 runCluster <- function(dat, cor_mat = F, cor_absolute = F, scale = T, center = T, n_core = 4) {
 
   dat <- t(scale(t(dat), center, scale))

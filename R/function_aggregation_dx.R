@@ -43,10 +43,10 @@ plotcorrDot <- function(input, output, session,
 # cat("plotCorrDot\n, m:", class(m));print(dim(m));#print(head(m))
   p <- ggpubr::ggscatter(m, x = "id", y = "correlation",
                          color = "aggregated_index", alpha = 0.5, 
-                         palette = "npg",         # npg journal color palett. see ?ggpar
-                         sort.val = "desc",          # Sort the value in dscending order
+                         palette = "npg",          # npg journal color palett. see ?ggpar
+                         sort.val = "desc",        # Sort the value in dscending order
                          # sort.by.groups = T,     # Don't sort inside each group
-                         ylim = c(0, 1),
+                         ylim = c(min(0, m[["correlation"]]), 1),
                          xlab = "sorted original index",
                          font.x = c(font_size(), "plain", "black"), # xlab
                          font.y = c(font_size(), "plain", "black"), # y lab

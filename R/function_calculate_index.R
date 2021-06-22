@@ -7,7 +7,7 @@
 #' @return a data.frame which columns as ID trait1 trait2... index1 index2...
 calculateIndividualBW <- function (input, output, session,
                                    df_ebv_select, df_econval, desc_ebv, desc_ev) {
-# cat("\ncalculateIndividualBW\n df_econval:");print(dim(df_econval))
+# cat("\ncalculateIndividualBW\n df_econval:");print(dim(df_econval));print(head(df_econval))
   df_ebv_select <- df_ebv_select[complete.cases(df_ebv_select),] # remove NA rows
   
   # subset traits existing in dt_econval() only

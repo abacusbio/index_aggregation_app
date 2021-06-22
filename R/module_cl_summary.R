@@ -8,8 +8,8 @@ clusterSumStatModSidebarUI <- function(id) {
     wellPanel(
       uploadTableModuleUI(ns("upload_index"), "index table (only has ID and index cols)"),
       span(textOutput(ns("error_m_1")), style = "color:salmon"),
-      uploadTableModuleUI(ns("upload_cl_obj"), "cluster object .RData file"),
-      span(textOutput(ns("error_m_2")), style = "color:salmon"),
+      # uploadTableModuleUI(ns("upload_cl_obj"), "cluster object .RData file"),
+      # span(textOutput(ns("error_m_2")), style = "color:salmon"),
       uploadTableModuleUI(ns("upload_clusters"), "cluster table"),
       span(textOutput(ns("error_m_3")), style = "color:salmon")
     ),
@@ -79,28 +79,28 @@ cat("clusterSumStatMod\n")
         val$dt_index <- out
       })
       
-      cl_obj_user <- uploadTableModuleServer("upload_cl_obj") # RData
-      
-      output$error_m_2 <- renderText({
-        validate(
-          need(class(cl_obj_user())!="try-error", attr(cl_obj_user(), "condition")$message),
-          need(class(cl_obj_user())[1] %in% c("hclust", "agnes"), "Please upload a cluster object")
-        )
-      })
-      
-      observeEvent(length(cl_obj_user()) > 0, {
-        # cat(" observe cl_obj_user\n  val names:");print(names(val))        
-        if(!"cl" %in% names(val)) {
-          val$cl <- NULL
-          
-        } else if("cl_obj" %in% names(val$cl)) {
-          output$warn_m <- renderText({
-            "You are going to re-write the clustering object by your uploaded file."
-          })
-        }
-        
-        val$cl$cluster_obj <- cl_obj_user()
-      })
+      # cl_obj_user <- uploadTableModuleServer("upload_cl_obj") # RData
+      # 
+      # output$error_m_2 <- renderText({
+      #   validate(
+      #     need(class(cl_obj_user())!="try-error", attr(cl_obj_user(), "condition")$message),
+      #     need(class(cl_obj_user())[1] %in% c("hclust", "agnes"), "Please upload a cluster object")
+      #   )
+      # })
+      # 
+      # observeEvent(length(cl_obj_user()) > 0, {
+      #   # cat(" observe cl_obj_user\n  val names:");print(names(val))        
+      #   if(!"cl" %in% names(val)) {
+      #     val$cl <- NULL
+      #     
+      #   } else if("cl_obj" %in% names(val$cl)) {
+      #     output$warn_m <- renderText({
+      #       "You are going to re-write the clustering object by your uploaded file."
+      #     })
+      #   }
+      #   
+      #   val$cl$cluster_obj <- cl_obj_user()
+      # })
       
       clusters_user <- uploadTableModuleServer("upload_clusters", 1, 0)
       
@@ -167,8 +167,8 @@ cat("clusterSumStatMod\n")
       # Index and cluster correlations
       output$error_m <- renderText({
         validate(need(!is.null(val$dt_index), "please finish filtering or upload an index"),
-                 need(!is.null(val$cl$cluster_obj), 
-                      "please finish 'run cluster' or upload a cluster object"),
+                 # need(!is.null(val$cl$cluster_obj), 
+                 #      "please finish 'run cluster' or upload a cluster object"),
                  need(!is.null(val$cl$clusters), 
                       "Please finish 'run cluster' or upload a cluster table")
         )
@@ -178,7 +178,7 @@ cat("clusterSumStatMod\n")
       sth <- reactive({
 # cat("clusterSumStatMod\n reactive sth\n")
         req(length(input$error_m)==0, 
-            !is.null(val$dt_index), !is.null(val$cl$cluster_obj), !is.null(val$cl$clusters))
+            !is.null(val$dt_index), !is.null(val$cl$clusters)) #, !is.null(val$cl$cluster_obj)
         
         shinyjs::show("wait")
         
