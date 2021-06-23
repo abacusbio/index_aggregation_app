@@ -10,6 +10,7 @@ sumstatModSidebarUI <- function(id) {
                 c("mean", "sd", "min", "max", "n_obs","n_missing"),
                 multiple = T),
     numericInput(ns("view_dec"), "Decimals:", value = 2, min = 0),
+    numericInput(ns("font_size"), "Font size", 12, 1, 20, 1),
     br(),
     actionButton(ns("create_table"), "Create table", icon("table"), class = "btn-success")
   )
@@ -21,11 +22,21 @@ sumstatModUI <- function(id) {
     textOutput(ns("warning1")),
     textOutput(ns("warning2")),
     h2("Numerical variable summary statistics"),
+    h3("Table"),
     renderDtTableModuleUI(ns("stat_num"), "Numeric sum stats"),
     br(),br(),
+    h3("Distribution"),
+    plotOutput(ns("hist_num")),
+    downloadModuleUI(ns("dnld_hist_num")),
+    br(),br(),
     h2("String variable summary statistics"),
+    h3("Table"),
     renderDtTableModuleUI(ns("stat_chr"), "String sum stats"),
-	  br(),br(),
+    br(),br(),
+    h3("Distribution"),
+    plotOutput(ns("bar_char")),
+    downloadModuleUI(ns("dnld_bar_char"))
+    #br(),br(),
     # h2("Mult-choice variable frequency table"),
     # renderDtTableModuleUI(ns("stat_lst"), "N choice stats")
     # level conversion table for rating vars
@@ -113,7 +124,9 @@ sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
         var_type <- sapply(tempVar$dat[,varss, drop = F], class) %>% sapply(head, 1)
         
         group_vars <- isolate(sapply(strsplit(input$group_vars, "\\{"), head, 1) %>% unlist())
-        if(length(group_vars)==1 && group_vars=="") group_vars <- NULL
+        if(length(group_vars)==0) {
+          group_vars <- NULL # convenient for dplyr functions
+        }
         
         l_fun <- list("mean" = mean, "sd" = sd, "min" = min, "max" = max) # add n_obs, n_missing later
         l_fun <- l_fun[which(names(l_fun) %in% input$functions)]
@@ -164,8 +177,9 @@ sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
         
         ## sumstat numeric variables
         if(length(vars_num) > 0) {
-          # cat("vars_num exists --> stat_num lapply\n")
-          df_num <- select_at(tempVar$dat, vars(all_of(group_vars), all_of(vars_num)))
+cat("vars_num exists --> stat_num lapply\n")
+          df_num <- dplyr::select(tempVar$dat, all_of(c(group_vars, vars_num)))
+
           stat_num <- lapply(vars_num, function(var_num) {
             # cat(" var_num", var_num, "\n")
             if(class(df_num[[var_num]]) == "list") {
@@ -173,30 +187,30 @@ sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
             } else {
               df <- df_num
             }
-            # cat("df"); print(dim(df))
-            stats <- df %>% select_at(vars(all_of(group_vars), all_of(var_num))) %>%
-              group_by_at(vars(all_of(group_vars))) %>%
-              summarise_at(var_num, l_fun, na.rm = T) %>%
+# cat(" df"); print(head(df))
+            stats <- df %>% dplyr::select(all_of(c(group_vars, var_num))) %>%
+              group_by_at(vars(all_of(group_vars))) %>% # group_by(across(all_of(group_vars))) %>% # doesn't work with group_vars==NULL
+              summarise(across(all_of(var_num), l_fun, na.rm = T, .names = "{fn}")) %>% # summarise_at(var_num, l_fun, na.rm = T) %>%
               mutate(variable = var_num)
-            
+# cat(" stats1:");print(head(stats))
             if(ncol(stats) < length(group_vars) + length(l_fun) + 1) { # sanity check
               return(NULL)
             } else {
-              stats <- select_at(stats, vars(all_of(group_vars), "variable", names(l_fun)))
+              stats <- dplyr::select(stats, all_of(c(group_vars, "variable", names(l_fun))))
             }
-            
+# cat(" stats2:");print(head(stats))
             if("n_missing" %in% input$functions) {
               miss <- df %>% select_at(vars(all_of(group_vars), all_of(var_num))) %>%
                 group_by_at(vars(all_of(group_vars), all_of(var_num))) %>%
                 tally() %>%
                 filter_at(vars(all_of(var_num)), any_vars(is.na(.))) %>%
-                select_at(vars(-var_num))
+                select_at(vars(-all_of(var_num)))
 
               if(nrow(miss) == 0) {
                 miss <- df %>% select_at(vars(all_of(group_vars))) %>%
                   group_by_at(vars(all_of(group_vars))) %>%
                   mutate(variable = var_num, n_missing = 0)
-                # cat("nrow miss == 0"); print(dim(miss))
+# cat("nrow miss == 0"); print(dim(miss))
               } else {
 
                 miss <- miss %>% mutate(variable = var_num)
@@ -236,7 +250,7 @@ sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
                 return(out)
               }))
             }
-            # print(head(stat_num)); print(head(ns))
+# cat(" stat_num:");print(head(stat_num)); print(head(ns))
             
             # variable   mean    sd   min   max n_missing n prop
             stat_num <- full_join(stat_num, ns) %>% distinct()
@@ -250,11 +264,45 @@ sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
             stat_num  <- mutate(stat_num, n = as.character(n))
           } # if n_obs in input$functions
           
-          # output
+          # output table
           renderDtTableModuleServer("stat_num", reactive(stat_num), T,
                                     c("FixedHeader", "FixedColumns"),
                                     digits = reactive(input$view_dec), downloadName = "sum_stat_num",
                                     editable = F, colfilter = "none")
+          
+          # make df for histogram
+cat("  group_vars:", !is.null(group_vars), "df_num:\n");print(head(df_num))
+          if(!is.null(group_vars)) {
+            df <- tidyr::pivot_longer(df_num, all_of(group_vars),
+                                    names_to = "group", values_to = group_vars) %>%
+# cat("  df 1:\n");print(head(df))
+              dplyr::select(-group)
+# cat("  df 2:\n");print(head(df))
+          } else {
+            df <- df_num
+          }
+          
+          # group var value ...  
+          df <- df %>% tidyr::pivot_longer(all_of(vars_num), "var", values_to = "value")
+cat("  df 3:\n");print(head(df));#write.table(df, "../test outputs/half_indexes/df", quote = F, row.names = F)
+          output$hist_num <- renderPlot({
+            req(df)
+cat(" renderPlot\n")
+            group2 <- NULL # ifelse can't return NULL without error
+            if(!is.null(group_vars)) group2 <- "var"
+            width  <- session$clientData[[paste0("output_", session$ns("hist_num"),
+                                                 "_width")]]
+            p <- plotHist(input, output, session,
+                                 df, "value",
+                                 group1 = ifelse(!is.null(group_vars), group_vars, "var"),
+                                 group2 = group2, nbins = 30,
+                                 font_size = reactive(input$font_size))
+
+            downloadPlotModuleServer("dnld_hist_num",
+                                     paste0("histogram_", "_numeric", session$ns("name")),
+                                     p, reactive(width))
+            return(p)
+          })
         } # if vars_num exists
         
         ## sumstat character|factor|logical|integer variables

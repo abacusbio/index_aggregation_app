@@ -13,10 +13,12 @@ clusterSumStatModSidebarUI <- function(id) {
       uploadTableModuleUI(ns("upload_clusters"), "cluster table"),
       span(textOutput(ns("error_m_3")), style = "color:salmon")
     ),
-    h4("Index & cluster corr")
-   # checkboxInput(ns("color"), "Show color scale", F)
-    # uiOutput(ns("ui_sel_index")),
-    # uiOutput(ns("ui_sel_clusters"))
+    h4("Table and plot control"),
+    wellPanel(
+      numericInput(ns("digit"), "Decimals", 3, 0, 10, 1), 
+     # numericInput(ns("show_n_indexes"), "# indexs to show", 10, 1, 10, 1),
+      numericInput(ns("font_size"), "Font size", 12, 1, 20, 1)
+     )
   )
 }
 
@@ -26,9 +28,14 @@ clusterSumStatModUI <- function(id) {
     br(),
     h1("Cluster Summary statistics"),
     h2("Within-cluster correlations"),
+    h3("Table"),
     textOutput(ns("warn_m")),
     textOutput(ns("error_m")),
-    renderDtTableModuleUI(ns("sum_cor"))
+    renderDtTableModuleUI(ns("sum_cor")),
+    br(),br(),
+    h3("Histogram"),
+    plotOutput(ns("hist_cor")),
+    downloadPlotModuleUI(ns("dnld_hist_cor"))
   )
 }
 
@@ -128,42 +135,6 @@ cat("clusterSumStatMod\n")
         val$cl$clusters <- out
       })
       
-      # # Index and cluster correlations UI
-      # output$ui_sel_index <- renderUI({
-      #   req(!is.null(val$cl$clusters), !is.null(val$dt_index))
-      # 
-      #   if(transpose) {x <- t(val$dt_index) } else { x <- val$dt_index}
-      # 
-      #   idx <- match(colnames(x), names(val$cl$clusters))
-      #   new_name <- paste0(colnames(x), "{", )
-      # 
-      #   return(selectInput(
-      #     session$ns("sel_index"), "Select an index",
-      #     names(val$cl$clusters), names(val$cl$clusters)[1],
-      #     multiple = T, selectize = F, size = min(8, length(unique(val$cl$clusters)))))
-      # })
-      # 
-      # output$ui_sel_clusters <- renderUI({
-      #   req(!is.null(val$cl$clusters))
-      # 
-      #   return(selectInput(
-      #     session$ns("sel_clusters"),  # use session$ns() to get inside id being recognized
-      #     "Select cluster(s):", choices = unique(val$cl$clusters),
-      #     selected = val$cl$clusters[1], #state_multiple("view_vars", vars, vars),
-      #     multiple = TRUE,
-      #     selectize = FALSE, size = min(8, length(unique(val$cl$clusters)))
-      #   ))
-      # })
-      # 
-      # dt_corr <- reactive({
-      #   req(input$sel_index, input$sel_clusters, val$dt_index)
-      # 
-      #   clstrs <- names(val$dt_index)[grep(1, val$dt_index)]
-      # 
-      # })
-      # 
-      # renderDT("idx_clst_corr", val$dt_index[input$sel_index])
-      
       # Index and cluster correlations
       output$error_m <- renderText({
         validate(need(!is.null(val$dt_index), "please finish filtering or upload an index"),
@@ -196,6 +167,7 @@ cat("clusterSumStatMod\n")
           }
           return(data.frame(cor = cor_sub, cluster = i))
         }))
+        tempVar$df_cor <- df_cor
 
         sum_cor <- dplyr::group_by(df_cor, cluster) %>% 
           dplyr::summarise(n = n(), 
@@ -212,5 +184,20 @@ cat("clusterSumStatMod\n")
         })
       
       renderDtTableModuleServer("sum_cor", sth, extensions = "FixedHeader",
-                                downloadName = "index_cor_summary")
+                                downloadName = "index_cor_summary", digits = reactive(input$digit))
+      
+      output$hist_cor <- renderPlot({
+        req(tempVar$df_cor)
+# cat(" renderPlot\n  df_cor:\n");print(head(tempVar$df_cor))
+        width  <- session$clientData[[paste0("output_", session$ns("hist_cor"), 
+                                             "_width")]]
+        
+        plot_hist <- plotHist(input, output, session,
+                              tempVar$df_cor, "cor", "cluster", 
+                              font_size = reactive(input$font_size))
+        
+        downloadPlotModuleServer("dnld_hist_cor", "histogram_index_by_cluster",
+                                 plot_hist, reactive(width))
+        return(plot_hist)
+      })
     })}

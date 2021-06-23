@@ -20,8 +20,8 @@ clusteringModSidebarUI <- function(id) {
    h4("Main"),
    wellPanel(
      selectInput(ns("which_data"), "Choose input data", 
-                 choices = c("Index by plant", "Index correlation matrix"), 
-                 selected = "Index by plant"),
+                 choices = c("Index by individual", "Index correlation matrix"), 
+                 selected = "Index by individual"),
      shinyjs::hidden(
        div(id = ns("absolute_cor"), 
            checkboxInput(ns("absolute"), "Absolute correlation", F)) 

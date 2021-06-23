@@ -369,9 +369,9 @@ print(head(val$dt_bnchmrk_ev_cleaned))
         
         downloadPlotModuleServer("dnld_heat_default", 
                                  name = "heatmap_new_and_original_indexes",
-                                 plots = heat_map$p # if(class(heat_map)[1]=="list") {
+                                 plots = heat_map$p, # if(class(heat_map)[1]=="list") {
                                  #   gridExtra::grid.arrange(grobs = heat_map, ncol = 1)} else {heat_map}, 
-                                 # width = reactive(width)
+                                 width = reactive(width)
         )
         
        # tempVar$corr_df <- heat_map$df
@@ -467,13 +467,12 @@ print(head(val$dt_bnchmrk_ev_cleaned))
                                 m, font_size = reactive(input$font_size))
         # }
         
-        downloadPlotModuleServer("dnld_heat", 
+        downloadPlotModuleServer("dnld_heat",
           name = paste0("heatmap_", 
                         paste0(input$sel_agg, collapse = "_"),
                         "_", tempVar$sel_index,
                         "_", input$sel_cluster),
-          plots = heat_map$p
-          )
+          plots = heat_map$p,  width = reactive(width))
         
         tempVar$corr_df <- heat_map$df
         
@@ -533,7 +532,7 @@ aggDxModSidebarUI2 <- function(id) {
     wellPanel(
       # numericInput(ns("show_n_indexes"), "# indexs to show", 10, 1, 10, 1),
       numericInput(ns("font_size"), "Font size", 12, 1, 20, 1)
-    ),
+    )
   )
 }
 
