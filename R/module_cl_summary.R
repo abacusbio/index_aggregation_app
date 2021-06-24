@@ -34,7 +34,7 @@ clusterSumStatModUI <- function(id) {
     renderDtTableModuleUI(ns("sum_cor")),
     br(),br(),
     h3("Histogram"),
-    plotOutput(ns("hist_cor")),
+    plotOutput(ns("hist_cor"), height = "600px"),
     downloadPlotModuleUI(ns("dnld_hist_cor"))
   )
 }

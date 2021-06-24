@@ -26,7 +26,7 @@ sumstatModUI <- function(id) {
     renderDtTableModuleUI(ns("stat_num"), "Numeric sum stats"),
     br(),br(),
     h3("Distribution"),
-    plotOutput(ns("hist_num"), height = "800px"), # default 400px
+    plotOutput(ns("hist_num"), height = "600px"), # default 400px
     downloadModuleUI(ns("dnld_hist_num")),
     br(),br(),
     h2("String variable summary statistics"),

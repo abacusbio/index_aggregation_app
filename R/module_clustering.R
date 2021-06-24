@@ -69,8 +69,8 @@ clusteringModUI <- function(id) {
     h2("Final Clustering"),
     plotOutput(ns("plot_dendro"), width = "100%", height = "800px"),
     downloadPlotModuleUI(ns("dnld_dendro")),
-    downloadModuleUI(ns("dnld_cl"), "Download the cluster object"),
-    downloadModuleUI(ns("dnld_cluster"), "Download the clusters table")
+    downloadModuleUI(ns("dnld_cluster"), "Download the clusters table"),
+    downloadModuleUI(ns("dnld_cl"), "Download the cluster object")
   )
 }
 
