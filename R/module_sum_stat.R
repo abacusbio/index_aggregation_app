@@ -26,7 +26,7 @@ sumstatModUI <- function(id) {
     renderDtTableModuleUI(ns("stat_num"), "Numeric sum stats"),
     br(),br(),
     h3("Distribution"),
-    plotOutput(ns("hist_num")),
+    plotOutput(ns("hist_num"), height = "800px"), # default 400px
     downloadModuleUI(ns("dnld_hist_num")),
     br(),br(),
     h2("String variable summary statistics"),
@@ -271,7 +271,7 @@ cat("vars_num exists --> stat_num lapply\n")
                                     editable = F, colfilter = "none")
           
           # make df for histogram
-cat("  group_vars:", !is.null(group_vars), "df_num:\n");print(head(df_num))
+# cat("  group_vars:", !is.null(group_vars), "df_num:\n");print(head(df_num))
           if(!is.null(group_vars)) {
             df <- tidyr::pivot_longer(df_num, all_of(group_vars),
                                     names_to = "group", values_to = group_vars) %>%
@@ -284,19 +284,19 @@ cat("  group_vars:", !is.null(group_vars), "df_num:\n");print(head(df_num))
           
           # group var value ...  
           df <- df %>% tidyr::pivot_longer(all_of(vars_num), "var", values_to = "value")
-cat("  df 3:\n");print(head(df));#write.table(df, "../test outputs/half_indexes/df", quote = F, row.names = F)
+# cat("  df 3:\n");print(head(df));#write.table(df, "../test outputs/half_indexes/df", quote = F, row.names = F)
           output$hist_num <- renderPlot({
             req(df)
-cat(" renderPlot\n")
+# cat(" renderPlot\n")
             group2 <- NULL # ifelse can't return NULL without error
             if(!is.null(group_vars)) group2 <- "var"
             width  <- session$clientData[[paste0("output_", session$ns("hist_num"),
                                                  "_width")]]
             p <- plotHist(input, output, session,
-                                 df, "value",
-                                 group1 = ifelse(!is.null(group_vars), group_vars, "var"),
-                                 group2 = group2, nbins = 30,
-                                 font_size = reactive(input$font_size))
+                          df, "value",
+                          group1 = ifelse(!is.null(group_vars), group_vars, "var"),
+                          group2 = group2, nbins = 30,
+                          font_size = reactive(input$font_size))
 
             downloadPlotModuleServer("dnld_hist_num",
                                      paste0("histogram_", "_numeric", session$ns("name")),

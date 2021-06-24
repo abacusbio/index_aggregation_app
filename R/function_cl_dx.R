@@ -39,11 +39,11 @@ cat("plotHeatmap\n")
 # cat(" x_mat ", class(x_mat));print(dim(x_mat))
 # cat(" new_order ", class(new_order), length(new_order), "\n")
 # cat(" new_cl");plot(new_cl)
-cat(" start zClust", t <- Sys.time(), "\n")
+cat(" start zClust ", t <- Sys.time(), "\n")
   # list(dat_scaled, cor_mat = matrix/F, Rowv = dendrogram/F, Colv = dendrogram/F)
   z_mat <- zClust(x_mat, which_dim = ifelse(transpose, "column", "row"), center, scale, cl = new_cl, 
              method = cl_obj$method, show_corr(), bi_clust())
-cat(" zClust finished"); print(Sys.time()-t)
+cat(" zClust finished "); print(Sys.time()-t)
 # cat(" z:");print(z_mat[-1]);print(head(z_mat$Rowv$labels[z_mat$Rowv$order]))
   if(show_corr()) {
     x <- z_mat$cor_mat
@@ -75,7 +75,22 @@ cat(" starts heatmap\n"); t <- Sys.time()
                             cluster_rows = z_mat$Rowv, cluster_cols = z_mat$Colv,
                             cutree_rows = cutree_row, cutree_cols = cutree_col,
                             silent = T)
-cat(" heatmap finished");print(Sys.time()-t)
+  #$tree_row # this is actually col
+  #[1] "hclust"
+  #
+  #$tree_col # this is actually row
+  #[1] "hclust"
+  #
+  #$kmeans
+  #[1] "logical"
+#  
+ # $gtable
+  #[1] "gtable" "gTree"  "grob"   "gDesc" 
+cat(" heatmap finished ");print(Sys.time()-t)
+  
+  # reorder x using pheatmap output
+  x <- x[out$tree_col$labels[out$tree_col$order], ]
+  x <- x[,out$tree_row$labels[out$tree_row$order]]
   
   return(list(heatmap = out, data = x))
   # return(list(x = x, col = rev(cols), Rowv = cl_obj, Colv = F,
@@ -110,7 +125,7 @@ findObsOrder <- function(cl_obj, k = 2) {
   return(new_order)
 }
 
-#' Generate a heatmap
+#' Rescale the matrix to optimise the heatmap carpet color
 #' @param x_mat a numeric matrix. e.g. animal by index.
 #' @param which_dim a character value. The dimension of the observation to be scaled. Options are 
 #'        "row" and "column".

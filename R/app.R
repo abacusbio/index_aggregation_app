@@ -229,11 +229,11 @@ ui <- fluidPage(
             clusteringModUI("find_cl")     
             ),
           
-          tabPanel("Step 2: Cluster summary", value = "tab.cl.2",
+          tabPanel("Cluster summary", value = "tab.cl.2",
             clusterSumStatModUI("cl_sumstat")
           ),
           
-          tabPanel("Step 3: Cluster diagnosis", value = "tab.cl.3",
+          tabPanel("Cluster diagnosis", value = "tab.cl.3",
             clusterDxModUI("Dx")
           )
                     
@@ -279,13 +279,13 @@ ui <- fluidPage(
           tabPanel("Step 1: Make new indexes", value = "tab.agg.1",
                    calWeiModUI("cl_weight")),
                     
-          tabPanel("Step 2: Aggregation diagnosis-correlation", value = "tab.agg.2",
+          tabPanel("Aggregation diagnosis-correlation", value = "tab.agg.2",
                    aggDxModUI("agg_dx")),
           
-          tabPanel("Step 3: Aggregation diagnosis-top individual", value = "tab.agg.3",
+          tabPanel("Aggregation diagnosis-top individual", value = "tab.agg.3",
                    aggDxModUI2("agg_dx2")),
           
-          tabPanel("Step4: Aggregation diagnosis-variable pattern", value = "tab.agg.4",
+          tabPanel("Aggregation diagnosis-variable pattern", value = "tab.agg.4",
                    aggDxModUI3("agg_dx3"))
         ) # tabsetPanel run_cluster
       ), # mainPanel
