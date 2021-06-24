@@ -30,7 +30,7 @@ runFinalCluster <- function(dat, cor_mat = F, cor_absolute, cluster_object = NUL
   
   clusters <- cutree(cluster_object, k = k)
   if(is.null(names(clusters))) names(clusters) <- colnames(dat)
-  clusters <- clusters[cl$order.lab]
+  clusters <- clusters[cluster_object$order.lab]
   # h3 <- heatmap.2(cor_mat, symm = T, col = gcol2, trace = "none",
   #                 hclustfun = function(x) hclust(x, "ward.D2"),
   #                 distfun = function(x) as.dist(1 - x)) # 1 - abs(x) ?? # 
