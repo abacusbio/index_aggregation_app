@@ -83,7 +83,8 @@ clusterDxModUI <- function(id) {
     plotOutput(ns("plot_heat"), width = "100%", height = "800px"),
     tags$table(
       tags$td(downloadPlotModuleUI(ns("download_heat"))),
-      tags$td(downloadModuleUI(ns("download_carpet"), "Download the data"))
+      tags$td(downloadModuleUI(ns("download_carpet"), "Download the data")),
+      tags$td(downloadModuleUI(ns("download_obj"), "Download the pheatmap object"))
     )
   )
 }
@@ -271,6 +272,7 @@ cat(" cl_obj:");print(val$cl$cluster_obj$call)
                                  width = reactive(tempVar$width))
         downloadModuleServer("download_carpet", "index_heatmap", tempVar$data,
                              row.names = T, type = "csv")
+        downloadModuleServer("download_obj", name = "index_pheatmap", tempVar$data, type = ".RData")
       }) # observeEvent 
       
       
