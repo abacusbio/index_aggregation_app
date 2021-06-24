@@ -272,7 +272,7 @@ cat(" cl_obj:");print(val$cl$cluster_obj$call)
                                  width = reactive(tempVar$width))
         downloadModuleServer("download_carpet", "index_heatmap", tempVar$data,
                              row.names = T, type = "csv")
-        downloadModuleServer("download_obj", name = "index_pheatmap", tempVar$data, type = ".RData")
+        downloadModuleServer("download_obj", "index_pheatmap", tempVar$heatmap, type = ".RData")
       }) # observeEvent 
       
       
