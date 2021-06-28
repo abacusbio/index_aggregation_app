@@ -22,23 +22,10 @@ clusterDxModSidebarUI <- function(id) {
     wellPanel(
       checkboxInput(ns("show_corr"), "Show index correlation matrix (no plant info)", 
                     value = T),
-      checkboxInput(ns("bi_clust"), "Also cluster plant", value = F),
+     # checkboxInput(ns("bi_clust"), "Also cluster plant", value = F),
       actionButton(ns("run_heatmap"), "Show heatmap", icon("running"),
                    class = "btn btn-outline-primary")
     )
-    # shinyjs::hidden(
-    #   div(id = ns("tune"),
-    #       h4("Parameter tuning"),      
-    #       wellPanel(
-    #         checkboxInput(ns("wss"), "Try within-cluster SS measurement (can be slow)", F),
-    #         checkboxInput(ns("sil"), "Try Silhouette value measurement (can be slow)", F)
-    #       )
-    #   )),
-    # sliderInput(ns("k_slider"), "Choose # of clusters:", 2, 10, 2, step = 1),
-    # selectInput(ns("agg_method"), "Choose an agglomeration method:",
-    #             c(# "average",
-    #               "single", "complete", "ward", "weighted"), "complete"),
-    # checkboxInput(ns("circle"), "Fan shaped dendrogram", F)
   )
 }
 
@@ -47,29 +34,6 @@ clusterDxModUI <- function(id) {
   tagList(
     br(),
     h1("Clustering diagnosis "),
-    # shinyjs::hidden(
-    #   div(id = ns("parameters"),
-    #       h2("Choose parameters by their performance"),
-    #       h3("Agglomerative coefficients"),
-    #       verbatimTextOutput(ns("message_method")),
-    #       h3("Number of clusters (k)"),
-    #       h4("by tree merging steps"),
-    #       verbatimTextOutput(ns("message_h")),
-    #       fluidRow(
-    #         column(6,
-    #                h4("by largest total within-cluster sum of squares drop"),
-    #                #  textOutput(ns("method")),
-    #                plotOutput(ns("plot_tss"))
-    #         ),
-    #         column(6,
-    #                h4("by largest mean within-cluster silhouette value"),
-    #                #   textOutput(ns("method")),
-    #                plotOutput(ns("plot_sil"))
-    #         )
-    #       )
-    #   )),
-    # h2("Index and cluster correlations"),
-    # br(),
     h2("Heatmap"),
     helpText(
       div("Warning:", class = "text-warning"), #style = "color:orange"),
@@ -111,7 +75,7 @@ clusterDxMod <- function(id, val = NULL, transpose = T,
 cat("clusterDxMod\n")
       tempVar <- reactiveValues()
       
-      observeEvent(input$show_corr, { shinyjs::toggle(id = "bi_clust", condition = !input$show_corr) })
+     # observeEvent(input$show_corr, {shinyjs::toggle(id = "bi_clust", condition = !input$show_corr)})
       
 #       # when user starts the app from this step,
 #       # upload intermediate files to replace reactive(val$dt_index), cl()$cluster_obj, cl()$clusters
@@ -224,8 +188,8 @@ cat("clusterDxMod\n")
       
       # run heatmap
       observeEvent(input$run_heatmap, {
-cat(" observe run_heatmap\n  dat:");print(dim(val$dt_index));cat("  clusters:");print(head(val$cl$clusters));
-cat(" cl_obj:");print(val$cl$cluster_obj$call)
+cat(" observe run_heatmap\n  dat:");#print(dim(val$dt_index));cat("  clusters:");print(head(val$cl$clusters));
+# cat(" cl_obj:");print(val$cl$cluster_obj$call)
         output$warn_m <- renderText({
           validate(need(!is.null(val$dt_index), "please finish filtering or upload an index"),
                    need(!is.null(val$cl$cluster_obj), 
@@ -246,19 +210,31 @@ cat(" cl_obj:");print(val$cl$cluster_obj$call)
           # width changes everytime the browser size changes
           tempVar$width  <- session$clientData[[paste0("output_", session$ns("plot_heat"), 
                                                        "_width")]]
-          # gtable
-          # this doesn't require observe input$run_heatmap from the 2nd time...
-          out <- 
-            plotHeatmap(input, output, session,
-                        x, val$cl$cluster_obj, val$cl$clusters, 
-                        transpose = T, center = center(), scale = scale(),
-                        show_corr = reactive(input$show_corr), bi_clust = reactive(input$bi_clust)
-                        # index_sel = reactive(input$sel_index), 
-                        # cluster_sel = reactive(input$sel_clusters)
-                        )
-          tempVar$heatmap <- out$heatmap; tempVar$data <- out$data
+          # # gtable
+          # # this doesn't require observe input$run_heatmap from the 2nd time...
+          # out <- # 28june2021 the order of the vars using Bayer's data seems wrong. Can see 
+          #   # neg corrs within a cluster, but the cluster summary shows no neg corr
+          #   plotHeatmap(input, output, session,
+          #               x, val$cl$cluster_obj, val$cl$clusters, 
+          #               transpose = T, center = center(), scale = scale(),
+          #               show_corr = reactive(input$show_corr), bi_clust = reactive(input$bi_clust)
+          #               # index_sel = reactive(input$sel_index), 
+          #               # cluster_sel = reactive(input$sel_clusters)
+          #               )
+          # tempVar$heatmap <- out$heatmap; tempVar$data <- out$data
+# cat(" x:");print(dim(x));print(x[1:3,1:3])
+          new_order <- findObsOrder(val$cl$cluster_obj, k = max(val$cl$clusters), desc = F)
+# cat(" new_order len:", length(new_order)," ");print(head(new_order))          
+          if(input$show_corr) {
+            x_sorted <- cor(t(x[new_order, ]))
+# cat(" x_sorted:");print(dim(x_sorted));print(x_sorted[1:3,1:3])
+          } else {
+            x_sorted <- x[new_order, ]
+          }
+          out <- drawHeatMap(x_sorted, "", val$cl$clusters, font_size = 3)
 # cat(" tempVar$heatmap:\n");print(class(tempVar$heatmap));print(tempVar$heatmap[-c(1:2)]); # plot(tempVar$heatmap)
 # cat("  starts heatmap.2\n"); t <- Sys.time()
+          tempVar$heatmap <- out; tempVar$data <- x_sorted
           return(tempVar$heatmap)
           #  return(eval(tempVar$heatmap$call))
           # return(gplots::heatmap.2(x = tempVar$heatmap$x, Rowv = tempVar$heatmap$Rowv, 

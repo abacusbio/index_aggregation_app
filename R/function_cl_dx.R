@@ -1,3 +1,58 @@
+#'@param cors a correlation matrix, or an observation by feature matrix. The matrix should have
+#'       row and col names.
+#'@param main text string, the plot title
+#'@param cluster a cluster assignment vector. e.g. a \code{cutree} output
+drawHeatMap <- function(cors, main, cluster, font_size = 3) {
+# cat("drawHeatMap\n cors:");print(cors[1:3,1:3])
+  dat2 <- tibble::as_tibble(cors) %>% # tbl_df(cors) %>%
+    mutate(rowname = rownames(cors)) %>%
+    tidyr::pivot_longer(-rowname, "colname", values_to = "value") %>% 
+    mutate(rowname = factor(rowname, levels = rownames(cors)),
+           colname = factor(colname, levels = colnames(cors))
+    )
+  
+  geom.text.size = ifelse(ncol(cors) < 8, 3, 1.5)
+  theme.size = min(c((14/5) * geom.text.size*2, 8.4))
+  cols <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(10, "RdBu"))(256) # tile colors
+  
+  # color the tick labels
+  colorx <- cluster[rownames(cors)]
+  colorx <- ggsci::pal_npg("nrc", alpha = 0.5)(max(colorx))[colorx] # npg
+  
+  if(nrow(cors)==ncol(cors)) { # correlation matrix
+    colory <- colorx
+    p <-  ggplot(dat2, aes(rowname, colname)) +
+      geom_tile(aes(fill = value), ) + 
+      # scale_fill_gradient2(low = "#053061", mid = "white", high = "#67001f", limits=c(-1,1)) + # RgBu
+      scale_fill_gradientn(colours = cols, limits=c(-1,1)) +
+      labs(title = main, x = "", y = "") + theme_minimal()
+    
+  } else {                     # index by animal matrix
+    colory <- "black"
+    p <-  ggplot(dat2, aes(rowname, colname)) +
+      geom_tile(aes(fill = value), ) + 
+      # scale_fill_gradient2(low = "#2d004b", mid = "white", high = "#7f3b08") + # PuOr
+      scale_fill_gradientn(colours = cols) +
+      labs(title = main, x = "", y = "") + theme_minimal()
+  }
+  
+  if(ncol(cors) < 8) { # show value in the tile
+    p <- p + geom_text(aes(label = round(value, 1)), size = geom.text.size/3*font_size) +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, size = theme.size/3*font_size, 
+                                       color = colorx),
+            axis.text.y = element_text(size = theme.size/3*font_size, color = colory),
+            legend.position = "top") # None
+  } else {            # too many tiles. don't show values
+    p <- p + theme(axis.text.x = element_text(angle = 90, hjust = 1, size = theme.size/2*font_size, 
+                                              color = colorx),
+                   axis.text.y = element_text(size = theme.size/3*font_size,
+                                              color = colory),
+                   legend.position = "top")
+  }
+  
+  return(p)
+}
+
 # https://stackoverflow.com/questions/17924828/differences-in-heatmap-clustering-defaults-in-r-heatplot-versus-heatmap-2
 # 1. heatmap.2, as default uses euclidean measure to obtain distance matrix and complete agglomeration
 # method for clustering
@@ -103,8 +158,10 @@ cat(" heatmap finished ");print(Sys.time()-t)
 #' Order the observations by their cluster sizes from the largest to the smallest
 #' 
 #' @param cl_obj a \code{hclust} or \link[clust]{agnes} object
-findObsOrder <- function(cl_obj, k = 2) {
+#' @param desc logical. Whether to sort the clusters from largest to smallest
+findObsOrder <- function(cl_obj, k = 2, desc = T) {
   
+  if(class(cl_obj)[1] != "hclust") cl_obj <- as.hclust(cl_obj)
 #  plot(cl_obj) # this prints to UI
  # gg <- rect.hclust(cl_obj, k = k) # this prints to UI
   gg <- split(cutree(cl_obj, k), cutree(cl_obj, k))
@@ -112,7 +169,11 @@ findObsOrder <- function(cl_obj, k = 2) {
     match(names(g), cl_obj$labels)
   })
   
-  cluster_order <- order(sapply(gg, length), decreasing = T) # 2 1 3
+  if(desc) {
+    cluster_order <- order(sapply(gg, length), decreasing = T) # 2 1 3
+  } else {
+    cluster_order <- as.numeric(names(gg))
+  }
   
   if(class(cl_obj)[1]!="hclust") cl_obj <- as.hclust(cl_obj)
   

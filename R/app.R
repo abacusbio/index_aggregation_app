@@ -34,7 +34,6 @@ library(pheatmap)
 # library(gplots) # heatmap.2
 library(ggrepel) # geom_text_repel
 library(ggdendro)
-library(ggdendro)
 
 library(cluster)
 library(PMA) # spc
@@ -53,10 +52,10 @@ source("module_aggregation_dx.R")
 source("function_preprocess.R")
 source("function_copied_selindexrevamp.R")
 source("function_clean.R")
+source("function_sum_stat.R")
 source("function_calculate_index.R")
 source("function_clustering.R")
 source("function_cl_dx.R")
-source("function_cl_summary.R")
 source("function_aggregation_dx.R")
 
 # Define UI for application that draws a histogram
@@ -471,7 +470,7 @@ server <- function(input, output, session) {
 
     # ID, sex, ... index1, index2...
     val$dt_sub_index_ids <- 
-      val$dt_sub_ebv_index_ids[,!names(val$dt_sub_ebv_index_ids) 
+      val$dt_sub_ebv_index_ids[,!names(val$dt_sub_ebv_index_ids)
                                %in% val$dt_description_clean$column_labelling[
                                  val$dt_description_clean$classifier=="EBV"] ]
 # cat(" dt_sub_index_ids:");print(tail(colnames(val$dt_sub_index_ids), -2))    

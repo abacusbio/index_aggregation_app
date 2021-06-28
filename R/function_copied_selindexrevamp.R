@@ -75,14 +75,15 @@ drawDendro <- function(cl, clcut, circle = F) {
                                  times=sapply(gg,length)))
 #cat(" names(clcut):");print(names(clcut));cat(" factor clcut:");print(factor(clcut))
   clcut1 <- data.frame(label = names(clcut), group = factor(clcut))
-  dendr <- ggdendro::dendro_data(cl, type="rectangle") 
+  dendr <- ggdendro::dendro_data(cl, type = "rectangle") 
   text.df<-merge(ggdendro::label(dendr),clust.gr,by.x="label",by.y="row.names")
   text.df <- merge(text.df, clcut1, by = "label")
   
   pDendro <- ggplot() + 
     geom_segment(data = ggdendro::segment(dendr), aes(x=x, y=y, xend=xend, yend=yend)) + 
     geom_label(data=text.df, aes(x=x, y=y, label=label, hjust=0, fill=group), color = "black") +
-    scale_fill_brewer(palette = "Set3")
+    #scale_fill_brewer(palette = "Set3")
+    ggsci::scale_fill_npg()
   #  theme_dendro() + 
   #  theme(legend.position = "None")
   

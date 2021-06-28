@@ -34,8 +34,8 @@ sumstatModUI <- function(id) {
     renderDtTableModuleUI(ns("stat_chr"), "String sum stats"),
     br(),br(),
     h3("Distribution"),
-    plotOutput(ns("bar_char")),
-    downloadModuleUI(ns("dnld_bar_char"))
+    plotOutput(ns("dot_chr")),
+    downloadModuleUI(ns("dnld_dot_chr"))
     #br(),br(),
     # h2("Mult-choice variable frequency table"),
     # renderDtTableModuleUI(ns("stat_lst"), "N choice stats")
@@ -188,7 +188,7 @@ cat("vars_num exists --> stat_num lapply\n")
               df <- df_num
             }
 # cat(" df"); print(head(df))
-            stats <- df %>% dplyr::select(all_of(c(group_vars, var_num))) %>%
+            stats <- df %>% dplyr::select(any_of(c(group_vars, var_num))) %>%
               group_by_at(vars(all_of(group_vars))) %>% # group_by(across(all_of(group_vars))) %>% # doesn't work with group_vars==NULL
               summarise(across(all_of(var_num), l_fun, na.rm = T, .names = "{fn}")) %>% # summarise_at(var_num, l_fun, na.rm = T) %>%
               mutate(variable = var_num)
@@ -299,7 +299,7 @@ cat("vars_num exists --> stat_num lapply\n")
                           font_size = reactive(input$font_size))
 
             downloadPlotModuleServer("dnld_hist_num",
-                                     paste0("histogram_", "_numeric", session$ns("name")),
+                                     paste0("histogram_", "_numeric_", session$ns("name")),
                                      p, reactive(width))
             return(p)
           })
@@ -307,24 +307,24 @@ cat("vars_num exists --> stat_num lapply\n")
         
         ## sumstat character|factor|logical|integer variables
         if(length(vars_chr) > 0) {
-          # cat("vars_chr exists --> stat_chr lapply\n")
+# cat(" vars_chr exists --> stat_chr lapply\n")
           df_chr <- select_at(tempVar$dat, vars(all_of(group_vars), all_of(vars_chr)))
-          
+# cat("  df_chr:\n");print(head(df_chr))
           stat_chr <- lapply(vars_chr, function(var_chr) {
             # cat(" var_chr", var_chr, "\n")
             if(class(df_chr[[var_chr]]) == "list") {
               df <- tidyr::unnest_longer(df_chr, var_chr)
-              # cat("  unnest_longer\n"); print(head(df))
+# cat("   unnest_longer\n"); print(head(df))
             } else {
               df <- df_chr
             }
-            
-            stats <- df %>% select_at(vars(all_of(group_vars), all_of(vars_chr))) %>%
-              group_by_at(vars(all_of(group_vars), all_of(vars_chr))) %>%
+# cat("   df:\n");print(head(df))
+            stats <- df %>% dplyr::select(any_of(c(group_vars, var_chr))) %>%
+              group_by(across(c(group_vars, var_chr))) %>%
               tally() %>%
               mutate(variable = var_chr)
-# cat("sumStatMod\n   1 stats\n"); print(head(stats))
-            stats <- select_at(stats, vars(all_of(group_vars), "variable", all_of(var_chr), "n"))
+# cat("   1 stats\n"); print(head(stats))
+            stats <- select(stats, any_of(c(group_vars, "variable", var_chr, "n")))
             
             if("prop" %in% input$functions) { # not by group
               stats <- stats %>% mutate(prop = n/sum(n))
@@ -342,17 +342,43 @@ cat("vars_num exists --> stat_num lapply\n")
             }
             
             names(stats)[which(names(stats)==var_chr)] <- "level"
-            
+# cat("   2 stats\n"); print(head(stats))
             return(stats)
           })
 
           # group_var variable level n prop n_missing
           stat_chr <- stat_chr %>% purrr::reduce(full_join) %>% distinct()
-# cat("  2 stat_chr\n"); print(head(stat_chr))
+# cat("  3 stat_chr\n"); print(head(stat_chr))
           renderDtTableModuleServer("stat_chr", reactive(stat_chr), T,
                                     c("FixedHeader", "FixedColumns"),
                                     digits = reactive(input$view_dec),
                                     downloadName = "sum_stat_chr", editable = F, colfilter = "none")
+          
+          # make df for lolipop/dot or barchart
+          df <- stat_chr
+          for(i in c("n", "n_missing", "n_obs")) {
+            df[[i]] <- as.integer(df[[i]])
+          }
+          
+          output$dot_chr <- renderPlot({
+            req(df)
+# cat(" renderPlot\n  df:\n");print(head(df))
+            yvar <- ifelse("n_obs" %in% names(df), "n_obs", "n")
+            group2 <- NULL # ifelse can't return NULL without error
+            if(!is.null(group_vars)) group2 <- "variable"
+            width  <- session$clientData[[paste0("output_", session$ns("dot_chr"),
+                                                 "_width")]]
+            p <- plotLolipop(input, output, session,
+                             df, "level", yvar,
+                             group1 = ifelse(!is.null(group_vars), group_vars, "variable"),
+                             group2 = group2,
+                             font_size = reactive(input$font_size))
+            
+            downloadPlotModuleServer("dnld_dot_chr",
+                                     paste0("lolipop_chart_", "_character_", session$ns("name")),
+                                     p, reactive(width))
+            return(p)
+          })
         } # if vars_char exist
         
         #         df1 <- do.call(cbind, lapply(1:ncol(df), function( i ) {
