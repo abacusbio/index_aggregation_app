@@ -34,7 +34,7 @@ sumstatModUI <- function(id) {
     renderDtTableModuleUI(ns("stat_chr"), "String sum stats"),
     br(),br(),
     h3("Distribution"),
-    plotOutput(ns("dot_chr")),
+    plotOutput(ns("dot_chr"), height = "600px"),
     downloadModuleUI(ns("dnld_dot_chr"))
     #br(),br(),
     # h2("Mult-choice variable frequency table"),
@@ -296,18 +296,23 @@ cat("vars_num exists --> stat_num lapply\n")
                           df, "value",
                           group1 = ifelse(!is.null(group_vars), group_vars, "var"),
                           group2 = group2, nbins = 30,
-                          font_size = reactive(input$font_size))
+                          font_size = reactive(input$font_size),
+                          scales = "free_both")
 
-            downloadPlotModuleServer("dnld_hist_num",
-                                     paste0("histogram_", "_numeric_", session$ns("name")),
-                                     p, reactive(width))
-            return(p)
+            downloadPlotModuleServer(
+              "dnld_hist_num", paste0("histogram_", "_numeric_", session$ns("name")),
+              if(class(p)[1]=="list") {
+                gridExtra::grid.arrange(grobs = p, ncol = min(4, length(p)))} else {p},
+              reactive(width))
+            
+            return(if(class(p)[1]=="list") {
+               gridExtra::grid.arrange(grobs = p, ncol = min(4, length(p)))} else {p})
           })
         } # if vars_num exists
         
         ## sumstat character|factor|logical|integer variables
         if(length(vars_chr) > 0) {
-# cat(" vars_chr exists --> stat_chr lapply\n")
+# cat(" vars_chr exists\n  group_vars:");print(group_vars)
           df_chr <- select_at(tempVar$dat, vars(all_of(group_vars), all_of(vars_chr)))
 # cat("  df_chr:\n");print(head(df_chr))
           stat_chr <- lapply(vars_chr, function(var_chr) {
@@ -375,9 +380,13 @@ cat("vars_num exists --> stat_num lapply\n")
                              font_size = reactive(input$font_size))
             
             downloadPlotModuleServer("dnld_dot_chr",
-                                     paste0("lolipop_chart_", "_character_", session$ns("name")),
-                                     p, reactive(width))
-            return(p)
+              paste0("lolipop_chart_", "_character_", session$ns("name")),
+              if(class(p)[1]=="list") {
+                gridExtra::grid.arrange(grobs = p, ncol = min(1, length(p)))} else {p}, 
+              reactive(width))
+            
+            return(if(class(p)[1]=="list") {
+              gridExtra::grid.arrange(grobs = p, ncol = min(1, length(p)))} else {p})
           })
         } # if vars_char exist
         
