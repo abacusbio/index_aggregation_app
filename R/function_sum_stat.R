@@ -3,9 +3,10 @@
 #' @param df a reactive function with a data.frame in it
 #' @param scales a string. Default is "free_y" for \code{ggpubr::facet}. Can also be "fixed", 
 #'        "free_x" or "free_both"
+#' @param xlab a character string to show on xlab. Default is \code{xvar}.
 plotHist <- function(input, output, session,
                      df, xvar, group1, group2 = NULL, nbins = 30, # reactive(30),
-                     font_size = reactive(12), scales = "free_y", ...) {
+                     font_size = reactive(12), scales = "free_y", xlab = xvar, ...) {
 # cat("plotHist\n ", xvar, "group1:", group1, "group2:", group2, "df:", class(df), "\n")
 # print(head(df))
 
@@ -17,9 +18,10 @@ plotHist <- function(input, output, session,
      (length(unique(df[[group1]])) > 1 || length(unique(df[,group2])) > 1)) {
     
     ps <- lapply(unique(df[[group1]]), function(i) {
-      ggpubr::gghistogram(df[df[,group1]==i, ], x = xvar, title = i, 
+      ggpubr::gghistogram(df[df[,group1]==i, ], x = xvar, 
                           bins = nbins, alpha = 0.5,
                           add = "mean", rug = TRUE, 
+                          xlab = xlab, title = i, 
                           color = "#008b99", fill = "#008b99", #group1,
                           #palette = "npg",          # npg journal color palett. see ?ggpar
                           font.x = c(font_size(), "plain", "black"), # xlab
@@ -31,6 +33,7 @@ plotHist <- function(input, output, session,
     p <- ggpubr::gghistogram(df, x = xvar, 
                              bins = nbins, alpha = 0.5,
                              add = "mean", rug = TRUE, 
+                             xlab = xlab,
                              color = "#008b99", fill = "#008b99", #group1,
                              #palette = "npg",          # npg journal color palett. see ?ggpar
                              font.x = c(font_size(), "plain", "black"), # xlab

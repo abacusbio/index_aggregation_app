@@ -70,17 +70,23 @@ clusteringModUI <- function(id) {
     plotOutput(ns("plot_dendro"), width = "100%", height = "800px"),
     downloadPlotModuleUI(ns("dnld_dendro")),
     downloadModuleUI(ns("dnld_cluster"), "Download the clusters table"),
-    downloadModuleUI(ns("dnld_cl"), "Download the cluster object")
+    downloadModuleUI(ns("dnld_cl"), "Download the cluster object"),
+    downloadModuleUI(ns("dnld_ev"), "Download the new EV file"),
+    downloadModuleUI(ns("dnld_desc_ev"), "Download the new EV description file")
   )
 }
 
 #'
-#'@param dat a reactive function with data.frame of animal by index in it. If the data is index by
+#' @param dat a reactive function with data.frame of animal by index in it. If the data is index by
 #'       animal, then \code{transpose} should be set to \code{T} 
-#'@param col_sel a reactive function. The col names of the \code{dat} to be selected for clustering 
-#'       analysis. 4) \code{val$dt_desc_ev_clean}, a data.frame of 2 columns: column_labelling and 
-#'@return if \code{input$find_k_agg} is on, return texts and graphs to UI, otherwise return a 
-#'        dendrogram and a download button to download a cluster result .csv.
+#' @param col_sel a reactive function. The col names of the \code{dat} to be selected for clustering 
+#'       analysis. 
+#' @param val a reactive value containing 1) \code{val$dt_desc_ev_clean}, a data.frame of 2 columns:
+#'        column_labelling and classVar, 2) \code{val$dt_ev_filtered}, a data.frame of columns Index
+#'        , classVar cols, and trait cols.
+#' @return if \code{input$find_k_agg} is on, return texts and graphs to UI, otherwise return a 
+#'        dendrogram and a download button to download a cluster result .csv from generated 
+#'        val$cl.
 clusteringMod <- function(id, val, dat, #= reactive(NULL),
                          # col_sel = reactive(NULL), 
                          transpose = F,
@@ -119,7 +125,8 @@ cat("clusteringMod\n")
       observeEvent(input$run_cluster, {
 # cat(" observe run_cluster\n  dat:");#print(dim(dat()));cat("  val:");print(names(val))
 # cat("  input$which_data: ", input$which_data, ", input$absolute: ", input$absolute, "\n")
-        req(!is.null(dat()), "dt_index" %in% names(val) )
+        req(!is.null(dat()), "dt_index" %in% names(val), !is.null(val$dt_ev_filtered),
+            !is.null(val$dt_desc_ev_clean))
         shinyjs::show("wait")
 #         if(length(col_sel()) > 0) {
 #           indexes <- col_sel()
@@ -183,7 +190,13 @@ cat(" Done findoptimalcut ");print(Sys.time()-t)
                                 scale = input$scale, center = input$center, k = input$k_slider,
                                 best_method = input$agg_method)
           val$cl <- cl # 20april2021
-# cat(" else runFinalCluster\n  val$cl:");print(names(val$cl))          
+# cat(" else runFinalCluster\n  val$cl:");print(names(val$cl))
+          # create files to download
+          tempVar$dt_index_new <- data.frame(Index = names(cl$clusters), cluster = cl$clusters) %>% 
+            right_join(val$dt_ev_filtered, by = "Index")
+          
+          tempVar$dt_desc_ev_clean <- rbind(val$dt_desc_ev_clean, c("cluster", "group"))
+          
           # dendrograph
           output$plot_dendro <- renderPlot({
             tempVar$width  <- session$clientData[[paste0("output_", session$ns("plot_dendro"), 
@@ -206,6 +219,14 @@ cat(" Done findoptimalcut ");print(Sys.time()-t)
                                                      input$agg_method), 
                                data.frame(Index = names(cl$clusters), cluster = cl$clusters),
                                F, "csv")
+          downloadModuleServer("dnld_ev", 
+                               downloadName = paste0("new_ev_k", input$k_slider, "_aggMethod_",
+                                                     input$agg_method), 
+                               tempVar$dt_index_new, F, "csv")
+          downloadModuleServer("dnld_desc_ev", 
+                               downloadName = paste0("new_ev_desc_k", input$k_slider, "_aggMethod_",
+                                                     input$agg_method), 
+                               dt_desc_ev_clean, F, "csv")
           shinyjs::hide("wait")
           # return(cl) # 
         #  val[["cluster"]] <- cl$clusters

@@ -68,13 +68,13 @@ sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
 # cat("sumstatMod\n observe dat:");print(dim(dat())); cat("\n")
         req(!is.null(dat()) && is.null(input$warning1))
 # cat("  req satisfied\n")
-        tempVar$dat <- dat()
+        tempVar$dat <- dat() %>% dplyr::select(-matches("ID|Index"))
 # cat("val name ", get(paste0(input$dat_sel, "_dat_name"))(), "\n")
 # print(dim(tempVar$dat))
-        tempVar$vars <- names(tempVar$dat)
+        tempVar$vars <- names(tempVar$dat) 
         tempVar$vars_n_types <-
           rlang::set_names(paste0(tempVar$vars, "{", sapply(tempVar$dat, typeof), "}"))
-        # print("sumstatUnivarMod"); print(head(tempVar$vars_n_types))
+# print(head(tempVar$vars_n_types))
       })
       
       # col var selection panel at sidebar
@@ -297,7 +297,7 @@ cat("vars_num exists --> stat_num lapply\n")
                           group1 = ifelse(!is.null(group_vars), group_vars, "var"),
                           group2 = group2, nbins = 30,
                           font_size = reactive(input$font_size),
-                          scales = "free_both")
+                          scales = "free_both", xlab = "Economic value ($)")
 
             downloadPlotModuleServer(
               "dnld_hist_num", paste0("histogram_", "_numeric_", session$ns("name")),

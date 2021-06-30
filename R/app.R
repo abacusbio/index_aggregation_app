@@ -44,6 +44,7 @@ source("module_preprocess.R", echo = F)
 source("module_dt_viewer.R")
 source("module_data_filter.R")
 source("module_sum_stat.R")
+# source("module_index_sumstat.R")
 source("module_clustering.R", echo = F)
 source("module_cl_dx.R")
 source("module_cl_summary.R")
@@ -134,6 +135,11 @@ ui <- fluidPage(
          tabsetPanel(id = "upload", # id can't have .
            tabPanel("Step 1: Upload", value = "tab.step1",
              br(),
+            # shinyjs::show(
+               span(id = "initial_warn", 
+                    p("Please wait a couple of seconds before clicking anywhere. This allows the app to load/calculate
+    first, otherwise it can result in error or chrash. For example, let the table/picture display 
+    before clicking the 'Filter and save' button."),  class = "text-warning"), # style="background-color:bg-danger"), # class = "bg-danger"), #
              actionButton("demo", "Run demo data", class="btn btn-secondary"),
              preprocessUploadModUI("step1")
            ),
@@ -186,6 +192,7 @@ ui <- fluidPage(
            tabPanel("View index", value = "tab.index1",
              # renderDtTableModuleUI("index1") # too long
              span(textOutput("index_view_warn"), class = "text-success"),
+             verbatimTextOutput("index_view_n"),
              downloadModuleUI("dnld_index", "Download the index table"),
              downloadModuleUI("dnld_index_group", 
                               "Download the index and group table for your own record")
@@ -307,6 +314,8 @@ server <- function(input, output, session) {
   cat("N cores:", parallel::detectCores(), "\n") # rsconnect.nonprod... 8 cores/processor
   
   ## INITIALIZE, load demo ##
+  shinyjs::hide("initial_warn", T, "fade", 10)
+  
   val <- reactiveValues()
   
   desc_ebv <- readxl::read_xlsx("data/description_bv.xlsx", col_names = T)
@@ -490,11 +499,16 @@ server <- function(input, output, session) {
     output$index_view_warn <- renderText({
     "Index calculated. Now you can download and go to the next steps."})
   })
+  
+  output$index_view_n <- renderPrint({
+    paste0("You have ", nrow(val$dt_index), " individuals and ", ncol(val$dt_index), " indexes. ",
+           "Individuals with missing EBVs are removed.")
+  })
+  
   # renderDtTableModuleServer("index1", reactive(val$dt_sub_index_ids), T, downloadName = "index")
   downloadModuleServer("dnld_index", "index", 
                        data.frame(ID = rownames(val$dt_index), val$dt_index), F, "csv")
   downloadModuleServer("dnld_index_group", "index_group", val$dt_sub_index_ids, F, "csv")
-  
   
   ## Find CLUSTER ##
   
