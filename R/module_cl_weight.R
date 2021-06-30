@@ -340,5 +340,5 @@ cat("calWeiMod\n")
       })
       
       renderDtTableModuleServer("ew_new", ew_new, extensions = "FixedHeader",
-                                downloadName = "new_EW")
+                                downloadName = "new_EW", colfilter = "none")
     })}

@@ -7,8 +7,8 @@
 plotHist <- function(input, output, session,
                      df, xvar, group1, group2 = NULL, nbins = 30, # reactive(30),
                      font_size = reactive(12), scales = "free_y", xlab = xvar, ...) {
-# cat("plotHist\n ", xvar, "group1:", group1, "group2:", group2, "df:", class(df), "\n")
-# print(head(df))
+cat("plotHist\n ", xvar, "group1:", group1, "group2:", group2, "df:", class(df), "\n")
+print(head(df))
 
   if(class(df)[1]!="data.frame") df <- as.data.frame(df) # doesn't plot with tbl_df/tbl possibly from tidyr
   df[,group1] <- as.factor(df[,group1])

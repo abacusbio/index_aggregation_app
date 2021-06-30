@@ -187,7 +187,7 @@ cat("vars_num exists --> stat_num lapply\n")
             } else {
               df <- df_num
             }
-# cat(" df"); print(head(df))
+cat(" df"); print(head(df))
             stats <- df %>% dplyr::select(any_of(c(group_vars, var_num))) %>%
               group_by_at(vars(all_of(group_vars))) %>% # group_by(across(all_of(group_vars))) %>% # doesn't work with group_vars==NULL
               summarise(across(all_of(var_num), l_fun, na.rm = T, .names = "{fn}")) %>% # summarise_at(var_num, l_fun, na.rm = T) %>%
@@ -360,21 +360,21 @@ cat("vars_num exists --> stat_num lapply\n")
                                     downloadName = "sum_stat_chr", editable = F, colfilter = "none")
           
           # make df for lolipop/dot or barchart
-          df <- stat_chr
+          dff <- stat_chr
           for(i in c("n", "n_missing", "n_obs")) {
-            df[[i]] <- as.integer(df[[i]])
+            dff[[i]] <- as.integer(dff[[i]])
           }
           
           output$dot_chr <- renderPlot({
-            req(df)
+            req(dff)
 # cat(" renderPlot\n  df:\n");print(head(df))
-            yvar <- ifelse("n_obs" %in% names(df), "n_obs", "n")
+            yvar <- ifelse("n_obs" %in% names(dff), "n_obs", "n")
             group2 <- NULL # ifelse can't return NULL without error
             if(!is.null(group_vars)) group2 <- "variable"
             width  <- session$clientData[[paste0("output_", session$ns("dot_chr"),
                                                  "_width")]]
             p <- plotLolipop(input, output, session,
-                             df, "level", yvar,
+                             dff, "level", yvar,
                              group1 = ifelse(!is.null(group_vars), group_vars, "variable"),
                              group2 = group2,
                              font_size = reactive(input$font_size))
