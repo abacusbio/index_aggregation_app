@@ -566,6 +566,7 @@ server <- function(input, output, session) {
           )
   
   # look at classVar pattern among indexes
+  # need val$dt_index_new and others in val.
   aggDxMod3("agg_dx3", val, transpose = F, reactive(val$cl$clusters))
 } # server
 

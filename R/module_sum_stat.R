@@ -177,7 +177,7 @@ sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
         
         ## sumstat numeric variables
         if(length(vars_num) > 0) {
-cat("vars_num exists --> stat_num lapply\n")
+# cat("vars_num exists --> stat_num lapply\n")
           df_num <- dplyr::select(tempVar$dat, all_of(c(group_vars, vars_num)))
 
           stat_num <- lapply(vars_num, function(var_num) {
@@ -187,7 +187,7 @@ cat("vars_num exists --> stat_num lapply\n")
             } else {
               df <- df_num
             }
-cat(" df"); print(head(df))
+# cat(" df"); print(head(df))
             stats <- df %>% dplyr::select(any_of(c(group_vars, var_num))) %>%
               group_by_at(vars(all_of(group_vars))) %>% # group_by(across(all_of(group_vars))) %>% # doesn't work with group_vars==NULL
               summarise(across(all_of(var_num), l_fun, na.rm = T, .names = "{fn}")) %>% # summarise_at(var_num, l_fun, na.rm = T) %>%
@@ -286,6 +286,8 @@ cat(" df"); print(head(df))
           df <- df %>% tidyr::pivot_longer(all_of(vars_num), "var", values_to = "value")
 # cat("  df 3:\n");print(head(df));#write.table(df, "../test outputs/half_indexes/df", quote = F, row.names = F)
           output$hist_num <- renderPlot({
+            withProgress(message = 'Plotting ...',
+                         detail = 'This may take a while...', value = 0, {
             req(df)
 # cat(" renderPlot\n")
             group2 <- NULL # ifelse can't return NULL without error
@@ -307,7 +309,7 @@ cat(" df"); print(head(df))
             
             return(if(class(p)[1]=="list") {
                gridExtra::grid.arrange(grobs = p, ncol = min(4, length(p)))} else {p})
-          })
+          }) })
         } # if vars_num exists
         
         ## sumstat character|factor|logical|integer variables
@@ -366,6 +368,8 @@ cat(" df"); print(head(df))
           }
           
           output$dot_chr <- renderPlot({
+            withProgress(message = 'Plotting ...',
+                         detail = 'This may take a while...', value = 0, {
             req(dff)
 # cat(" renderPlot\n  df:\n");print(head(df))
             yvar <- ifelse("n_obs" %in% names(dff), "n_obs", "n")
@@ -387,7 +391,7 @@ cat(" df"); print(head(df))
             
             return(if(class(p)[1]=="list") {
               gridExtra::grid.arrange(grobs = p, ncol = min(1, length(p)))} else {p})
-          })
+          }) })
         } # if vars_char exist
         
         #         df1 <- do.call(cbind, lapply(1:ncol(df), function( i ) {

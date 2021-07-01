@@ -208,7 +208,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
 
   output$table <- DT::renderDT({
     withProgress(
-      message = 'Loading data', value = 1,
+      message = 'Loading table...', value = 0,
       {
         req(!is.null(dat())) # 14oct2020
 

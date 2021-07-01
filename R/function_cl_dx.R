@@ -14,7 +14,7 @@ drawHeatMap <- function(cors, main, cluster, font_size = 3) {
   geom.text.size = ifelse(ncol(cors) < 8, 3, 1.5)
   theme.size = min(c((14/5) * geom.text.size*2, 8.4))
   cols <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(10, "RdBu"))(256) # tile colors
-  
+
   # color the tick labels
   colorx <- cluster[rownames(cors)]
   colorx <- ggsci::pal_npg("nrc", alpha = 0.5)(max(colorx))[colorx] # npg
@@ -22,17 +22,19 @@ drawHeatMap <- function(cors, main, cluster, font_size = 3) {
   if(nrow(cors)==ncol(cors)) { # correlation matrix
     colory <- colorx
     p <-  ggplot(dat2, aes(rowname, colname)) +
-      geom_tile(aes(fill = value), ) + 
-      # scale_fill_gradient2(low = "#053061", mid = "white", high = "#67001f", limits=c(-1,1)) + # RgBu
-      scale_fill_gradientn(colours = cols, limits=c(-1,1)) +
+      geom_tile(aes(fill = value)) + 
+      # scale_fill_gradient2(low = "#053061", mid = "white", high = "#67001F", 
+                           # midpoint = 0.5, limits = c(-1, 1)) + # RgBu
+      scale_fill_gradientn(colours = rev(cols), values = scales::rescale(c(-1, 0.5, 1)),
+                           limits = c(-1, 1)) + # values) +
       labs(title = main, x = "", y = "") + theme_minimal()
     
   } else {                     # index by animal matrix
     colory <- "black"
     p <-  ggplot(dat2, aes(rowname, colname)) +
-      geom_tile(aes(fill = value), ) + 
+      geom_tile(aes(fill = value)) + 
       # scale_fill_gradient2(low = "#2d004b", mid = "white", high = "#7f3b08") + # PuOr
-      scale_fill_gradientn(colours = cols) +
+      scale_fill_gradientn(colours = rev(cols)) +
       labs(title = main, x = "", y = "") + theme_minimal()
   }
   

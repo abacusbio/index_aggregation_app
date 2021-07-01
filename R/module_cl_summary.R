@@ -187,6 +187,8 @@ cat("clusterSumStatMod\n")
                                 downloadName = "index_cor_summary", digits = reactive(input$digit))
       
       output$hist_cor <- renderPlot({
+        withProgress(message = 'Plotting ...',
+                     detail = 'This may take a while...', value = 0, {
         req(tempVar$df_cor)
 # cat(" renderPlot\n  df_cor:\n");print(head(tempVar$df_cor))
         width  <- session$clientData[[paste0("output_", session$ns("hist_cor"), 
@@ -199,5 +201,5 @@ cat("clusterSumStatMod\n")
         downloadPlotModuleServer("dnld_hist_cor", "histogram_index_by_cluster",
                                  plot_hist, reactive(width))
         return(plot_hist)
-      })
+      }) })
     })}

@@ -206,6 +206,8 @@ cat(" observe run_heatmap\n  dat:");#print(dim(val$dt_index));cat("  clusters:")
         if(transpose) {x <- t(val$dt_index) } else { x <- val$dt_index} # index x animal
         
         output$plot_heat <- renderPlot({
+          withProgress(message = 'Plotting ...',
+                       detail = 'This may take a while...', value = 0, {
           req(x, val$cl$cluster_obj, val$cl$clusters)
           # width changes everytime the browser size changes
           tempVar$width  <- session$clientData[[paste0("output_", session$ns("plot_heat"), 
@@ -225,7 +227,7 @@ cat(" observe run_heatmap\n  dat:");#print(dim(val$dt_index));cat("  clusters:")
 # cat(" x:");print(dim(x));print(x[1:3,1:3])
           new_order <- findObsOrder(val$cl$cluster_obj, k = max(val$cl$clusters), desc = F)
 # cat(" new_order len:", length(new_order)," ");print(head(new_order))          
-          if(input$show_corr) {
+          if(isolate(input$show_corr)) {
             x_sorted <- cor(t(x[new_order, ]))
 # cat(" x_sorted:");print(dim(x_sorted));print(x_sorted[1:3,1:3])
           } else {
@@ -241,7 +243,7 @@ cat(" observe run_heatmap\n  dat:");#print(dim(val$dt_index));cat("  clusters:")
           #                          Colv = tempVar$heatmap$Colv, col = tempVar$heatmap$col,
           #                          trace = "none", ColSideColors = tempVar$heatmap$ColSideColors,
           #                          RowSideColors = tempVar$heatmap$RowSideColors))
-        })
+        }) })
         shinyjs::hide("wait")
 # cat("  heatmap.2 finished"); print(Sys.time()-t)
         downloadPlotModuleServer("download_heat", name = "index_heatmap", plots = tempVar$heatmap,

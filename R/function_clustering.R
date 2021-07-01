@@ -97,9 +97,8 @@ cat(" done trying agglo methods in "); print(Sys.time() - t) # 6min 2090 obs 999
 #'       "average", "single", "complete"...for corresponding cluster function
 #'@param k_max an integer, the max number of clusters to test in \link[factoextra]{fviz_nbclust}.
 #'@detail choose the best cutoff: \url{https://uc-r.github.io/hc_clustering}
-findOptimalCut <- function(input, output, session,
-                           dat, cl, hc_method = "ward", k_max = 10,
-                           wss = reactive(F), silhouette = reactive(F)) {
+findOptimalCut <- function(dat, cl, hc_method = "ward", k_max = 10,
+                           wss = F, silhouette = F) {
 cat("findOptimalCut\n cl:") # ;print(cl);
   k_tss <- NULL; k_sil <- NULL; p_tss <- NULL; p_sil <- NULL
 # cat(" ### BEFORE ###\n  cl$height:");print(cl$height);cat(" diff height:");print(diff(cl$height))
@@ -116,7 +115,7 @@ cat("findOptimalCut\n cl:") # ;print(cl);
   clusters <- cutree(cl, h = h)
   k_h <- max(clusters)
 cat(" found best height\n")
-  if(wss()) {
+  if(wss) {
     # largest total sum of squares change cutoff
     # k.max = 10, n_obs = 2009, n_f = 999 need 6.5 mins
     # t <- Sys.time()
@@ -132,7 +131,7 @@ cat(" found best height\n")
 cat(" found SS\n")    
   }
   
-  if(silhouette()) {
+  if(silhouette) {
     # largest silhouette value cutoff
     # k.max = 10, n_obs = 2009, n_f = 999 need 6 mins
     p_sil <- factoextra::fviz_nbclust(t(dat), factoextra::hcut, method = "silhouette",

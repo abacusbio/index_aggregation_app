@@ -70,7 +70,7 @@ aggDxModUI <- function(id) {
 #'        2) \code{cl}, a list containing \code{cl_obj}, a class "hclust" or "agnes" object,
 #'        and \code{val$cl$clusters}, a cluster assignment vector. e.g. a \code{cutree} 
 #'        output. 4) \code{val$dt_desc_ev_clean}, a data.frame of 2 columns: column_labelling and 
-#'        classifier/ 5) \code{val$dt_ev_filtered}, a data.frame of columns Index, classVar
+#'        classifier/ 5) \code{val$dt_ev_filtered}, a data.frame of columns Index, ClassVar
 #'        (optional) and trait names
 #' @param dt_ev_agg a reactive function of a data.frame of columns Index, cluster and trait names
 #'        assignments
@@ -292,20 +292,43 @@ cat("aggDxMod\n")
         
         by_cluster <- dplyr::arrange(by_cluster, desc(correlation)) %>% 
           mutate(id = dplyr::row_number())  # sort the id differently
-                 # index_type = "aggregation")
+                 # index_type = "aggregation") # Index aggregated_index correlation id
         
-        # add an average index as a benchmark
-        if("average" %in% input$sel_benchmark) {
-          index_ave <- rowSums(val$dt_index[,-1]) # , na.rm = T)
-          df <- data.frame(avg = index_ave, val$dt_index)
+        index <- dplyr::select(val$dt_index_new, !matches("new_index_"))
+        dt_sub_index_ids_orig <- data.frame(ID = rownames(index), index, check.names = F)
+# cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(dt_sub_index_ids_orig[3:5,3:5])
+        if("average" %in% input$sel_benchmark) { # add an average index as a benchmark
+          
+          # make an average EV table
+          ev_avg <- val$dt_ev_filtered[1,,drop = F]
+          idx <- which(names(val$dt_ev_filtered) %in% 
+                         val$dt_desc_ev_clean$column_labelling[val$dt_desc_ev_clean$classifier=="EV"])
+          ev_mean <- apply(val$dt_ev_filtered[,idx], 2, mean, na.rm = T)
+          ev_avg[1,idx] <- ev_mean
+          ev_avg[1,"Index"] <- "avg_index"
+
+          dt_sub_ebv_index_ids <- calculateIndividualBW(input, output, session, 
+                                val$dt_ebv_filtered, ev_avg, val$dt_description_clean, val$dt_desc_ev_clean)
+# cat("  dt_sub_ebv_index_ids:");print(dim(dt_sub_ebv_index_ids));print(head(dt_sub_ebv_index_ids))
+          dt_sub_index_ids <- # ID sex avg_index
+            dt_sub_ebv_index_ids[,!names(dt_sub_ebv_index_ids) 
+                                 %in% val$dt_description_clean$column_labelling[
+                                   val$dt_description_clean$classifier=="EBV"] ]
+# cat("  dt_sub_index_ids:");print(dim(dt_sub_index_ids));print(head(dt_sub_index_ids))
+          # ID sex avg_index, index_1 ... index_3000
+          val$dt_sub_index_ids <- left_join(dt_sub_index_ids, dt_sub_index_ids_orig)
+# cat("  dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(val$dt_sub_index_ids[1:5,1:5])
+          # avg_index, index_1 ... index_3000
+          dt_index_avg <- dplyr::select(
+            val$dt_sub_index_ids, 
+            dplyr::any_of(c("avg_index", val$dt_ev_filtered$Index)))
+# cat("  dt_index_avg:");print(dim(dt_index_avg));print(dt_index_avg[1:3,1:3])          
           by_ave <- makeLongCor(input, output, session,
-                                cor(df, use = "pairwise.complete.obs"), reactive("avg"))
+                                cor(dt_index_avg, use = "pairwise.complete.obs"),
+                                reactive("avg_index")) # Index aggregated_index correlation ID
           by_cluster <- rbind(by_cluster, by_ave)
-# cat("  average computed\n")          
-        }
-        
-        # add uploaded indexes as benchmarks
-        if("upload" %in% input$sel_benchmark) {
+# cat("  average index by_cluster:\n");print(tail(by_cluster))
+        } else if("upload" %in% input$sel_benchmark) { # add uploaded indexes as benchmarks
 # cat("  upload in sel_benchmark\n   val$dt_bnchmrk_ev_cleaned:\n")
 print(head(val$dt_bnchmrk_ev_cleaned))
           if(is.null(val$dt_bnchmrk_ev_cleaned)) return(by_cluster)
@@ -319,31 +342,29 @@ print(head(val$dt_bnchmrk_ev_cleaned))
                                  %in% val$dt_description_clean$column_labelling[
                                    val$dt_description_clean$classifier=="EBV"] ]
 # cat("  dt_sub_index_ids:");print(dim(dt_sub_index_ids));print(head(dt_sub_index_ids))
-          
-          index <- dplyr::select(val$dt_index_new, !matches("new_index_"))
           # ID sex bnchmrk_index, index_1 ... index_3000
-          dt_sub_index_ids_orig <- data.frame(ID = rownames(index), index, check.names = F)
-# cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(dt_sub_index_ids_orig[3:5,3:5])
-          val$dt_sub_index_ids <- left_join(dt_sub_index_ids, dt_sub_index_ids_orig, by = "ID")
+          val$dt_sub_index_ids <- left_join(dt_sub_index_ids, dt_sub_index_ids_orig)
 # cat("  dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(val$dt_sub_index_ids[3:5,3:5])
-          
           # animal ID x Index
           dt_index_bnchmrk <- dplyr::select(
             val$dt_sub_index_ids, 
             dplyr::any_of(c(val$dt_bnchmrk_ev_cleaned$Index, val$dt_ev_filtered$Index)))
 # cat("  dt_index_bnchmrk dim: ");print(dim(dt_index_bnchmrk));print(dt_index_bnchmrk[3:5,3:5])
-          
+          # bnchmrk_index, index_1 ... index_3000
           by_bnchmrk <- makeLongCor(input, output, session,
                                     cor(dt_index_bnchmrk, use = "pairwise.complete.obs"),
                                     reactive(val$dt_bnchmrk_ev_cleaned$Index))
-          by_cluster <- rbind(by_cluster, by_bnchmrk)
+          by_cluster <- rbind(by_cluster, by_bnchmrk) # Index aggregated_index correlation ID
 # cat("  upload computed\n   by_cluster:");print(head(by_cluster))     
         } # if "upload" in input$sel_benchmark
+        
         return(by_cluster)
-      })
+      }) # cor_default eventReactive
       
       # Heatmap or scatter plot
       output$plot_cor_default <- renderPlot({
+        withProgress(message = 'Plotting ...',
+                     detail = 'This may take a while...', value = 0, {
         req(cor_default, input$font_size)
 # cat(" renderPlot plot_cor_default\n")
 # cat("  cor_default:");print(head(cor_default()))
@@ -383,7 +404,7 @@ print(head(val$dt_bnchmrk_ev_cleaned))
                 # if(class(heat_map)[1]=="list") {
                 # gridExtra::grid.arrange(grobs = heat_map, ncol = 1)} else {heat_map}
         )
-      }) #, height = 800) # can't use reactive values for height
+      }) }) #, height = 800) # can't use reactive values for height
       
       # CALCULATE SELECTED CORRELATION
       observeEvent(input$run_heatmap,{
@@ -456,6 +477,8 @@ print(head(val$dt_bnchmrk_ev_cleaned))
       
       # Heatmap or scatter plot
       output$plot_cor <- renderPlot({
+        withProgress(message = 'Plotting ...',
+                     detail = 'This may take a while...', value = 0, {
         req(length(tempVar$corr) > 1, input$font_size)
 # cat(" renderPlot plot_cor\n")
         # initial parameters
@@ -483,7 +506,7 @@ print(head(val$dt_bnchmrk_ev_cleaned))
                              tempVar$corr, T)
         
         return( heat_map$p)
-      }) #, height = 800) # can't use reactive values for height
+      }) }) #, height = 800) # can't use reactive values for height
       
       # Correlation by quantile table
       q_table <- #eventReactive(input$quantile | input$run_heatmap, {
@@ -666,6 +689,8 @@ cat("aggDxMod2\n")
       
       # TOP N individual agreement plot
       output$plot_top_n <- renderPlot({
+        withProgress(message = 'Plotting ...',
+                     detail = 'This may take a while...', value = 0, {
         req(tempVar$df_top_n, input$font_size)
         
         # initial parameters
@@ -692,7 +717,7 @@ cat("aggDxMod2\n")
         # } else if(class(plot_top_n)[1]=="list") { #if (length(plot_top_n)==1) {
         # return(gridExtra::grid.arrange(grobs = plot_top_n, ncol = 1))
         # }
-      })#, height = 800)]
+      }) })#, height = 800)]
 })} # aggDXMod2
         
         
@@ -701,7 +726,7 @@ aggDxModSidebarUI3 <- function(id) {
   tagList(
     h4("Main"),
     wellPanel(
-      selectInput(ns("class_var"), "Choose a classification variable:", "", "") 
+      selectInput(ns("class_group_var"), "Choose a classification variable:", "", "") 
     ),
     htmltools::HTML(strrep(br(), 35)),
     h4("Plot control"),
@@ -761,25 +786,25 @@ cat("aggDxMod3\n")
                  need(!is.null(clusters()), "Please upload a cluster table"),
                  #     "Please finish 'run cluster' or upload a cluster table"),
                  #need(!is.null(dt_ev_agg()), "Please finish 'Make new weights'"),
-                 need(input$class_var!="",  "Please select a classification variable")
+                 need(input$class_group_var!="",  "Please select a classification variable")
         )
       })
       
-      # update input$class_var
+      # update input$class_group_var
       observeEvent(!is.null(clusters()), { 
 # cat(" observeEvent clusters:");print(head(clusters()));print(dim(val$dt_desc_ev_clean))
 # print(val$dt_desc_ev_clean)
         req(!is.null(val$dt_desc_ev_clean))
 
-        class_vars <- val$dt_desc_ev_clean$column_labelling[
-          val$dt_desc_ev_clean$classifier == "ClassVar"]
+        class_group_vars <- val$dt_desc_ev_clean$column_labelling[
+          val$dt_desc_ev_clean$classifier %in% c("ClassVar", "Group")]
 # cat("  class_vars: ");print(class_vars)
-        updateSelectInput(session, "class_var", choices = c("", class_vars))
+        updateSelectInput(session, "class_group_var", choices = c("", class_group_vars))
       }, ignoreInit = T)
       
-      classvar_summary <- eventReactive(input$class_var, {
-        req(clusters, val$dt_ev_filtered, val$dt_desc_ev_clean, input$class_var!="")
-# cat(" eventreactive input$class_var\n  input$class_var:", input$class_var, "\n")
+      classvar_summary <- eventReactive(input$class_group_var, {
+        req(clusters, val$dt_ev_filtered, val$dt_desc_ev_clean, input$class_group_var!="")
+# cat(" eventreactive input$class_group_var\n  input$class_group_var:", input$class_group_var, "\n")
         class_vars <- val$dt_desc_ev_clean$column_labelling[
           val$dt_desc_ev_clean$classifier == "ClassVar"]
 
@@ -787,7 +812,7 @@ cat("aggDxMod3\n")
           val$dt_desc_ev_clean$classifier == "Group"]
         group_vars <- c(group_vars, "new_index_by_cluster")
         
-        # Merge classVar and new index
+        # Merge ClassVar and new index
         # Index RM State... Group1... new_index_by_cluster 
         df_cluster <- data.frame(Index = names(clusters()), new_index_by_cluster = clusters(),
                                  check.names = F)
@@ -797,11 +822,17 @@ cat("aggDxMod3\n")
 # write.table(df_index_classvar_group, "df_index_classvar_group.txt", quote = F, row.names = F, sep = ",")
         # calculate summary stat table
         # aggregated_by, aggregated_index, n, percent
+  
         df_summary_table <- do.call(rbind, lapply(group_vars, function(group_var) {
-
-          out <- group_by(df_index_classvar_group, across(c(group_var, input$class_var))) %>% 
+cat(" group_var:", group_var, "\n")
+print(group_by(df_index_classvar_group, 
+               across(unique(c(group_var, input$class_group_var)))) %>% 
+        tally() %>% 
+        group_by(.data[[input$class_group_var]]) %>% head())
+          out <- group_by(df_index_classvar_group, 
+                          across(unique(c(group_var, input$class_group_var)))) %>% 
             tally() %>% 
-            group_by(.data[[input$class_var]]) %>% 
+            group_by(.data[[input$class_group_var]]) %>% 
             mutate(count = sum(n), percent = n/count) %>% dplyr::select(-count)
           names(out)[1] <- "aggregated_index"
           
@@ -825,14 +856,16 @@ cat("aggDxMod3\n")
       
       # draw percentage plot
       output$classvar_plot <- renderPlot({
-# cat(" classvar_plot\n class_var:", input$class_var, "\n"); print(classvar_summary()[1,])
-        req(input$class_var!="", input$agg_by!="")
+        withProgress(message = 'Plotting ...',
+                     detail = 'This may take a while...', value = 0, {
+# cat(" classvar_plot\n class_var:", input$class_group_var, "\n"); print(classvar_summary()[1,])
+        req(input$class_group_var!="", input$agg_by!="")
 
         width <- session$clientData[[paste0("output_", session$ns("classvar_plot"), "_width")]]
         df <- classvar_summary() %>% 
           dplyr::filter(aggregated_by == input$agg_by)
 # cat("  df:", class(df), "\n");print(sapply(df, class))
-        p <- plotClassvarBar(df, input$class_var, "aggregated_index", input$use_count)
+        p <- plotClassvarBar(df, input$class_group_var, "aggregated_index", input$use_count)
 # cat("  p:", class(p),"\n");#print(p)
         downloadPlotModuleServer(
           "dnld_cv_plot", "classvar_by_index", p,
@@ -842,5 +875,5 @@ cat("aggDxMod3\n")
         
         return(p) #gridExtra::grid.arrange(grobs = ps,
                                        # nrow = min(2, length(unique(df$aggregated_index)))))
-      })
+      }) })
     })}

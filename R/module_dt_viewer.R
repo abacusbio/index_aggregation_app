@@ -160,7 +160,7 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
       ## datatable on tabPanel
       output$dataviewer <- DT::renderDT({
         withProgress(
-          message = "Generating view table", value = 1,
+          message = "Loading table...", value = 1,
           {
             req(!is.null(datt()), input$view_vars)
             # print("dataViewerModuleServer")

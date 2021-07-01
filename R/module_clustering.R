@@ -163,9 +163,8 @@ t <- Sys.time()
           # Find best k
           # list(k_h, k_tss, k_sil, h, p_tss, p_sil)
           op_cut <- reactive({
-            findOptimalCut(input, output, session,
-                           dt, cl$cluster_obj, hc_method = input$agg_method, 
-                           wss = reactive(input$wss), silhouette = reactive(input$sil))
+            findOptimalCut(dt, cl$cluster_obj, hc_method = input$agg_method, 
+                           wss = isolate(input$wss), silhouette = isolate(input$sil))
           })
 cat(" Done findoptimalcut ");print(Sys.time()-t)
           output$message_h <- renderPrint({
@@ -173,12 +172,16 @@ cat(" Done findoptimalcut ");print(Sys.time()-t)
           })
           
           output$plot_tss <- renderPlot({
+            withProgress(message = 'Plotting ...',
+                         detail = 'This may take a while...', value = 0, {
             print(op_cut()$p_tss)
-          })
+          }) })
           
           output$plot_sil <- renderPlot({
+            withProgress(message = 'Plotting ...',
+                         detail = 'This may take a while...', value = 0, {
             print(op_cut()$p_sil)
-          })
+          }) })
           
           shinyjs::hide("wait")
            
@@ -199,11 +202,13 @@ cat(" Done findoptimalcut ");print(Sys.time()-t)
           
           # dendrograph
           output$plot_dendro <- renderPlot({
+            withProgress(message = 'Plotting ...',
+                         detail = 'This may take a while...', value = 0, {
             tempVar$width  <- session$clientData[[paste0("output_", session$ns("plot_dendro"), 
                                                          "_width")]]
             tempVar$plot <- drawDendro(as.hclust(cl$cluster_obj), cl$clusters, circle = input$circle)
             return(tempVar$plot)
-          })
+          }) })
           
           # download clustering objects
           downloadPlotModuleServer("dnld_dendro", 
