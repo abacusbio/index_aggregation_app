@@ -45,9 +45,9 @@ drawHeatMap <- function(cors, main, cluster, font_size = 3) {
             axis.text.y = element_text(size = theme.size/3*font_size, color = colory),
             legend.position = "top") # None
   } else {            # too many tiles. don't show values
-    p <- p + theme(axis.text.x = element_text(angle = 90, hjust = 1, size = theme.size/2*font_size, 
+    p <- p + theme(axis.text.x = element_text(angle = 90, hjust = 1, size = theme.size/5*font_size, 
                                               color = colorx),
-                   axis.text.y = element_text(size = theme.size/3*font_size,
+                   axis.text.y = element_text(size = theme.size/5*font_size,
                                               color = colory),
                    legend.position = "top")
   }

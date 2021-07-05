@@ -296,7 +296,7 @@ cat("aggDxMod\n")
         
         index <- dplyr::select(val$dt_index_new, !matches("new_index_"))
         dt_sub_index_ids_orig <- data.frame(ID = rownames(index), index, check.names = F)
-cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(dt_sub_index_ids_orig[3:5,3:5])
+cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(dt_sub_index_ids_orig[1:5,1:5])
         if("average" %in% input$sel_benchmark) { # add an average index as a benchmark
 cat("  average benchmark\n")          
           # make an average EV table
@@ -317,7 +317,7 @@ cat("  dt_sub_ebv_index_ids:");print(dim(dt_sub_ebv_index_ids));print(head(dt_su
 cat("  dt_sub_index_ids:");print(dim(dt_sub_index_ids));print(head(dt_sub_index_ids))
           # ID sex avg_index, index_1 ... index_3000
           val$dt_sub_index_ids <- left_join(dt_sub_index_ids, dt_sub_index_ids_orig)
-cat("  dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(val$dt_sub_index_ids[1:5,1:5])
+cat("  val$dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(val$dt_sub_index_ids[1:10,1:5])
           # avg_index, index_1 ... index_3000
           dt_index_avg <- dplyr::select(
             val$dt_sub_index_ids, 
