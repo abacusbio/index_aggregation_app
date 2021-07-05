@@ -264,7 +264,8 @@ cat("aggDxMod\n")
             # animal ID x Index
             val$dt_index_new <- dplyr::select(
               val$dt_sub_index_ids, dplyr::any_of(c(dt_ev_agg()$Index, val$dt_ev_filtered$Index)))
-# cat("  val$dt_index_new dim: ");print(dim(val$dt_index_new));print(val$dt_index_new[3:5,dt_ev_agg()$Index])
+cat("  val$dt_index_new dim: ");print(dim(val$dt_index_new));print(val$dt_index_new[3:5,dt_ev_agg()$Index])
+            rownames(val$dt_index_new) <- val$dt_sub_index_ids$ID
           } # if new_index? not in val$dt_index_new
         }, ignoreInit = T) # observe 3 datasets
       
@@ -293,7 +294,7 @@ cat("aggDxMod\n")
         by_cluster <- dplyr::arrange(by_cluster, desc(correlation)) %>% 
           mutate(id = dplyr::row_number())  # sort the id differently
                  # index_type = "aggregation") # Index aggregated_index correlation id
-        
+cat("  val$dt_index_new:");print(val$dt_index_new[1:3,1:3])        
         index <- dplyr::select(val$dt_index_new, !matches("new_index_"))
         dt_sub_index_ids_orig <- data.frame(ID = rownames(index), index, check.names = F)
 cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(dt_sub_index_ids_orig[1:5,1:5])
@@ -317,7 +318,7 @@ cat("  dt_sub_ebv_index_ids:");print(dim(dt_sub_ebv_index_ids));print(head(dt_su
 cat("  dt_sub_index_ids:");print(dim(dt_sub_index_ids));print(head(dt_sub_index_ids))
           # ID sex avg_index, index_1 ... index_3000
           val$dt_sub_index_ids <- left_join(dt_sub_index_ids, dt_sub_index_ids_orig)
-cat("  val$dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(val$dt_sub_index_ids[1:10,1:5])
+cat("  val$dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(val$dt_sub_index_ids[1:5,1:10])
           # avg_index, index_1 ... index_3000
           dt_index_avg <- dplyr::select(
             val$dt_sub_index_ids, 
