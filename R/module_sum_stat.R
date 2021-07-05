@@ -34,7 +34,7 @@ sumstatModUI <- function(id) {
     renderDtTableModuleUI(ns("stat_chr"), "String sum stats"),
     br(),br(),
     h3("Distribution"),
-    plotOutput(ns("dot_chr"), height = "600px"),
+    plotOutput(ns("dot_chr"), height = "800px"),
     downloadModuleUI(ns("dnld_dot_chr"))
     #br(),br(),
     # h2("Mult-choice variable frequency table"),
@@ -44,7 +44,7 @@ sumstatModUI <- function(id) {
 }
 
 # val$data_filtered, val$onekmind_cleaned, val$rank, val$merged_filtered
-sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
+sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NULL),
                        ...) {
   moduleServer(
     id,
@@ -299,7 +299,7 @@ sumstatMod <- function(id, dat = reactive(NULL), #val = reactive(NULL),
                           group1 = ifelse(!is.null(group_vars), group_vars, "var"),
                           group2 = group2, nbins = 30,
                           font_size = reactive(input$font_size),
-                          scales = "free_both", xlab = "Economic value ($)")
+                          scales = "free_both", xlab = xlab)
 
             downloadPlotModuleServer(
               "dnld_hist_num", paste0("histogram_", "_numeric_", session$ns("name")),

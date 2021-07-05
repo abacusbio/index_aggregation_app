@@ -2,20 +2,23 @@
 #'
 #' @param df a reactive function with a data.frame in it
 #' @param scales a string. Default is "free_y" for \code{ggpubr::facet}. Can also be "fixed", 
-#'        "free_x" or "free_both"
+#'        "free_x" or "free_both". When "free_both" then return a list of plots.
 #' @param xlab a character string to show on xlab. Default is \code{xvar}.
+#' 
+#' @return when scales == "free_both", return a list of ggpubr objects, otherwise return a ggpubr
+#'         object.
 plotHist <- function(input, output, session,
                      df, xvar, group1, group2 = NULL, nbins = 30, # reactive(30),
                      font_size = reactive(12), scales = "free_y", xlab = xvar, ...) {
-# cat("plotHist\n ", xvar, "group1:", group1, "group2:", group2, "df:", class(df), "\n")
-# print(head(df))
-
+# cat("plotHist\n ", xvar, "group1:", group1, "group2:", group2, "df:", class(df), "scales:", scales,
+    # "\n"); # print(head(df))
   if(class(df)[1]!="data.frame") df <- as.data.frame(df) # doesn't plot with tbl_df/tbl possibly from tidyr
   df[,group1] <- as.factor(df[,group1])
   # df[,group2] <- as.factor(df[,group2])
+  if(is.null(xlab)) xlab <- xvar
   
   if(scales == "free_both" &&
-     (length(unique(df[[group1]])) > 1 || length(unique(df[,group2])) > 1)) {
+     (length(unique(df[[group1]])) > 1 && length(unique(df[,group2])) <= 1)) {
     
     ps <- lapply(unique(df[[group1]]), function(i) {
       ggpubr::gghistogram(df[df[,group1]==i, ], x = xvar, 
@@ -30,11 +33,13 @@ plotHist <- function(input, output, session,
     })
     return(ps)
   } else {
+    
+    if(scales == "free_both") scales <- "free_y"
     p <- ggpubr::gghistogram(df, x = xvar, 
                              bins = nbins, alpha = 0.5,
                              add = "mean", rug = TRUE, 
                              xlab = xlab,
-                             color = "#008b99", fill = "#008b99", #group1,
+                             color = group1, fill = group1, #group1,
                              #palette = "npg",          # npg journal color palett. see ?ggpar
                              font.x = c(font_size(), "plain", "black"), # xlab
                              font.y = c(font_size(), "plain", "black"), # ylab
@@ -44,7 +49,7 @@ plotHist <- function(input, output, session,
                              ...)
     
     if(length(unique(df[[group1]])) > 1 && length(unique(df[,group2])) > 1) { # df[[NULL]] causes error
-      p <- ggpubr::facet(p, facet.by = c(group1, group2), scales = scales)
+      p <- ggpubr::facet(p, facet.by = c(group2, group1), scales = scales)
       
     } else if(length(unique(df[[group1]])) > 1) {
       p <- ggpubr::facet(p, facet.by = group1, scales = scales)
@@ -54,7 +59,6 @@ plotHist <- function(input, output, session,
     }  
     return(p)
   } # if free_both
- 
 }
 
 #'Plot a dot chart for discrete variables

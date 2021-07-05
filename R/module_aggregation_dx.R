@@ -132,7 +132,7 @@ cat("aggDxMod\n")
           })
         } else {
           output$warn_m <- renderText({
-            sanityCheckEBV(ebv_user())
+            sanityCheckEBV(ebv_user(), val$dt_description_clean)
           })
         }
         
@@ -296,9 +296,9 @@ cat("aggDxMod\n")
         
         index <- dplyr::select(val$dt_index_new, !matches("new_index_"))
         dt_sub_index_ids_orig <- data.frame(ID = rownames(index), index, check.names = F)
-# cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(dt_sub_index_ids_orig[3:5,3:5])
+cat("  dt_sub_index_ids_orig:");print(dim(dt_sub_index_ids_orig));print(dt_sub_index_ids_orig[3:5,3:5])
         if("average" %in% input$sel_benchmark) { # add an average index as a benchmark
-          
+cat("  average benchmark\n")          
           # make an average EV table
           ev_avg <- val$dt_ev_filtered[1,,drop = F]
           idx <- which(names(val$dt_ev_filtered) %in% 
@@ -309,25 +309,25 @@ cat("aggDxMod\n")
 
           dt_sub_ebv_index_ids <- calculateIndividualBW(input, output, session, 
                                 val$dt_ebv_filtered, ev_avg, val$dt_description_clean, val$dt_desc_ev_clean)
-# cat("  dt_sub_ebv_index_ids:");print(dim(dt_sub_ebv_index_ids));print(head(dt_sub_ebv_index_ids))
+cat("  dt_sub_ebv_index_ids:");print(dim(dt_sub_ebv_index_ids));print(head(dt_sub_ebv_index_ids))
           dt_sub_index_ids <- # ID sex avg_index
             dt_sub_ebv_index_ids[,!names(dt_sub_ebv_index_ids) 
                                  %in% val$dt_description_clean$column_labelling[
                                    val$dt_description_clean$classifier=="EBV"] ]
-# cat("  dt_sub_index_ids:");print(dim(dt_sub_index_ids));print(head(dt_sub_index_ids))
+cat("  dt_sub_index_ids:");print(dim(dt_sub_index_ids));print(head(dt_sub_index_ids))
           # ID sex avg_index, index_1 ... index_3000
           val$dt_sub_index_ids <- left_join(dt_sub_index_ids, dt_sub_index_ids_orig)
-# cat("  dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(val$dt_sub_index_ids[1:5,1:5])
+cat("  dt_sub_index_ids:");print(dim(val$dt_sub_index_ids));print(val$dt_sub_index_ids[1:5,1:5])
           # avg_index, index_1 ... index_3000
           dt_index_avg <- dplyr::select(
             val$dt_sub_index_ids, 
             dplyr::any_of(c("avg_index", val$dt_ev_filtered$Index)))
-# cat("  dt_index_avg:");print(dim(dt_index_avg));print(dt_index_avg[1:3,1:3])          
+cat("  dt_index_avg:");print(dim(dt_index_avg));print(dt_index_avg[1:3,1:3])
           by_ave <- makeLongCor(input, output, session,
                                 cor(dt_index_avg, use = "pairwise.complete.obs"),
                                 reactive("avg_index")) # Index aggregated_index correlation ID
           by_cluster <- rbind(by_cluster, by_ave)
-# cat("  average index by_cluster:\n");print(tail(by_cluster))
+cat("  average index by_cluster:\n");print(tail(by_cluster))
         } else if("upload" %in% input$sel_benchmark) { # add uploaded indexes as benchmarks
 # cat("  upload in sel_benchmark\n   val$dt_bnchmrk_ev_cleaned:\n")
 print(head(val$dt_bnchmrk_ev_cleaned))

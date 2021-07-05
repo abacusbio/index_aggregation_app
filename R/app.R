@@ -455,7 +455,7 @@ server <- function(input, output, session) {
   )
   
   ## SUMMARY STATISTICS EBV ##
-  sumstatMod("sumstat_ev", reactive(val$dt_ev_filtered))
+  sumstatMod("sumstat_ev", reactive(val$dt_ev_filtered), xlab = "Economic Value ($)")
   
   ## CALCULATE INDEX ##
   
