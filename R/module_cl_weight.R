@@ -39,7 +39,7 @@ calWeiModUI <- function(id) {
     renderDtTableModuleUI(ns("index_w"), "Download the new index weight file"),
     br(),br(),
     h2("New economic weights"),
-    renderDtTableModuleUI(ns("ew_new"), "Download the new EW file")
+    renderDtTableModuleUI(ns("ew_new"), "Download the updated EW file")
   )
 }
 
@@ -344,5 +344,5 @@ cat("calWeiMod\n")
       })
       
       renderDtTableModuleServer("ew_new", ew_new, extensions = "FixedHeader",
-                                downloadName = "new_EW", colfilter = "none")
+                                downloadName = "EW_cluster_", colfilter = "none")
     })}

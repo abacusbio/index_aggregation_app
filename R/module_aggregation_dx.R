@@ -240,13 +240,13 @@ cat("aggDxMod\n")
 # cat("  ebv_filtered:");print(dim(val$dt_ebv_filtered))
 # cat("  description_clean:");print(dim(val$dt_description_clean))
 # cat("  desc_ev_clean:");print(dim(val$dt_desc_ev_clean))
-# cat("  dt_index:");print(dim(val$dt_index));print(val$dt_index[1:3,1:3]);print(names(val$dt_index))
+# cat("  dt_index:");print(dim(val$dt_index));#print(val$dt_index[1:3,1:3]);print(names(val$dt_index))
           req(!is.null(dt_ev_agg()), !is.null(val$dt_ebv_filtered), !is.null(clusters()),
               !is.null(val$dt_description_clean),
               !is.null(val$dt_desc_ev_clean), !is.null(dt_index()))
           
           # avoid recalculation
-          if(sum(!is.na(match(dt_ev_agg()$Index, colnames(val$dt_index_new)))) == 0) {
+          if(sum(is.na(match(dt_ev_agg()$Index, colnames(val$dt_index_new)))) > 0) {
             
             if(transpose) {
               index <- t(dt_index())
@@ -273,7 +273,7 @@ cat("aggDxMod\n")
             # animal ID x Index
             val$dt_index_new <- dplyr::select(
               val$dt_sub_index_ids, dplyr::any_of(c(dt_ev_agg()$Index, val$dt_ev_filtered$Index)))
-# cat("  val$dt_index_new dim: ");print(dim(val$dt_index_new));print(val$dt_index_new[3:5,dt_ev_agg()$Index])
+# cat("  val$dt_index_new dim: ");print(dim(val$dt_index_new));print(val$dt_index_new[3:5,1:5]) #dt_ev_agg()$Index])
             rownames(val$dt_index_new) <- val$dt_sub_index_ids$ID
           } # if new_index? not in val$dt_index_new
         }, ignoreInit = T) # observe 3 datasets
@@ -281,13 +281,12 @@ cat("aggDxMod\n")
       # CALCULATE DEFAULT CORRELATION
       cor_default <- eventReactive(
         {length(val$dt_index_new) > 0
-          input$sel_benchmark
-          }, 
+          input$sel_benchmark}, 
         {
-# cat("event reactive val$dt_index_new\n")
-# cat("  dt_index_new:");print(dim(val$dt_index_new));print(val$dt_index_new[1:3, dt_ev_agg()$Index])
+# cat(" event reactive val$dt_index_new\n")
+# cat("  dt_index_new:");print(dim(val$dt_index_new));print(val$dt_index_new[1:3, 1:5]) #dt_ev_agg()$Index])
         req(!is.null(clusters()), !is.null(dt_ev_agg()), !is.null(val$dt_index_new))
-        
+# cat("  clusters unique:");print(unique(clusters()))        
         by_cluster <- do.call(rbind, lapply(unique(clusters()), function(i) {
           
           sel_agg <- grep(as.character(i), dt_ev_agg()$Index, value = T)
@@ -295,6 +294,7 @@ cat("aggDxMod\n")
           df_index_sub <- dplyr::select(val$dt_index_new, 
                                         dplyr::any_of(c(sel_agg, sel_cluster)))
           m <- cor(df_index_sub, use = "pairwise.complete.obs")
+# cat("   i:", i, "sel_agg:", paste0(sel_agg), "m dim:");print(dim(m))
           out <- makeLongCor(input, output, session,
                              m, reactive(sel_agg)) # Index aggregated_index correlation id
           return(out)
@@ -316,11 +316,11 @@ cat("aggDxMod\n")
           ev_mean <- apply(val$dt_ev_filtered[,idx], 2, mean, na.rm = T)
           ev_avg[1,idx] <- ev_mean
           ev_avg[1,"Index"] <- "avg_index"
-cat("  ev_avg old:");print(ev_avg)
+# cat("  ev_avg old:");print(ev_avg)
           idx_2 <- match(names(ev_avg), names(val$dt_ev_avg))
           idx_1 <- which(!is.na(idx_2))
           ev_avg[,idx_1] <- val$dt_ev_avg[,na.omit(idx_2)]
-cat("  ev_avg new:");print(ev_avg)
+# cat("  ev_avg new:");print(ev_avg)
           dt_sub_ebv_index_ids <- calculateIndividualBW(input, output, session, 
                                 val$dt_ebv_filtered, ev_avg, val$dt_description_clean, val$dt_desc_ev_clean)
 # cat("  dt_sub_ebv_index_ids:");print(dim(dt_sub_ebv_index_ids));print(head(dt_sub_ebv_index_ids))
@@ -402,7 +402,6 @@ cat("  ev_avg new:");print(ev_avg)
         heat_map <- plotcorrDot(input, output, session,
                                 cor_default(), reactive(input$font_size),
                                 reactive(input$fixed_y_scale))
-        # }
         
         downloadPlotModuleServer("dnld_heat_default", 
                                  name = "heatmap_new_and_original_indexes",
@@ -412,7 +411,6 @@ cat("  ev_avg new:");print(ev_avg)
         )
         
        # tempVar$corr_df <- heat_map$df
-        
         downloadModuleServer("dnld_cor_default", "correlation_new_and_original_indexes",
                              heat_map$df, T)
         

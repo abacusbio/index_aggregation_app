@@ -177,10 +177,7 @@ findObsOrder <- function(cl_obj, k = 2, desc = T) {
     cluster_order <- as.numeric(names(gg))
   }
   
-  if(class(cl_obj)[1]!="hclust") cl_obj <- as.hclust(cl_obj)
-  
   new_order <- unlist(lapply(1:k, function(i) {
-    c <- cluster_order[ i ]
     idx <- which(cl_obj$order %in% gg[[cluster_order[ i ]]])
     
     return(cl_obj$order[idx])
