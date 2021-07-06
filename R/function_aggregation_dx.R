@@ -3,7 +3,7 @@
 #' @param m the correlation matrix, numeric
 #' @param agg_index_names a reactive object within which a string scalar or vector, the aggregated
 #'        index name(s)
-#' @return a data.frame with columns Index, aggregated_index, correlation, ID
+#' @return a data.frame with columns Index, aggregated_index, correlation, id
 makeLongCor <- function(input, output, session,
                         m, agg_index_names = reactive(NULL)) {
 # cat("makeLongCor\n, m:", class(m));print(dim(m));#print(head(m))
@@ -20,11 +20,11 @@ makeLongCor <- function(input, output, session,
   # ...
   
   # create an index for sorting
-  # Index aggregated_index correlation ID
+  # Index aggregated_index correlation id
   m <- do.call(rbind, lapply(unique(m$aggregated_index), function(agg_index) {
-    df <- dplyr::filter(m, aggregated_index == agg_index) %>% 
+    return(dplyr::filter(m, aggregated_index == agg_index) %>% 
       dplyr::arrange(desc(correlation)) %>% 
-      mutate(id = dplyr::row_number())
+      mutate(id = dplyr::row_number()))
   }))
   
   return(m)

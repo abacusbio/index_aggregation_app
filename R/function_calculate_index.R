@@ -32,6 +32,7 @@ calculateIndividualBW <- function (input, output, session,
   
   indexes <- sub_ebv %*% econval # animal x index
   colnames(indexes) <- df_econval$Index
+  rownames(indexes) <- df_ebv_select$ID
 # cat(" indexes animal x index:");print(dim(indexes))  
   if(sum(is.na(indexes)) > 0) {
     print("Error: calculateIndividualBW indexes has NA")
