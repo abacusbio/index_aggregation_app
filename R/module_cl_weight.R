@@ -312,8 +312,7 @@ cat("calWeiMod\n")
       renderDtTableModuleServer("index_w", index_w, extensions = "FixedHeader",
                                 downloadName = "index_weight")
       
-      # make aggregated index
-      # make aggregated EW
+      # make aggregated EV
       ew_new <- reactive({ # 15june2021 reacted twice...
 # cat("\n reactive ew_new\n")
         req(length(input$error_m)==0, index_w, 
@@ -334,9 +333,14 @@ cat("calWeiMod\n")
 # cat("  index_new: i =", i, ", class", class(index_new), ", length");print(length(index_new));print(head(index_new))
           return(data.frame(Index = paste0("new_index_", i), cluster = i, t(index_new)))
         }))
-# cat("  ews_new: ");print(dim(ews_new));print(ews_new)
         val$dt_ev_agg <- ews_new
-        return(ews_new)
+        
+        # make average EV
+        ev_mean <- apply(val$dt_ev_filtered[,idx_trait], 2, mean, na.rm = T)
+        ews_avg <- data.frame(Index = "avg_index", cluster = NA, t(ev_mean))
+        val$dt_ev_avg <- ews_avg
+
+        return(rbind(ews_new, ews_avg))
       })
       
       renderDtTableModuleServer("ew_new", ew_new, extensions = "FixedHeader",

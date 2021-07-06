@@ -15,6 +15,12 @@ aggDxModSidebarUI <- function(id) {
       selectInput(ns("sel_benchmark"), "Select a benchmark index", 
                   choice = c("", "average"))
     ),
+    h4("Plot control"),
+    wellPanel(
+      # numericInput(ns("show_n_indexes"), "# indexs to show", 10, 1, 10, 1),
+      checkboxInput(ns("fixed_y_scale"), "Y scale fixed 0-1", T),
+      numericInput(ns("font_size"), "Font size", 12, 1, 20, 1)
+      ),
     htmltools::HTML(strrep(br(), 25)),
     h4("User select indexes"),
     wellPanel(
@@ -23,11 +29,6 @@ aggDxModSidebarUI <- function(id) {
       selectInput(ns("sel_cluster"), "Or select all indexes from a cluster", choices = ""),
       actionButton(ns("run_analysis"), "Run analysis", icon("running"), 
                    class = "btn btn-primary")
-      ),
-    h4("Plot control"),
-    wellPanel(
-      # numericInput(ns("show_n_indexes"), "# indexs to show", 10, 1, 10, 1),
-      numericInput(ns("font_size"), "Font size", 12, 1, 20, 1)
       )
     )
 }
@@ -71,11 +72,12 @@ aggDxModUI <- function(id) {
 #' @param id shiny object id
 #' @param val a reactive value object, containing at least 4 objects: 1) \code{reactive(
 #'        val$dt_index)}, a data.frame of animal by index. If the data is index by animal, 
-#'        then \code{transpose} should be set to \code{T}.
+#'        then \code{transpose} should be set to \code{T},
 #'        2) \code{cl}, a list containing \code{cl_obj}, a class "hclust" or "agnes" object,
 #'        and \code{val$cl$clusters}, a cluster assignment vector. e.g. a \code{cutree} 
-#'        output. 4) \code{val$dt_desc_ev_clean}, a data.frame of 2 columns: column_labelling and 
-#'        classifier/ 5) \code{val$dt_ev_filtered}, a data.frame of columns Index, ClassVar
+#'        output, 3)\code{val$dt_ev_avg}, a data.frame of the same structure as \code{dt_ev_agg}, 4)
+#'         \code{val$dt_desc_ev_clean}, a data.frame of 2 columns: column_labelling and 
+#'        classifier, 5) \code{val$dt_ev_filtered}, a data.frame of columns Index, ClassVar
 #'        (optional) and trait names
 #' @param dt_ev_agg a reactive function of a data.frame of columns Index, cluster and trait names
 #'        assignments
@@ -182,7 +184,8 @@ cat("aggDxMod\n")
                  need(!is.null(val$dt_index), "Please finish filtering or upload an index table"),
                  need(!is.null(clusters()), #val$cl$clusters),
                      "Please finish 'run cluster' or upload a cluster table"),
-                 need(!is.null(dt_ev_agg()), "Please finish 'Make new weights'")
+                 need(!is.null(dt_ev_agg()), "Please finish 'Make new weights'"),
+                 need(!is.null(val$dt_ev_avg), "Please finish 'Make new weights'")
         )
       })
       
@@ -229,7 +232,8 @@ cat("aggDxMod\n")
        
       # CALCULATE AGGREGATED INDEXES FOR EACH ANIMAL
       observeEvent( #input$run_analysis,{
-        !is.null(dt_ev_agg()) && !is.null(val$dt_ebv_filtered) && !is.null(val$dt_description_clean),
+        !is.null(dt_ev_agg()) && !is.null(val$dt_ebv_filtered) && 
+          !is.null(val$dt_description_clean) && is.null(val$dt_ev_avg),
         {
 # cat(" observe 3 data\n")#, names val: ");print(names(val))
 # cat("  dt_ev_agg:");print(dim(dt_ev_agg()));print(dt_ev_agg())
@@ -307,12 +311,16 @@ cat("aggDxMod\n")
 # cat("  average benchmark\n")          
           # make an average EV table
           ev_avg <- val$dt_ev_filtered[1,,drop = F]
-          idx <- which(names(val$dt_ev_filtered) %in% 
+          idx <- which(names(val$dt_ev_filtered) %in%
                          val$dt_desc_ev_clean$column_labelling[val$dt_desc_ev_clean$classifier=="EV"])
           ev_mean <- apply(val$dt_ev_filtered[,idx], 2, mean, na.rm = T)
           ev_avg[1,idx] <- ev_mean
           ev_avg[1,"Index"] <- "avg_index"
-
+cat("  ev_avg old:");print(ev_avg)
+          idx_2 <- match(names(ev_avg), names(val$dt_ev_avg))
+          idx_1 <- which(!is.na(idx_2))
+          ev_avg[,idx_1] <- val$dt_ev_avg[,na.omit(idx_2)]
+cat("  ev_avg new:");print(ev_avg)
           dt_sub_ebv_index_ids <- calculateIndividualBW(input, output, session, 
                                 val$dt_ebv_filtered, ev_avg, val$dt_description_clean, val$dt_desc_ev_clean)
 # cat("  dt_sub_ebv_index_ids:");print(dim(dt_sub_ebv_index_ids));print(head(dt_sub_ebv_index_ids))
@@ -392,7 +400,8 @@ cat("aggDxMod\n")
         # } else {
         # list(p, df). df cols are Index aggregated_index correlation id
         heat_map <- plotcorrDot(input, output, session,
-                                cor_default(), font_size = reactive(input$font_size))
+                                cor_default(), reactive(input$font_size),
+                                reactive(input$fixed_y_scale))
         # }
         
         downloadPlotModuleServer("dnld_heat_default", 
@@ -515,8 +524,7 @@ cat("aggDxMod\n")
         m <- makeLongCor(input, output, session,
                          tempVar$corr, reactive(input$sel_agg))
         heat_map <- plotcorrDot(input, output, session,
-                                m, font_size = reactive(input$font_size))
-        # }
+                                m, reactive(input$font_size), reactive(input$fixed_y_scale))
         
         downloadPlotModuleServer("dnld_heat",
           name = paste0("heatmap_", 

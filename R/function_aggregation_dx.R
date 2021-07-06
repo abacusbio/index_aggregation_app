@@ -37,17 +37,23 @@ makeLongCor <- function(input, output, session,
 #' @param show_n an integer, the total number of bars to show      
 #' @return either a ggplot object or a list of ggplot object
 plotcorrDot <- function(input, output, session,
-                        m, font_size = reactive(12),
+                        m, font_size = reactive(12), fixed_y_scale = reactive(T),
                         # n = 30, show_n = reactive(10), 
                         ...) {
 # cat("plotCorrDot\n, m:", class(m));print(dim(m));#print(head(m))
 # cat("  c(min(0, m[['correlation']]), 1):");print( c(min(0, m[["correlation"]], na.rm = T), 1))
+  if(fixed_y_scale()) {
+    ylim <- c(min(0, m[["correlation"]], na.rm = T), 1)
+  } else {
+    ylim <- range(m[["correlation"]])
+  }
+  
   p <- ggpubr::ggscatter(m, x = "id", y = "correlation",
                          color = "aggregated_index", alpha = 0.5, 
                          palette = "npg",          # npg journal color palett. see ?ggpar
                          sort.val = "desc",        # Sort the value in dscending order
                          # sort.by.groups = T,     # Don't sort inside each group
-                         ylim = c(min(0, m[["correlation"]], na.rm = T), 1),
+                         ylim = ylim,
                          xlab = "sorted original index",
                          font.x = c(font_size(), "plain", "black"), # xlab
                          font.y = c(font_size(), "plain", "black"), # y lab
@@ -109,53 +115,53 @@ plotTopNdot <- function(input, output, session,
  return(list(p = p, df = do.call(rbind, by_ref_index)))
 }
 
-#' Plot the classification variable distribution across indexes of a type
+#' #' Plot the classification variable distribution across indexes of a type
+#' #' 
+#' #' @param df a data.frame of columns aggregated_by, aggregated_index, n, percent. e.g. 
+#' #'        classvar_summary() filtered by aggregated_by
+#' #'
+#' plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
+#' # cat("plotClassvarBar\n df:", class(df), " x:", class(x), " fill:", class(fill), " use_count:",
+#'     # class(use_count), "\n")
+#'   for(i in c(x, fill)) {
+#'     if(class(df[,i])[1] %in% c("numeric", "integer", "double", "float")) {
+#'       df[,i] <- as.factor(df[,i])
+#'     }
+#'   }
 #' 
-#' @param df a data.frame of columns aggregated_by, aggregated_index, n, percent. e.g. 
-#'        classvar_summary() filtered by aggregated_by
-#'
-plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
-# cat("plotClassvarBar\n df:", class(df), " x:", class(x), " fill:", class(fill), " use_count:",
-    # class(use_count), "\n")
-  for(i in c(x, fill)) {
-    if(class(df[,i])[1] %in% c("numeric", "integer", "double", "float")) {
-      df[,i] <- as.factor(df[,i])
-    }
-  }
-
-  df$label <- ifelse(use_count, 
-                     df$n, paste0(sapply(df$percent, format, digits = 2, nsmall = 0), "%"))
-  
-  # if(input$switch_index_classvar) {
-  
-  # x <-input$class_var
-  # fill <- "aggregated_index"
-  # } else {
-  
-  # x <-"aggregated_index"
-  # fill <- input$class_var
-  # }
-# cat("  x:", x, " fill:", fill, "\n")
-  y <- ifelse(use_count, "n", "percent")
-  ylab <- ifelse(use_count, "count", "percent(%)")
-  
-  # ps <- lapply(unique(df$aggregated_by), function(agg_by) {
-  # df_sub <- dplyr::filter(df, aggregated_by == agg_by)
-  x.text.angle <- ifelse(length(unique(df[,x]))<=10, 0, 90)
-  
-  return(ggpubr::ggbarplot(
-    df, x = x, y = y, fill = fill, color = "white",
-    # position = position_dodge(),
-    orientation = "horiz",
-    # label = df_sub$label, lab.col = "black", lab.pos = "out",
-    # title = agg_by, 
-    ylab = ylab, x.text.angle = x.text.angle,
-    # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
-    palette = ggpubr::get_palette("npg", length(unique(df[,fill]))),
-    ...) #)
-  #  })
-  )
-}
+#'   df$label <- ifelse(use_count, 
+#'                      df$n, paste0(sapply(df$percent, format, digits = 2, nsmall = 0), "%"))
+#'   
+#'   # if(input$switch_index_classvar) {
+#'   
+#'   # x <-input$class_var
+#'   # fill <- "aggregated_index"
+#'   # } else {
+#'   
+#'   # x <-"aggregated_index"
+#'   # fill <- input$class_var
+#'   # }
+#' # cat("  x:", x, " fill:", fill, "\n")
+#'   y <- ifelse(use_count, "n", "percent")
+#'   ylab <- ifelse(use_count, "count", "percent(%)")
+#'   
+#'   # ps <- lapply(unique(df$aggregated_by), function(agg_by) {
+#'   # df_sub <- dplyr::filter(df, aggregated_by == agg_by)
+#'   x.text.angle <- ifelse(length(unique(df[,x]))<=10, 0, 90)
+#'   
+#'   return(ggpubr::ggbarplot(
+#'     df, x = x, y = y, fill = fill, color = "white",
+#'     # position = position_dodge(),
+#'     orientation = "horiz",
+#'     # label = df_sub$label, lab.col = "black", lab.pos = "out",
+#'     # title = agg_by, 
+#'     ylab = ylab, x.text.angle = x.text.angle,
+#'     # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
+#'     palette = ggpubr::get_palette("npg", length(unique(df[,fill]))),
+#'     ...) #)
+#'   #  })
+#'   )
+#' }
 
 #' #' Generic bar plot using ggpubr template
 #' #' @param m the data.frame to plot
