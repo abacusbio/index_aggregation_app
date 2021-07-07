@@ -268,7 +268,8 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
           renderDtTableModuleServer("stat_num", reactive(stat_num), T,
                                     c("FixedHeader", "FixedColumns"),
                                     digits = reactive(input$view_dec), downloadName = "sum_stat_num",
-                                    editable = F, colfilter = "none")
+                                    editable = F, colfilter = "none", 
+                                    option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
           
           # make df for histogram
 # cat("  group_vars:", !is.null(group_vars), "df_num:\n");print(head(df_num))
@@ -359,7 +360,8 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
           renderDtTableModuleServer("stat_chr", reactive(stat_chr), T,
                                     c("FixedHeader", "FixedColumns"),
                                     digits = reactive(input$view_dec),
-                                    downloadName = "sum_stat_chr", editable = F, colfilter = "none")
+                                    downloadName = "sum_stat_chr", editable = F, colfilter = "none", 
+                                    option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
           
           # make df for lolipop/dot or barchart
           dff <- stat_chr

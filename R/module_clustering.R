@@ -71,8 +71,8 @@ clusteringModUI <- function(id) {
     downloadPlotModuleUI(ns("dnld_dendro")),
     downloadModuleUI(ns("dnld_cluster"), "Download the clusters table"),
     downloadModuleUI(ns("dnld_cl"), "Download the cluster object"),
-    downloadModuleUI(ns("dnld_ev"), "Download the new EV file"),
-    downloadModuleUI(ns("dnld_desc_ev"), "Download the new EV description file")
+    downloadModuleUI(ns("dnld_ev"), "Download the updated EV file"),
+    downloadModuleUI(ns("dnld_desc_ev"), "Download the updated EV description file")
   )
 }
 
@@ -198,7 +198,7 @@ cat(" Done findoptimalcut ");print(Sys.time()-t)
           tempVar$dt_index_new <- data.frame(Index = names(cl$clusters), cluster = cl$clusters) %>% 
             right_join(val$dt_ev_filtered, by = "Index")
           
-          tempVar$dt_desc_ev_clean <- rbind(val$dt_desc_ev_clean, c("cluster", "group"))
+          tempVar$dt_desc_ev_clean <- rbind(val$dt_desc_ev_clean, c("cluster", "Group"))
           
           # dendrograph
           output$plot_dendro <- renderPlot({
@@ -225,13 +225,13 @@ cat(" Done findoptimalcut ");print(Sys.time()-t)
                                data.frame(Index = names(cl$clusters), cluster = cl$clusters),
                                F, "csv")
           downloadModuleServer("dnld_ev", 
-                               downloadName = paste0("new_ev_k", input$k_slider, "_aggMethod_",
+                               downloadName = paste0("updated_ev_k", input$k_slider, "_aggMethod_",
                                                      input$agg_method), 
                                tempVar$dt_index_new, F, "csv")
           downloadModuleServer("dnld_desc_ev", 
-                               downloadName = paste0("new_ev_desc_k", input$k_slider, "_aggMethod_",
+                               downloadName = paste0("updated_ev_desc_k", input$k_slider, "_aggMethod_",
                                                      input$agg_method), 
-                               dt_desc_ev_clean, F, "csv")
+                               tempVar$dt_desc_ev_clean, F, "csv")
           shinyjs::hide("wait")
           # return(cl) # 
         #  val[["cluster"]] <- cl$clusters

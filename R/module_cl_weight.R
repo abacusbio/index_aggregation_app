@@ -39,7 +39,8 @@ calWeiModUI <- function(id) {
     renderDtTableModuleUI(ns("index_w"), "Download the new index weight file"),
     br(),br(),
     h2("New economic weights"),
-    renderDtTableModuleUI(ns("ew_new"), "Download the updated EW file")
+    renderDtTableModuleUI(ns("ew_new"), "Download the new EW file"),
+    downloadModuleUI(ns("ew_new_t"), "Download the transposed new EW file")
   )
 }
 
@@ -344,5 +345,8 @@ cat("calWeiMod\n")
       })
       
       renderDtTableModuleServer("ew_new", ew_new, extensions = "FixedHeader",
-                                downloadName = "EW_cluster_", colfilter = "none")
+                                downloadName = "EW_cluster_", colfilter = "none", 
+                                option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
+      
+      downloadModuleServer("ew_new_t", "EW_cluster_transpose_", t(dplyr::select(ew_new(), -cluster)))
     })}

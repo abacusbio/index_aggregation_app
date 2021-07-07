@@ -51,6 +51,7 @@ aggDxModUI <- function(id) {
     h3("Minimum correlation given a quantile"),
     numericInput(ns("quantile_default"), "Enter a quantile", 100, 1, 100, 1),
     renderDtTableModuleUI(ns("quantile_table_default")),
+    downloadModuleUI(ns("poor_cor_index"), "Download poorly correlated index table"),
     br(),br(),
     h2(textOutput(ns("corr_title"))),
     h3("Scatter plot"), #"Scatter/heatmap plot"),
@@ -63,7 +64,8 @@ aggDxModUI <- function(id) {
     br(),br(),
     h3("Minimum correlation given a quantile"),
     numericInput(ns("quantile"), "Enter a quantile", 100, 1, 100, 1),
-    renderDtTableModuleUI(ns("quantile_table"))
+    renderDtTableModuleUI(ns("quantile_table")),
+    downloadModuleUI(ns("poor_cor_index_sub"), "Download poorly correlated index table")
   )
 }
 
@@ -434,12 +436,17 @@ cat("aggDxMod\n")
             #dplyr::select(-Index)
           names(out)[which(names(out)=="id")] <- "n_indexes"
           
+          poor_cor_indexes <- dplyr::filter(cor_default(), id >=n)
+          names(poor_cor_indexes)[which(names(poor_cor_indexes)=="id")] <- "order"
+          tempVar$poor_cor_index <- left_join(poor_cor_indexes, val$dt_ev_filtered, by = "Index")
+# cat("  poor_cor_index:");print(dim(tempVar$poor_cor_index));print(head(tempVar$poor_cor_index))          
           return(out)
         })
       
       renderDtTableModuleServer("quantile_table_default", q_table_default, 
                                 extensions = c("FixedHeader", "FixedColumns"),
                                 downloadName = paste0("min_corr_at_", input$quantile, "%"))
+      downloadModuleServer("poor_cor_index", "poorly_corr_index", tempVar$poor_cor_index)
       
       # CALCULATE SELECTED CORRELATION
       observeEvent(input$run_analysis,{
@@ -554,12 +561,19 @@ cat("aggDxMod\n")
           # dplyr::select(-Index)
         names(out)[which(names(out)=="id")] <- "n_indexes"
         
+        poor_cor_indexes <- dplyr::filter(tempVar$corr_df, id >=n)
+        names(poor_cor_indexes)[which(names(poor_cor_indexes)=="id")] <- "order"
+        tempVar$poor_cor_index_sub <- left_join(poor_cor_indexes, val$dt_ev_filtered, by = "Index")
+        
         return(out)
       })
       
       renderDtTableModuleServer("quantile_table", q_table, 
                                 extensions = c("FixedHeader", "FixedColumns"),
-                                downloadName = paste0("min_corr_at_", input$quantile, "%"))
+                                downloadName = paste0("min_corr_at_", input$quantile, "%"), 
+                                option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
+      
+      downloadModuleServer("poor_cor_index_sub", "poorly_corr_index_sub", tempVar$poor_cor_index_sub)
       
       return(reactive(tempVar$df_for_dx2))
     })}
@@ -718,7 +732,8 @@ cat("aggDxMod2\n")
         # cat("  table_top_n2:");print(dim(df_index_sub));print(head(table_top_n[,]))
         renderDtTableModuleServer("top_n_index", reactive(table_top_n),
                                   downloadName = paste0("top_", n, ifelse(input$percent, "%", ""),
-                                                        "_by_index"))
+                                                        "_by_index"), 
+                                  option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
       }) # observe input$run_top
       
       # TOP N individual agreement plot

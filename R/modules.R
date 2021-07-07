@@ -188,11 +188,14 @@ renderDtTableModuleUI <- function(id, label = "Download the table") {
 #'       colours in the table
 #'@param dom string, the button type
 #'@param buttons shiny button to show/hide columns
+#'@param option_list additional elements to append to \code{options} argument in 
+#'       \link[DT]\code{datatable}
 #'
 #'@references  https://dev.to/awwsmm/reactive-datatables-in-r-with-persistent-filters-l26
 #' basic https://shiny.rstudio.com/gallery/datatables-options.html
 #' filter https://yihui.shinyapps.io/DT-info/
 #' interactive https://laustep.github.io/stlahblog/posts/DTcallbacks.html
+#' disable search bar: http://legacy.datatables.net/usage/options
 renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
                                      extensions = c("FixedHeader", "FixedColumns", "Buttons"),
                                      fixedHeader = F, leftColumns = 0, # fixed left most column
@@ -201,7 +204,8 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
                                      colourcode = reactive(FALSE),
                                      dom = "Bfrtip", buttons = I('colvis'),
                                      downloadName = "test_download", row.names = F, type = "csv",
-                                     editable = T, colfilter = "top") {
+                                     editable = T, colfilter = "top",
+                                     option_list = NULL, ...) {
   moduleServer(
     id,
     function(input, output, session){
@@ -226,6 +230,8 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
           optionss$dom <- dom
           optionss$buttons <- buttons
         }
+        
+        optionss <- append(optionss, option_list)
 
         dt_output <-
           DT::datatable(dat(), rownames = rownames,
@@ -233,7 +239,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
                         filter = colfilter, # col filter
                         #selection = list(mode = "multiple", target = "row+column"),#"multiple",
                         editable = editable,
-                        options = optionss#, class = "table-primary"
+                        options = optionss, ... # class = "table-primary"
         )
 
         if(length(columns) > 0) { # 25nov2020
