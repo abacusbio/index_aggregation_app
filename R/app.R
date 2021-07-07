@@ -138,7 +138,7 @@ ui <- fluidPage(
             # shinyjs::show(
                span(id = "initial_warn", 
                     p("Please wait a couple of seconds before clicking anywhere. This allows the app to load/calculate
-    first, otherwise it can result in error or chrash. For example, let the table/picture display 
+    first, otherwise it can result in error or crash. For example, let the table/picture display 
     before clicking the 'Filter and save' button."),  class = "text-warning"), # style="background-color:bg-danger"), # class = "bg-danger"), #
              actionButton("demo", "Run demo data", class="btn btn-secondary"),
              preprocessUploadModUI("step1")

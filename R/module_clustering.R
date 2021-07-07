@@ -2,8 +2,11 @@ clusteringModSidebarUI <- function(id) {
   ns <- NS(id)
   tagList(
     # data selection ?
-    actionButton(ns("run_cluster"), "Run clustering", icon("running"), 
-                 class = "btn btn-primary"),
+    shinyjs::disabled(
+      div(id = ns("bttn"),
+          actionButton(ns("run_cluster"), "Run clustering", icon("running"), 
+                       class = "btn btn-primary")
+      )),
     br(),br(),
     h4("Parameter tuning"),
     wellPanel(
@@ -100,9 +103,9 @@ cat("clusteringMod\n")
       
       observeEvent(!is.null(dat() ), { # update k slider max value
         if(transpose) { k_max <- ncol(dat()) - 1 } else { k_max <- nrow(dat()) - 1 }
-# cat(" observe dat\n  k_max", k_max, "\n")
         updateSliderInput(session, "k_slider", max = min(k_max, 10))
-      })
+        shinyjs::enable("bttn")
+      }, ignoreInit = T)
       
       observeEvent(input$find_k_agg, {
        if(isTRUE(input$find_k_agg)) {
@@ -127,7 +130,9 @@ cat("clusteringMod\n")
 # cat("  input$which_data: ", input$which_data, ", input$absolute: ", input$absolute, "\n")
         req(!is.null(dat()), "dt_index" %in% names(val), !is.null(val$dt_ev_filtered),
             !is.null(val$dt_desc_ev_clean))
+        
         shinyjs::show("wait")
+        shinyjs::disable("bttn")
 #         if(length(col_sel()) > 0) {
 #           indexes <- col_sel()
 # # cat(" length desc file > 0\n  desc:");print(head(col_sel()));cat("indexes:");print(head(indexes))
@@ -236,7 +241,7 @@ cat(" Done findoptimalcut ");print(Sys.time()-t)
           # return(cl) # 
         #  val[["cluster"]] <- cl$clusters
         } # if find k agg
-        
+        shinyjs::enable("bttn")
       }) # observe run_cluster
       
       return(reactive(val$cl))

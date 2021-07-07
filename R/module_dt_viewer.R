@@ -8,8 +8,11 @@ dataViewerModuleSidebarUI <- function(id, defaultName = "") {
   ns <- NS(id)
   tagList(
     #  tags$td(
-    actionButton(ns("view_store"), "Filter and save", icon = icon("pen"),
-                 class = "btn-success"), #style = "padding-top:20px;")),
+    shinyjs::disabled(
+      div(id = ns("bttn"),
+          actionButton(ns("view_store"), "Filter and save", icon = icon("pen"),
+                       class = "btn-success") #style = "padding-top:20px;")),
+    )),
     downloadModuleUI(ns("download_1")),
     downloadModuleUI(ns("download_2"), "Download the filter records"),
     #， help_and_report(
@@ -72,6 +75,10 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
       
       # r_state <- reactiveValues(view_vars = NULL, dataviewer_state = list(),
       #                           dataviewer_search_columns = NULL)
+      
+      observeEvent(datt(), {
+        if(!is.null(datt())) shinyjs::enable(id = "bttn")
+      })
       
       ## col var selection panel at sidebar
       output$ui_view_vars <- renderUI({
@@ -249,8 +256,7 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
       
       ## store new name and download
       observeEvent(input$view_store, {
-        req(input$view_name)
-        req(val)
+        req(input$view_name, val, !is.null(datt()))
         
         if(is.null(tmp$dat)) { # user didn't apply stefan filter
           dat <- datt()

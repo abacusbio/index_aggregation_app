@@ -23,8 +23,11 @@ clusterDxModSidebarUI <- function(id) {
       checkboxInput(ns("show_corr"), "Show index correlation matrix (no plant info)", 
                     value = T),
      # checkboxInput(ns("bi_clust"), "Also cluster plant", value = F),
-      actionButton(ns("run_heatmap"), "Show heatmap", icon("running"),
-                   class = "btn btn-outline-primary")
+      shinyjs::disabled(
+        div(id = ns("bttn"),
+            actionButton(ns("run_heatmap"), "Show heatmap", icon("running"),
+                         class = "btn btn-outline-primary")
+        ))
     )
   )
 }
@@ -74,6 +77,14 @@ clusterDxMod <- function(id, val = NULL, transpose = T,
     function(input, output, session) {
 cat("clusterDxMod\n")
       tempVar <- reactiveValues()
+      
+      observeEvent({
+       !is.null(val$dt_index)
+      !is.null(val$cl$cluster_obj)
+       !is.null(val$cl$clusters)}, {
+# cat(" observe event val$dt_index, val$cl$cluster_obj, val$cl$clusters")
+          shinyjs::enable("bttn")
+          })
       
      # observeEvent(input$show_corr, {shinyjs::toggle(id = "bi_clust", condition = !input$show_corr)})
       
@@ -190,6 +201,9 @@ cat("clusterDxMod\n")
       observeEvent(input$run_heatmap, {
 cat(" observe run_heatmap\n  dat:");#print(dim(val$dt_index));cat("  clusters:");print(head(val$cl$clusters));
 # cat(" cl_obj:");print(val$cl$cluster_obj$call)
+        shinyjs::show("wait")
+        shinyjs::disable("bttn")
+        
         output$warn_m <- renderText({
           validate(need(!is.null(val$dt_index), "please finish filtering or upload an index"),
                    need(!is.null(val$cl$cluster_obj), 
@@ -201,14 +215,11 @@ cat(" observe run_heatmap\n  dat:");#print(dim(val$dt_index));cat("  clusters:")
         
         req(val$dt_index, val$cl$cluster_obj, val$cl$clusters) # req(!is.null(dat()))
         
-        shinyjs::show("wait")
-        
         if(transpose) {x <- t(val$dt_index) } else { x <- val$dt_index} # index x animal
         
         output$plot_heat <- renderPlot({
           withProgress(message = 'Plotting ...',
                        detail = 'This may take a while...', value = 0, {
-          req(x, val$cl$cluster_obj, val$cl$clusters)
           # width changes everytime the browser size changes
           tempVar$width  <- session$clientData[[paste0("output_", session$ns("plot_heat"), 
                                                        "_width")]]
@@ -245,6 +256,7 @@ cat(" observe run_heatmap\n  dat:");#print(dim(val$dt_index));cat("  clusters:")
           #                          RowSideColors = tempVar$heatmap$RowSideColors))
         }) })
         shinyjs::hide("wait")
+        shinyjs::enable("bttn")
 # cat("  heatmap.2 finished"); print(Sys.time()-t)
         downloadPlotModuleServer("download_heat", name = "index_heatmap", plots = tempVar$heatmap,
                                  width = reactive(tempVar$width))
