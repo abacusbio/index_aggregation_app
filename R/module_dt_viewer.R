@@ -245,19 +245,13 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
               {if (sum(isInt) > 0) DT::formatRound(., names(isInt)[isInt], 0) else .}
           }) # withProgress
         
-        shinyjs::enable(id = "bttn")
-        
         return(dt_output)
       }, server = T # server-side processing, defaut is TRUE
       ) # DT::renderDT
       
-#       observeEvent(session$clientData[[paste0("output_", session$ns("dataviewer_hidden"))]], {
-# cat(" observe event dataviewer\n");print(session$clientData[[paste0("output_", session$ns("dataviewer_hidden"))]])
-#         if(!session$clientData[[paste0("output_", session$ns("dataviewer_hidden"))]]) {
-#           print(session$clientData)
-#           shinyjs::enable(id = "bttn")
-#         }
-#       })
+      observeEvent(input$dataviewer_rows_all, { # when datatable has >0 rows, enable filter and save button
+        if(!is.null(input$dataviewer_rows_all)) shinyjs::enable(id = "bttn")
+      })
       
       ## store new name and download
       observeEvent(input$view_store, {
