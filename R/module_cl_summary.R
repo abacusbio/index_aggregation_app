@@ -165,20 +165,21 @@ cat("clusterSumStatMod\n")
           if(length(cor_sub)==0) { # only 1 obs in this cluster
             cor_sub <- 1
           }
-          return(data.frame(cor = cor_sub, cluster = i))
+          return(data.frame(cor = cor_sub, cluster = i, n_index = length(idx)))
         }))
         tempVar$df_cor <- df_cor
 
         sum_cor <- dplyr::group_by(df_cor, cluster) %>% 
-          dplyr::summarise(n = n(), 
+          dplyr::summarise(n_corr = n(),
                            mean = mean(cor, na.rm = T), median = median(cor, na.rm = T),
                            sd = sd(cor, na.rm = T), 
                            min = min(cor, na.rm = T), max = max(cor, na.rm = T))
 
         missing <- dplyr::group_by(df_cor, cluster) %>% 
-          summarise(n_missing = sum(is.na(cor)))
+          summarise(n_corr_missing = sum(is.na(cor)))
         
-        sum_cor <- dplyr::left_join(sum_cor, missing, by = "cluster")
+        sum_cor <- dplyr::left_join(sum_cor, missing, by = "cluster") %>% 
+          dplyr::right_join(dplyr::select(df_cor, cluster, n_index) %>% distinct())
         
         return(sum_cor)
         })

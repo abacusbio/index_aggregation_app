@@ -26,7 +26,7 @@ plotHist <- function(input, output, session,
                           add = "mean", rug = TRUE, 
                           xlab = xlab, title = i, 
                           color = "#008b99", fill = "#008b99", #group1,
-                          #palette = "npg",          # npg journal color palett. see ?ggpar
+                          palette = "npg",          # npg journal color palett. see ?ggpar
                           font.x = c(font_size(), "plain", "black"), # xlab
                           font.y = c(font_size(), "plain", "black"), # ylab
                           ...)
@@ -40,7 +40,7 @@ plotHist <- function(input, output, session,
                              add = "mean", rug = TRUE, 
                              xlab = xlab,
                              color = group1, fill = group1, #group1,
-                             #palette = "npg",          # npg journal color palett. see ?ggpar
+                             palette = "npg",          # npg journal color palett. see ?ggpar
                              font.x = c(font_size(), "plain", "black"), # xlab
                              font.y = c(font_size(), "plain", "black"), # ylab
                              font.legend = c(font_size(), "plain", "black"),

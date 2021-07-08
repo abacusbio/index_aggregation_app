@@ -76,10 +76,6 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
       # r_state <- reactiveValues(view_vars = NULL, dataviewer_state = list(),
       #                           dataviewer_search_columns = NULL)
       
-      observeEvent(datt(), {
-        if(!is.null(datt())) shinyjs::enable(id = "bttn")
-      })
-      
       ## col var selection panel at sidebar
       output$ui_view_vars <- renderUI({
         req(!is.null(datt()))
@@ -87,7 +83,6 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
         # if(is.null(vars())) {
         vars <- names(datt())  # varnames() # 9sept2020
         # } else { vars <- vars()}
-        
         return(
           selectInput(
             session$ns("view_vars"),  # use session$ns() to get inside id being recognized
@@ -249,10 +244,20 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
               {if (sum(isDbl) > 0) DT::formatRound(., names(isDbl)[isDbl], dec) else .} %>%
               {if (sum(isInt) > 0) DT::formatRound(., names(isInt)[isInt], 0) else .}
           }) # withProgress
-        return(dt_output)
         
+        shinyjs::enable(id = "bttn")
+        
+        return(dt_output)
       }, server = T # server-side processing, defaut is TRUE
       ) # DT::renderDT
+      
+#       observeEvent(session$clientData[[paste0("output_", session$ns("dataviewer_hidden"))]], {
+# cat(" observe event dataviewer\n");print(session$clientData[[paste0("output_", session$ns("dataviewer_hidden"))]])
+#         if(!session$clientData[[paste0("output_", session$ns("dataviewer_hidden"))]]) {
+#           print(session$clientData)
+#           shinyjs::enable(id = "bttn")
+#         }
+#       })
       
       ## store new name and download
       observeEvent(input$view_store, {
