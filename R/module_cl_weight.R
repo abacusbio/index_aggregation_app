@@ -348,5 +348,6 @@ cat("calWeiMod\n")
                                 downloadName = "EW_cluster_", colfilter = "none", 
                                 option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
       
-      downloadModuleServer("ew_new_t", "EW_cluster_transpose_", t(dplyr::select(ew_new(), -cluster)))
+      downloadModuleServer("ew_new_t", "EW_cluster_transpose", 
+                           t.data.frame(dplyr::select(ew_new(), -cluster)), row.names = T, col.names = F)
     })}

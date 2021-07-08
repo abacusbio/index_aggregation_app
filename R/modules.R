@@ -128,7 +128,7 @@ downloadModuleUI <- function(id, label = "Download the table") {
 #'
 #' @return a .csv file
 downloadModuleServer <- function(id, downloadName = "test_download", df,
-                                 row.names = F, type = "csv") {
+                                 row.names = F, type = "csv", col.names = T) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -136,16 +136,17 @@ downloadModuleServer <- function(id, downloadName = "test_download", df,
         output$download_table <- downloadHandler(
           filename = paste0(downloadName, "-", Sys.Date(), ".csv"),
           content = function(file) {
-cat("csv"); print(dim(df))
+cat("download csv"); print(dim(df))
             return(
-              write.csv(df, file, row.names = row.names, quote = F)) #, fileEncoding = "UTF-8-BOM"))
+              write.table(df, file, sep = ",", 
+                          row.names = row.names, quote = F, col.names = col.names)) #, fileEncoding = "UTF-8-BOM"))
           }
         )
      } else if (type == "rdata") {
        output$download_table <- downloadHandler(
          filename = paste0(downloadName, "-", Sys.Date(), ".RData"),
          content = function(file) {
-cat("rdata"); print(dim(df))
+cat("download rdata"); print(dim(df))
            return(
            saveRDS(df, file))
          }
