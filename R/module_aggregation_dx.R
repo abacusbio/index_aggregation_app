@@ -870,17 +870,16 @@ cat("aggDxMod3\n")
           right_join(df_cluster, by = "Index")
 # write.table(df_index_classvar_group, "df_index_classvar_group.txt", quote = F, row.names = F, sep = ",")
         # calculate summary stat table
-        # aggregated_by, aggregated_index, n, percent
-  
+        # aggregated_by, aggregated_index, group_var, n, percent
         df_summary_table <- do.call(rbind, lapply(group_vars, function(group_var) {
 
           out <- group_by(df_index_classvar_group, 
                           across(unique(c(group_var, input$class_var)))) %>% 
-            tally() %>% 
+            tally(wt = n()) %>% 
             group_by(.data[[input$class_var]]) %>% 
-            mutate(count = sum(n), percent = n/count) %>% dplyr::select(-count)
+            mutate(count = sum(n), percent = n/count*100) %>% dplyr::select(-count)
           names(out)[1] <- "aggregated_index"
-          
+# cat(" df_summary_table:\n");print(head(out))
           return(data.frame(aggregated_by = group_var, out))
         }))
         
@@ -890,7 +889,14 @@ cat("aggDxMod3\n")
         return(df_summary_table)
       })
         
-      renderDtTableModuleServer("classvar_summary", classvar_summary, 
+      classvar_sum_show <- eventReactive(classvar_summary(), {
+        req(!is.null(classvar_summary()), input$class_var)
+        
+        return(tidyr::pivot_wider(classvar_summary(), 
+                           names_from = input$class_var, values_from = c(n, percent)))
+      })
+      
+      renderDtTableModuleServer("classvar_summary", classvar_sum_show, 
                                 extensions = c("FixedHeader", "FixedColumns"),
                                 downloadName = "class_var_summary_in_agg_index")
       

@@ -41,6 +41,7 @@ plotHist <- function(input, output, session,
                              xlab = xlab,
                              color = group1, fill = group1, #group1,
                              palette = "npg",          # npg journal color palett. see ?ggpar
+                             # palette = ggpubr::get_palette("npg", length(unique(df[,fill]))),
                              font.x = c(font_size(), "plain", "black"), # xlab
                              font.y = c(font_size(), "plain", "black"), # ylab
                              font.legend = c(font_size(), "plain", "black"),
@@ -84,12 +85,12 @@ plotLolipop <- function(input, output, session,
       dff <- filter(df, variable == var1) # across(all_of(group1), ~ .x==var1))
       
       if(group1=="variable") { # no group_var. group1=="variable". group2==NULL
-        if(length(dff[[xvars]]) > 8) {
-          cols <- colorRampPalette(ggsci::pal_npg(alpha = 0.5)(8))(length(dff[[xvars]]))  
-        }
+        # if(length(dff[[xvars]]) > 8) {
+        #   cols <- colorRampPalette(ggsci::pal_npg(alpha = 0.5)(8))(length(dff[[xvars]]))  
+        # }
 # cat("   cols len:", length(cols), "\n")
         return(ggpubr::ggdotchart(dff, x = xvars, y = yvar, 
-                                  palette = cols,          # npg journal color palett. see ?ggpar
+                                  palette = ggpubr::get_palette("npg", length(dff[[xvars]])),
                                   color = xvars, #group = group1,
                                   sorting = "descending",
                                   add = "segments", add.params = list(color = "lightgray", size = 1),
@@ -102,12 +103,12 @@ plotLolipop <- function(input, output, session,
                                   font.legend = c(font_size(), "plain", "black"),
                                   ...))
       } else {                 # group_var exist. group2=="variable" group1==group_var
-        if(length(unique(dff[[group1]])) > 8) {
-          cols <- colorRampPalette(ggsci::pal_npg(alpha = 0.5)(8))(length(unique(dff[[group1]])))  
-        }
+        # if(length(unique(dff[[group1]])) > 8) {
+        #   cols <- colorRampPalette(ggsci::pal_npg(alpha = 0.5)(8))(length(unique(dff[[group1]])))  
+        # }
         
         return(ggpubr::ggdotchart(dff, x = xvars, y = yvar, 
-                                 palette = cols,          # npg journal color palett. see ?ggpar
+                                  palette = ggpubr::get_palette("npg", length(unique(dff[[group1]]))),
                                  color = group1, group = group1,
                                  position = position_dodge(1), sorting = "descending",
                                  add = "segments", add.params = list(color = "lightgray", size = 1),

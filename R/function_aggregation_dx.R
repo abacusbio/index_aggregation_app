@@ -121,8 +121,8 @@ plotTopNdot <- function(input, output, session,
 #'        classvar_summary() filtered by aggregated_by
 #'
 plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
-# cat("plotClassvarBar\n df:", class(df), " x:", class(x), " fill:", class(fill), " use_count:",
-    # class(use_count), "\n")
+# cat("plotClassvarBar\n df:", class(df), " x:", x, " fill:", fill, " use_count:", use_count, "\n")
+# print(head(df));#print(str(df))
   for(i in c(x, fill)) {
     if(class(df[,i])[1] %in% c("numeric", "integer", "double", "float")) {
       df[,i] <- as.factor(df[,i])
@@ -144,23 +144,39 @@ plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
 # cat("  x:", x, " fill:", fill, "\n")
   y <- ifelse(use_count, "n", "percent")
   ylab <- ifelse(use_count, "count", "percent(%)")
-
   # ps <- lapply(unique(df$aggregated_by), function(agg_by) {
   # df_sub <- dplyr::filter(df, aggregated_by == agg_by)
   x.text.angle <- ifelse(length(unique(df[,x]))<=10, 0, 90)
 
-  return(ggpubr::ggbarplot(
-    df, x = x, y = y, fill = fill, color = "white",
-    # position = position_dodge(),
-    orientation = "horiz",
-    # label = df_sub$label, lab.col = "black", lab.pos = "out",
-    # title = agg_by,
-    ylab = ylab, x.text.angle = x.text.angle,
-    # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
-    palette = ggpubr::get_palette("npg", length(unique(df[,fill]))),
-    ...) #)
+  if(use_count) {
+    y <- "n"; ylab <- "count"
+    
+    p <- ggpubr::ggbarplot(
+      df, x = x, y = y, fill = fill, color = "white",
+      # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
+      position = position_stack(reverse = TRUE),
+      label = T, lab.col = "white", lab.pos = "in", lab.vjust = -5,
+      # title = agg_by,
+      ylab = ylab, orientation = "horiz", ...)
+      
+  } else {
+    y <- "percent"; ylab <- "percent(%)"
+    
+    p <- ggpubr::ggbarplot(
+      df, x = x, y = y, fill = fill, color = "white",
+      # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
+      position = position_fill(reverse = TRUE),
+      label = df$label, lab.col = "white", lab.pos = "in", lab.vjust = -0.1, 
+      # title = agg_by,
+      ylab = ylab, orientation = "horiz", ...)
+  }
+
+  p <- ggpubr::set_palette(p, ggpubr::get_palette("npg", length(unique(df[,fill])))) +
+    ggpubr::rotate_x_text(angle = x.text.angle)
+    #palette = ggpubr::get_palette("npg", length(unique(df[,fill]))),
+    #...)
+  return(p)
   #  })
-  )
 }
 
 #' #' Generic bar plot using ggpubr template
