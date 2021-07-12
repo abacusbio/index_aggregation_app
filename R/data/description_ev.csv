@@ -11,5 +11,5 @@ GIBBERELLA,EV
 NLEAFBLIGHT,EV
 BROWNRUST,EV
 TARSPOT,EV
-group,Group
+sector,Group
 zone,ClassVar

@@ -211,7 +211,7 @@ cat("aggDxMod\n")
       observeEvent(!is.null(dt_ev_agg()), { 
 # cat(" observe dt_ev_agg: ");print(dim(dt_ev_agg()))
         req(clusters, val$dt_ev_filtered, val$dt_desc_ev_clean)
-# cat("  req satisfied. clusters:");print(head(clusters()))
+# cat(" clusters:\n");print(head(clusters()));cat(" val$dt_ev_filtered:\n");print(head(val$dt_ev_filtered))
         updateSelectInput(session, "sel_index", 
                           choices = c("", paste0(names(clusters()), "{", clusters(), "}")))
         updateSelectInput(session, "sel_agg", choices = dt_ev_agg()$Index)
@@ -220,7 +220,7 @@ cat("aggDxMod\n")
 
           group_headers <- val$dt_desc_ev_clean$column_labelling[
             val$dt_desc_ev_clean$classifier=="Group"]
-          
+
           group_levels <- sapply(val$dt_ev_filtered[,group_headers,drop = F], unique, simplify = F)
           group_levels <- append(group_levels, list("cluster" = unique(clusters())))
           
