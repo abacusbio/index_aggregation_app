@@ -129,9 +129,13 @@ plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
     }
   }
 
-  df$label <- ifelse(use_count,
-                     df$n, paste0(sapply(df$percent, format, digits = 2, nsmall = 0), "%"))
-
+  if(use_count) { # ifelse doesn't work with vector well
+    df$label <- df$n
+  } else {
+    df$label <- paste0(sapply(df$percent, format, digits = 2, nsmall = 0), "%")
+  }
+                     
+# cat(" df_label:");print(df$label)
   # if(input$switch_index_classvar) {
 
   # x <-input$class_var
@@ -155,7 +159,7 @@ plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
       df, x = x, y = y, fill = fill, color = "white",
       # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
       position = position_stack(reverse = TRUE),
-      label = T, lab.col = "white", lab.pos = "in", lab.vjust = -5,
+      label = T, lab.col = "white", lab.pos = "in", lab.vjust = -2,
       # title = agg_by,
       ylab = ylab, orientation = "horiz", ...)
       
@@ -166,7 +170,7 @@ plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
       df, x = x, y = y, fill = fill, color = "white",
       # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
       position = position_fill(reverse = TRUE),
-      label = df$label, lab.col = "white", lab.pos = "in", lab.vjust = -0.1, 
+      label = df$label, lab.col = "white", lab.pos = "in", lab.vjust = -0.5, 
       # title = agg_by,
       ylab = ylab, orientation = "horiz", ...)
   }

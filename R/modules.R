@@ -272,6 +272,8 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
         } # if colourcode
         return(dt_output)
       }) # withProgress
+    
+    downloadModuleServer("download_1", downloadName, dat(), row.names, type)
     return(dt_output)
   }, server = T) #, options = list(stateSave =T)) #, 8sept2020
   #filter = "top") # renderDT/DT::renderDataTable
@@ -292,11 +294,6 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
 # print(input$table_cell_edit[1:3])
 #  # d9 <<- editData(d9, input$x9_cell_edit, 'x9', rownames = FALSE)
 # })
-
-   #isolate(
-      downloadModuleServer("download_1", downloadName, dat(), row.names, type)
-  # )
-
   })} # renderDtTableModuleServer
 
 #'Download button UI function

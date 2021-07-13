@@ -43,6 +43,9 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
     function(input, output, session) {
 # cat("preprocessMod\n");
       flag <- F
+      tempVar <- reactiveValues(
+        cnvrt = data.frame(classifier = c("ID", "ClassVar", "Group", "EBV", "EV"),
+                           colClasses = c(rep("character", 3), rep("numeric", 2))))
       
       output$demo_message <- renderText({
        req("desc_ebv" %in% names(val))
@@ -73,6 +76,8 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
 # cat(" is.null txt")
           val$desc_ebv <- desc_ebv()
           output$demo_message <- renderText({ "You are using uploaded data now" })
+          tempVar$ebv_colClasses <- dplyr::left_join(val$desc_ebv, tempVar$cnvrt)
+          
         } else {
           flag <- T
         #  shinyjs::delay(30000, stopApp()) # 30 seconds
@@ -95,6 +100,8 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
         output$sanity_message <- renderText({ txt })
         if(is.null(txt)) {
           val$desc_ev <- desc_ev()
+          tempVar$ev_colClasses <- dplyr::left_join(val$desc_ev, tempVar$cnvrt)
+          
         } else {
           flag <- T
        #   shinyjs::delay(30000, stopApp())
@@ -102,7 +109,8 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
       })
       
       ## EBV file
-      dat_ebv <- uploadTableModuleServer("dat_ebv", sheet = sheet, skip = skip)
+      dat_ebv <- uploadTableModuleServer("dat_ebv", sheet = sheet, skip = skip, 
+                                         what = tempVar$ebv_colClasses)
       
       output$error_m_3 <- renderText({
         validate(need(
@@ -128,7 +136,8 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
       })
       
       ## EV file
-      dat_ev <- uploadTableModuleServer("dat_ev", sheet = sheet, skip = skip)
+      dat_ev <- uploadTableModuleServer("dat_ev", sheet = sheet, skip = skip, 
+                                        what = tempVar$ebv_colClasses)
       
       output$error_m_4 <- renderText({
         validate(need(

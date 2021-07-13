@@ -438,15 +438,18 @@ cat("aggDxMod\n")
           
           poor_cor_indexes <- dplyr::filter(cor_default(), id >=n)
           names(poor_cor_indexes)[which(names(poor_cor_indexes)=="id")] <- "order"
-          tempVar$poor_cor_index <- left_join(poor_cor_indexes, val$dt_ev_filtered, by = "Index")
-# cat("  poor_cor_index:");print(dim(tempVar$poor_cor_index));print(head(tempVar$poor_cor_index))          
+          poor_cor_index <- left_join(poor_cor_indexes, val$dt_ev_filtered, by = "Index")
+# cat("  poor_cor_index:");print(dim(tempVar$poor_cor_index));print(head(tempVar$poor_cor_index))
+          downloadModuleServer("poor_cor_index",
+                               paste0("poorly_corr_index_under_", input$quantile_default, "%"),
+                               poor_cor_index)
+          
           return(out)
         })
       
       renderDtTableModuleServer("quantile_table_default", q_table_default, 
                                 extensions = c("FixedHeader", "FixedColumns"),
                                 downloadName = paste0("min_corr_at_", input$quantile, "%"))
-      downloadModuleServer("poor_cor_index", "poorly_corr_index", tempVar$poor_cor_index)
       
       # CALCULATE SELECTED CORRELATION
       observeEvent(input$run_analysis,{
@@ -563,17 +566,20 @@ cat("aggDxMod\n")
         
         poor_cor_indexes <- dplyr::filter(tempVar$corr_df, id >=n)
         names(poor_cor_indexes)[which(names(poor_cor_indexes)=="id")] <- "order"
-        tempVar$poor_cor_index_sub <- left_join(poor_cor_indexes, val$dt_ev_filtered, by = "Index")
+       
+        poor_cor_index_sub <- left_join(poor_cor_indexes, val$dt_ev_filtered, by = "Index")
+        downloadModuleServer("poor_cor_index_sub", 
+                             paste0("poorly_corr_index_sub_under_", input$quantile, "%"), 
+                             poor_cor_index_sub)
         
         return(out)
       })
       
       renderDtTableModuleServer("quantile_table", q_table, 
                                 extensions = c("FixedHeader", "FixedColumns"),
-                                downloadName = paste0("min_corr_at_", input$quantile, "%"), 
+                                downloadName = paste0("min_corr"), # _at_", input$quantile, "%"), # doesn't react to input$quantile change?
                                 option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
       
-      downloadModuleServer("poor_cor_index_sub", "poorly_corr_index_sub", tempVar$poor_cor_index_sub)
       
       return(reactive(tempVar$df_for_dx2))
     })}
