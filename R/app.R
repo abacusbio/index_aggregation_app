@@ -58,6 +58,7 @@ source("function_sum_stat.R")
 source("function_calculate_index.R")
 source("function_clustering.R")
 source("function_cl_dx.R")
+source("function_cl_weight.R")
 source("function_aggregation_dx.R")
 
 # Define UI for application that draws a histogram

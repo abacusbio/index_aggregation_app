@@ -788,6 +788,7 @@ aggDxModSidebarUI3 <- function(id) {
     wellPanel(
       selectInput(ns("agg_by"), "Select an index type", "", ""),
       checkboxInput(ns("use_count"), "Use count", F),
+      numericInput(ns("font_size"), "Font size", 12, 1, 20, 1)
       # checkboxInput(ns("switch_index_classvar"), 
                     # "Switch between indexes and classification variables", F) 
     )
@@ -916,13 +917,15 @@ cat("aggDxMod3\n")
         withProgress(message = 'Plotting ...',
                      detail = 'This may take a while...', value = 0, {
 # cat(" classvar_plot\n class_var:", input$class_var, "\n"); print(classvar_summary()[1,])
-        req(input$class_var!="", input$agg_by!="")
+        req(input$class_var!="", input$agg_by!="", input$font_size)
 
         width <- session$clientData[[paste0("output_", session$ns("classvar_plot"), "_width")]]
         df <- classvar_summary() %>% 
           dplyr::filter(aggregated_by == input$agg_by)
 # cat("  df:", class(df), "\n");print(sapply(df, class))
-        p <- plotClassvarBar(df, input$class_var, "aggregated_index", input$use_count)
+        p <- plotClassvarBar(#input, output, session,
+                             df, input$class_var, "aggregated_index", input$use_count,
+                             input$font_size)
 # cat("  p:", class(p),"\n");#print(p)
         downloadPlotModuleServer(
           "dnld_cv_plot", "classvar_by_index", p,

@@ -15,7 +15,12 @@ calWeiModSidebarUI <- function(id) {
       # span(textOutput(ns("error_m_2")), style = "color:salmon"),
       uploadTableModuleUI(ns("upload_clusters"), "cluster table"),
       span(textOutput(ns("error_m_3")), style = "color:salmon")
-    )
+    ),
+    htmltools::HTML(strrep(br(), 35)),
+    h4("Plot control"),
+    wellPanel(
+      numericInput(ns("font_size"), "Font size", 12, 1, 20, 1)
+      )
   )
 }
 
@@ -39,8 +44,13 @@ calWeiModUI <- function(id) {
     renderDtTableModuleUI(ns("index_w"), "Download the new index weight file"),
     br(),br(),
     h2("New economic weights"),
+    h3("Table"),
     renderDtTableModuleUI(ns("ew_new"), "Download the new EW file"),
-    downloadModuleUI(ns("ew_new_t"), "Download the transposed new EW file")
+    downloadModuleUI(ns("ew_new_t"), "Download the transposed new EW file"),
+    br(),br(),
+    h3("Bar Chart"),
+    plotOutput(ns("plot_bar_newev")),
+    downloadPlotModuleUI(ns("dnlod_plot_newev"))
   )
 }
 
@@ -350,4 +360,20 @@ cat("calWeiMod\n")
       
       downloadModuleServer("ew_new_t", "EW_cluster_transpose", 
                            t.data.frame(dplyr::select(ew_new(), -cluster)), row.names = T, col.names = F)
+      
+      # plot aggreagted EV
+      output$plot_bar_newev <- renderPlot({
+        withProgress(message = 'Plotting ...',
+                     detail = 'This may take a while...', value = 0, {
+          req(ew_new, input$font_size)
+        
+        width <- session$clientData[[paste0("output_", session$ns("plot_bar_newev"), "_width")]]
+        
+        df <- tidyr::pivot_longer(ew_new(), !c(Index, cluster), "trait", values_to = "economic_weight")
+        p <- plotGroupedBar(input, output, session, 
+                            df, "trait", "economic_weight", "Index", "Economic weight($)",
+                            reactive(input$font_size))
+        downloadPlotModuleServer("dnld_plot_newev", "barchart_new_ev", p, width)
+        return(p)
+      }) })
     })}

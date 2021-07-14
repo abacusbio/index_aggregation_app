@@ -110,7 +110,7 @@ plotTopNdot <- function(input, output, session,
                            font.y = c(font_size(), "plain", "black"), # y lab
                            font.legend = c(font_size(), "plain", "black"),
                            ...) +
-      ggpubr::rremove("x.ticks") + ggpubr::rremove("x.text")
+      ggpubr::rremove("x.ticks") + ggpubr::rremove("x.text") # remove tick marks and tick text
   
  return(list(p = p, df = do.call(rbind, by_ref_index)))
 }
@@ -120,7 +120,9 @@ plotTopNdot <- function(input, output, session,
 #' @param df a data.frame of columns aggregated_by, aggregated_index, n, percent. e.g.
 #'        classvar_summary() filtered by aggregated_by
 #'
-plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
+plotClassvarBar <- function(#input, output, session, 
+                            df, x, fill = "aggregated_index", use_count, font_size = 12, #reactive(12),
+                            ...) {
 # cat("plotClassvarBar\n df:", class(df), " x:", x, " fill:", fill, " use_count:", use_count, "\n")
 # print(head(df));#print(str(df))
   for(i in c(x, fill)) {
@@ -134,7 +136,6 @@ plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
   } else {
     df$label <- paste0(sapply(df$percent, format, digits = 2, nsmall = 0), "%")
   }
-                     
 # cat(" df_label:");print(df$label)
   # if(input$switch_index_classvar) {
 
@@ -150,7 +151,7 @@ plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
   ylab <- ifelse(use_count, "count", "percent(%)")
   # ps <- lapply(unique(df$aggregated_by), function(agg_by) {
   # df_sub <- dplyr::filter(df, aggregated_by == agg_by)
-  x.text.angle <- ifelse(length(unique(df[,x]))<=10, 0, 90)
+  x.text.angle <- ifelse(length(unique(df[,y]))<=10, 0, 90)
 
   if(use_count) {
     y <- "n"; ylab <- "count"
@@ -159,9 +160,10 @@ plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
       df, x = x, y = y, fill = fill, color = "white",
       # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
       position = position_stack(reverse = TRUE),
-      label = T, lab.col = "white", lab.pos = "in", lab.vjust = -2,
+      label = T, lab.col = "white", lab.pos = "in", lab.hjust = 1, lab.vjust = -0.5,
+      lab.size = max(3, font_size-8),
       # title = agg_by,
-      ylab = ylab, orientation = "horiz", ...)
+      ylab = ylab, ...)
       
   } else {
     y <- "percent"; ylab <- "percent(%)"
@@ -170,15 +172,22 @@ plotClassvarBar <- function(df, x, fill = "aggregated_index", use_count, ...) {
       df, x = x, y = y, fill = fill, color = "white",
       # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
       position = position_fill(reverse = TRUE),
-      label = df$label, lab.col = "white", lab.pos = "in", lab.vjust = -0.5, 
+      label = df$label, lab.col = "white", lab.pos = "in", lab.hjust = 1, lab.vjust = -0.5,
+      lab.size = max(3, font_size-8),
       # title = agg_by,
-      ylab = ylab, orientation = "horiz", ...)
+      ylab = ylab, ...)
   }
 
-  p <- ggpubr::set_palette(p, ggpubr::get_palette("npg", length(unique(df[,fill])))) +
-    ggpubr::rotate_x_text(angle = x.text.angle)
-    #palette = ggpubr::get_palette("npg", length(unique(df[,fill]))),
-    #...)
+  p <- ggpubr::ggpar(p, orientation = "horiz",
+                     font.x = c(font_size, "plain", "black"), # xlab
+                     font.y = c(font_size, "plain", "black"), # y lab
+                     font.legend = c(font_size, "plain", "black"),
+                     font.tickslab = c(font_size+2, "plain", "black"),
+                     # font.label = list(size = font_size-1, face = "plain", color = "white"), # doesnt work
+                     x.text.angle = x.text.angle,
+                     palette = ggpubr::get_palette("npg", length(unique(df[,fill]))))
+    # ggpubr::set_palette(p, ggpubr::get_palette("npg", length(unique(df[,fill])))) +
+    # ggpubr::rotate_x_text(angle = x.text.angle)
   return(p)
   #  })
 }
