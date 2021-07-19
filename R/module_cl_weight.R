@@ -1,8 +1,12 @@
 calWeiModSidebarUI <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("Upload files (optional)"),
+    h4("Upload files (optional, if you skipped previous steps)"),
     wellPanel(
+      uploadTableModuleUI(ns("upload_ebv_desc"), "EBV description file"),
+      div(textOutput(ns("error_m_6")), class = "text-warning"),
+      uploadTableModuleUI(ns("upload_ebv"), "EBV file"),
+      div(textOutput(ns("error_m_7")), class = "text-warning"),
       uploadTableModuleUI(ns("upload_ev_desc"), "EV description file"),
       span(textOutput(ns("error_m_0")), class = "text-danger"),
       uploadTableModuleUI(ns("upload_ev"), "EV file"),
@@ -20,7 +24,7 @@ calWeiModSidebarUI <- function(id) {
     wellPanel(
       numericInput(ns("digits"), "Number of decimal places", 3, 0, 20, 1)
     ),
-    htmltools::HTML(strrep(br(), 31)),
+    htmltools::HTML(strrep(br(), 20)),
     h4("Plot display control"),
     wellPanel(
       numericInput(ns("font_size"), "Font size", 12, 1, 20, 1)
@@ -47,14 +51,18 @@ calWeiModUI <- function(id) {
                 selected = "equal weight", selectize = T),
     renderDtTableModuleUI(ns("index_w"), "Download the new index weight file"),
     br(),br(),
-    h2("New economic weights"),
+    h2("New economic valuess"),
     h3("Table"),
     renderDtTableModuleUI(ns("ew_new"), "Download the new EW file"),
     downloadModuleUI(ns("ew_new_t"), "Download the transposed new EW file"),
     br(),br(),
-    h3("Bar Chart"),
+    h3("Economic value bar Chart"),
     plotOutput(ns("plot_bar_newev")),
-    downloadPlotModuleUI(ns("dnlod_plot_newev"))
+    downloadPlotModuleUI(ns("dnlod_plot_newev")),
+    br(),br(),
+    h3("Relative economic value bar chart"),
+    plotOutput(ns("plot_bar_newevsd")),
+    downloadPlotModuleUI(ns("dnlod_plot_newevsd"))
   )
 }
 
@@ -230,9 +238,65 @@ cat("calWeiMod\n")
         val$dt_w_clean <- cleanW(w_user())
       })
       
+      ebv_desc_user <- uploadTableModuleServer("upload_ebv_desc", what = rep("character", 2))
+      
+      output$error_m_6 <- renderText({
+        validate(
+          need(class(ebv_desc_user())!="try-error", attr(ebv_desc_user(), "condition")$message),
+          need(names(ebv_desc_user())[1]=="column_labelling", 
+               "Description file column header wrong."),
+          need("EBV" %in% ebv_desc_user()[,2,drop = T], "Are you sure this is an EBV description file?")
+        )
+      })
+      
+      observeEvent(length(ebv_desc_user()) > 0, { # if use ev_desc_user, only observe once...
+        req(class(ebv_desc_user())=="data.frame")
+        
+        if("dt_description_clean" %in% names(val)) {
+          output$warn_m <- renderText({
+            "You are going to re-write the EBV description table by your uploaded file."
+          })
+        } else {
+          output$warn_m <- renderText({
+            sanityCheckEBVdesc(ebv_desc_user())
+          })
+        }
+        val$dt_description_clean <- ebv_desc_user()
+        tempVar$ebv_colClasses <- dplyr::left_join(val$dt_description_clean, tempVar$cnvrt, by = "classifier")
+      })
+      
+      ebv_user <- uploadTableModuleServer("upload_ebv", 1, 0, 
+                                          what = tempVar$ebv_colClasses$colClasses)
+      
+      output$error_m_7 <- renderText({
+        validate(
+          need(class(ebv_user())!="try-error", attr(ebv_user(), "condition")$message),
+          need(names(ebv_user())[1]=="ID",
+               "EBV file headers should be 'ID' and trait names")
+        )
+      })
+      
+      observeEvent(length(ebv_user())>0, {
+        req(class(ebv_user())=="data.frame", !is.null(val$dt_description_clean),
+            names(ebv_user())[1]=="ID")
+        if("dt_ebv_filtered" %in% names(val)) {
+          output$warn_m <- renderText({
+            "You are going to re-write the EV table by your uploaded file."
+          })
+        } else {
+          output$warn_m <- renderText({
+            sanityCheckEBV(ebv_user(), val$dt_description_clean)
+          })
+        }
+        
+        val$dt_ebv_filtered <- cleanEbvData(val$dt_description_clean, ebv_user())
+      })
+      
       output$error_m <- renderText({
         validate(need(!is.null(val$dt_desc_ev_clean), "Please upload a EV description file"),
                  need(!is.null(val$dt_ev_filtered), "Please upload a EV file"),
+                 need(!is.null(val$dt_description_clean), "Please upload an EBV description file"),
+                 need(!is.null(val$dt_ebv_filtered), "Please upload an EBV file"),
                  need(!is.null(val$dt_index), "Please finish filtering or upload an index table"),
                  # need(!is.null(val$cl$cluster_obj), 
                       # "Please finish 'run cluster' or upload a cluster object"),
@@ -379,30 +443,36 @@ cat("calWeiMod\n")
         
         width <- session$clientData[[paste0("output_", session$ns("plot_bar_newev"), "_width")]]
         
-        df <- tidyr::pivot_longer(ew_new(), !c(Index, cluster), "trait", values_to = "economic_weight")
+        df <- tidyr::pivot_longer(ew_new(), !c(Index, cluster), "trait", values_to = "economic_value")
         p <- plotGroupedBar(input, output, session, 
-                            df, "trait", "economic_weight", "Index", "Economic weight($)",
+                            df, "trait", "economic_value", "Index", "Economic value($)",
                             reactive(input$font_size))
         downloadPlotModuleServer("dnld_plot_newev", "barchart_new_ev", p, width)
         return(p)
       }) })
       
-      # # plot aggregated EV*SD(EBV)
-      # output$plot_bar_newevsd <- renderPlot({
-      #   withProgress(message = 'Plotting ...',
-      #                detail = 'This may take a while...', value = 0, {
-      #     req(ew_new, input$font_size) # Index, cluster, trait1, trait2, ...
-      #                  
-      #     width <- session$clientData[[paste0("output_", session$ns("plot_bar_newevsd"), "_width")]]
-      #     
-      #     
-      #                  
-      #     df <- tidyr::pivot_longer(ew_new(), !c(Index, cluster), "trait", values_to = "economic_weight")
-      #     p <- plotGroupedBar(input, output, session, 
-      #                                      df, "trait", "economic_weight", "Index", "Economic weight($)",
-      #                                      reactive(input$font_size))
-      #     downloadPlotModuleServer("dnld_plot_newev", "barchart_new_ev", p, width)
-      #     return(p)
-      #     }) })
+      # plot REW, a.k.a. aggregated EV*SD(EBV)
+      output$plot_bar_newevsd <- renderPlot({
+       withProgress(message = 'Plotting ...',
+                    detail = 'This may take a while...', value = 0, {
+          req(ew_new,  # Index, cluster, trait1, trait2, ...
+              val$dt_ebv_filtered, input$font_size)
+# cat(" plot_bar_newevsd\n  dt_ebv\n:");print(head(val$dt_ebv_filtered, 1))
+          width <- session$clientData[[paste0("output_", session$ns("plot_bar_newevsd"), "_width")]]
+          
+          idx <- na.omit(match(names(ew_new()), names(val$dt_ebv_filtered)))
+          df_ebv <- val$dt_ebv_filtered[, idx] # animal x trait
+
+          rew <- sweep(ew_new()[,-c(1:2)], 2, apply(df_ebv, 2, sd, na.rm = T)) # col1*sd1, col2*sd2, ...
+          rew <- cbind(ew_new()[, 1:2], rew)
+
+          df <- tidyr::pivot_longer(rew, !c(Index, cluster), "trait", 
+                                    values_to = "relative_economic_value")
+          p <- plotGroupedBar(input, output, session,
+                              df, "trait", "relative_economic_value", "Index", 
+                              "Relative economic value($)", reactive(input$font_size))
+          downloadPlotModuleServer("dnld_plot_newev", "barchart_new_relative_ev", p, width)
+          return(p)
+         }) })
       
     })}

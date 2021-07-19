@@ -103,6 +103,9 @@ plotTopNdot <- function(input, output, session,
     p <- ggpubr::ggscatter(do.call(rbind, by_ref_index), x = "id", y = "percent",
                            color = "aggregated_index", alpha = 0.5,
                            palette = "npg",            # npg journal color palett. see ?ggpar
+                           # palette = tail(
+                             # ggpubr::get_palette("npg", length(unique(df[,"aggregated_index"]))+1),
+                             # -1), # skip red, the 1st color
                            sort.val = "desc",          # Sort the value in dscending order
                            # sort.by.groups = T,     # Don't sort inside each group
                            xlab = "sorted original index", 
@@ -182,7 +185,7 @@ plotClassvarBar <- function(#input, output, session,
                      font.legend = c(font_size, "plain", "black"),
                      font.tickslab = c(font_size+2, "plain", "black"),
                      # font.label = list(size = font_size-1, face = "plain", color = "white"), # doesnt work
-                     palette = ggpubr::get_palette("npg", length(unique(df[,fill]))))
+                     palette = tail(ggpubr::get_palette("npg", length(unique(df[,fill]))+1), -1)) # skip red, the 1st color
     # ggpubr::set_palette(p, ggpubr::get_palette("npg", length(unique(df[,fill])))) +
     # ggpubr::rotate_x_text(angle = x.text.angle)
   return(p)
@@ -211,6 +214,7 @@ plotNumvarBar <- function(df, x, y, fill = "aggregated_index", use_count,
   }
 # cat(" label:");print(df$label)  
   if(use_count) {
+    
     p <- ggpubr::ggbarplot(
       df, x = x, y = y, fill = fill, color = "white",
       # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
@@ -221,6 +225,8 @@ plotNumvarBar <- function(df, x, y, fill = "aggregated_index", use_count,
       ...)
     
   } else {
+    
+    xlab = paste0(y, "(%)")
     p <- ggpubr::ggbarplot(
       df, x = x, y = y, fill = fill, color = "white",
       # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
@@ -236,7 +242,7 @@ plotNumvarBar <- function(df, x, y, fill = "aggregated_index", use_count,
                      # font.y = c(font_size, "plain", "black"), # y lab
                      # font.legend = c(font_size, "plain", "black"),
                      font.tickslab = c(font_size+2, "plain", "black"),
-                     palette = ggpubr::get_palette("npg", length(unique(df[,fill]))))
+                     palette = tail(ggpubr::get_palette("npg", length(unique(df[,fill]))+1), -1)) # skip red, the 1st color
   
   return(p)
 }

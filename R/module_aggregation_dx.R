@@ -3,10 +3,6 @@ aggDxModSidebarUI <- function(id) {
   tagList(
     h4("Upload files (optional)"),
     wellPanel(
-      uploadTableModuleUI(ns("upload_ebv_desc"), "EBV description file"),
-      div(textOutput(ns("error_m_0")), class = "text-warning"),
-      uploadTableModuleUI(ns("upload_ebv"), "EBV file"),
-      div(textOutput(ns("error_m_1")), class = "text-warning"),
       uploadTableModuleUI(ns("upload_benchmark"), "Benchmark index EV file (optional)"),
       div(textOutput(ns("error_m_2")), class = "text-warning")
     ),
@@ -21,7 +17,7 @@ aggDxModSidebarUI <- function(id) {
       checkboxInput(ns("fixed_y_scale"), "Y scale fixed 0-1", T),
       numericInput(ns("font_size"), "Font size", 12, 1, 20, 1)
       ),
-    htmltools::HTML(strrep(br(), 25)),
+    htmltools::HTML(strrep(br(), 27)),
     h4("User select indexes"),
     wellPanel(
       selectInput(ns("sel_agg"), "Select an aggregated index", choice = "", multiple = T),
@@ -80,7 +76,8 @@ aggDxModUI <- function(id) {
 #'        output, 3)\code{val$dt_ev_avg}, a data.frame of the same structure as \code{dt_ev_agg}, 4)
 #'         \code{val$dt_desc_ev_clean}, a data.frame of 2 columns: column_labelling and 
 #'        classifier, 5) \code{val$dt_ev_filtered}, a data.frame of columns Index, ClassVar
-#'        (optional) and trait names
+#'        (optional) and trait names, 6)\code{val$dt_description_clean}, a data.frame of columns
+#'        column_labelling and classifier
 #' @param dt_ev_agg a reactive function of a data.frame of columns Index, cluster and trait names
 #'        assignments
 #' 
@@ -98,59 +95,6 @@ cat("aggDxMod\n")
                            colClasses = c(rep("character", 3), rep("numeric", 2))))
      # plot_height <- reactive(input$plot_height)
       # upload intermediate files to replace reactive(val$dt_index), cl()$cluster_obj, cl()$clusters
-      ebv_desc_user <- uploadTableModuleServer("upload_ebv_desc", what = rep("character", 2))
-      
-      output$error_m_0 <- renderText({
-        validate(
-          need(class(ebv_desc_user())!="try-error", attr(ebv_desc_user(), "condition")$message),
-          need(names(ebv_desc_user())[1]=="column_labelling", 
-               "Description file column header wrong."),
-          need("EBV" %in% ebv_desc_user()[,2,drop = T], "Are you sure this is an EBV description file?")
-        )
-      })
-      
-      observeEvent(length(ebv_desc_user()) > 0, { # if use ev_desc_user, only observe once...
-        req(class(ebv_desc_user())=="data.frame")
-        
-        if("dt_description_clean" %in% names(val)) {
-          output$warn_m <- renderText({
-            "You are going to re-write the EBV description table by your uploaded file."
-          })
-        } else {
-          output$warn_m <- renderText({
-            sanityCheckEBVdesc(ebv_desc_user())
-          })
-        }
-        val$dt_description_clean <- ebv_desc_user()
-        tempVar$ebv_colClasses <- dplyr::left_join(val$dt_description_clean, tempVar$cnvrt, by = "classifier")
-      })
-      
-      ebv_user <- uploadTableModuleServer("upload_ebv", 1, 0, 
-                                          what = tempVar$ebv_colClasses$colClasses)
-      
-      output$error_m_1 <- renderText({
-        validate(
-          need(class(ebv_user())!="try-error", attr(ebv_user(), "condition")$message),
-          need(names(ebv_user())[1]=="ID",
-               "EBV file headers should be 'ID' and trait names")
-        )
-      })
-      
-      observeEvent(length(ebv_user())>0, {
-        req(class(ebv_user())=="data.frame", !is.null(val$dt_description_clean),
-            names(ebv_user())[1]=="ID")
-        if("dt_ebv_filtered" %in% names(val)) {
-          output$warn_m <- renderText({
-            "You are going to re-write the EV table by your uploaded file."
-          })
-        } else {
-          output$warn_m <- renderText({
-            sanityCheckEBV(ebv_user(), val$dt_description_clean)
-          })
-        }
-        
-        val$dt_ebv_filtered <- cleanEbvData(val$dt_description_clean, ebv_user())
-      })
       
       bnchmrk_user <- uploadTableModuleServer("upload_benchmark", 1, 0)
       
@@ -183,13 +127,18 @@ cat("aggDxMod\n")
       output$error_m <- renderText({
 # cat(" erro_m:");print(input$error_m) # always NULL
 # cat("  names val:");print(names(val))
-        validate(need(!is.null(val$dt_description_clean), "Please upload an EBV description file"),
-                 need(!is.null(val$dt_desc_ev_clean), "Please upload an EV description file"),
-                 need(!is.null(val$dt_ebv_filtered), "Please upload an EBV file"),
-                 need(!is.null(val$dt_ev_filtered), "Please upload an EV file"),
-                 need(!is.null(val$dt_index), "Please finish filtering or upload an index table"),
+        validate(need(!is.null(val$dt_description_clean), 
+                      "Please upload an EBV description file in 'Make new weights'"),
+                 need(!is.null(val$dt_desc_ev_clean), 
+                      "Please upload an EV description file in 'Make new weights'"),
+                 need(!is.null(val$dt_ebv_filtered), 
+                      "Please upload an EBV file in 'Make new weights'"),
+                 need(!is.null(val$dt_ev_filtered), 
+                      "Please upload an EV file in 'Make new weights'"),
+                 need(!is.null(val$dt_index), 
+                      "Please finish filtering or upload an index table in 'Make new weights'"),
                  need(!is.null(clusters()), #val$cl$clusters),
-                     "Please finish 'run cluster' or upload a cluster table"),
+                     "Please finish 'run cluster' or upload a cluster table in 'Make new weights'"),
                  need(!is.null(dt_ev_agg()), "Please finish 'Make new weights'"),
                  need(!is.null(val$dt_ev_avg), "Please finish 'Make new weights'")
         )
@@ -928,10 +877,10 @@ cat("aggDxMod3\n")
         df <- classvar_summary() %>% 
           dplyr::filter(aggregated_by == input$agg_by)
 # cat("  df:", class(df), "\n");print(sapply(df, class))
-        p <- plotClassvarBar(#input, output, session,
+        p <- plotClassvarBar(# input, output, session,
                              df, input$class_var, "aggregated_index", input$use_count,
                              input$font_size)
-# cat("  p:", class(p),"\n");#print(p)
+# cat("  p:", class(p),"\n");# print(p)
         downloadPlotModuleServer(
           "dnld_cv_plot", "classvar_by_agg_index", p,
           # gridExtra::grid.arrange(grobs = ps,
@@ -1036,7 +985,7 @@ cat("aggDxMod4\n")
         clusters()
         input$digits}
         , {
-cat(" eventReactive weight_summary\n  clusters:"); #print(head(clusters()))
+# cat(" eventReactive weight_summary\n  clusters:"); #print(head(clusters()))
 # cat("  dt_ev_agg:", class(dt_ev_agg()), "\n");print(head(dt_ev_agg()))
         req(!is.null(clusters()), !is.null(dt_ev_agg()), !is.null(dt_w_clean()))
           
