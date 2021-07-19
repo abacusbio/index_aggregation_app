@@ -279,6 +279,10 @@ ui <- fluidPage(
           condition = "input.run_agg == 'tab.agg.4' && input.plant_app == 'tab.agg'",
           aggDxModSidebarUI3("agg_dx3")
         ),
+        conditionalPanel(
+          condition = "input.run_agg == 'tab.agg.5' && input.plant_app == 'tab.agg'",
+          aggDxModSidebarUI4("agg_dx4")
+        ),
         width = 4), # sidebarPanel
       
       # Show a plot of the generated distribution
@@ -294,7 +298,10 @@ ui <- fluidPage(
                    aggDxModUI2("agg_dx2")),
           
           tabPanel("Aggregation diagnosis-variable pattern", value = "tab.agg.4",
-                   aggDxModUI3("agg_dx3"))
+                   aggDxModUI3("agg_dx3")),
+          
+          tabPanel("Aggregation diagnosis-weighting pattern", value = "tab.agg.5",
+                   aggDxModUI4("agg_dx4"))
         ) # tabsetPanel run_cluster
       ), # mainPanel
       fluid = T) # sidebarLayout fluid = F doesn't work here
@@ -568,9 +575,16 @@ server <- function(input, output, session) {
            reactive(input$`agg_dx-sel_cluster`) 
           )
   
-  # look at classVar pattern among indexes
+  # look at classVar pattern among aggregated indexes and user-defined groups
   # need val$dt_index_new and others in val.
   aggDxMod3("agg_dx3", val, transpose = F, reactive(val$cl$clusters))
+  
+  # look at EV weighting pattern among aggregated indexes and user-defined groups
+  # need val$dt_w_clean
+  # need val$dt_ev_agg, a data.frame of columns as Index, cluster and traits (EVs); and
+  # val$dt_ev_avg, same structure as above
+  aggDxMod4("agg_dx4", val, 
+            reactive(val$dt_ev_agg), reactive(val$dt_w_clean), reactive(val$cl$clusters))
 } # server
 
 # options(shiny.reactlog = T) # lzhang April172020

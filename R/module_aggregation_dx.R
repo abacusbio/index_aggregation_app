@@ -4,18 +4,18 @@ aggDxModSidebarUI <- function(id) {
     h4("Upload files (optional)"),
     wellPanel(
       uploadTableModuleUI(ns("upload_ebv_desc"), "EBV description file"),
-      div(textOutput(ns("error_m_0")), class = "text-danger"),
+      div(textOutput(ns("error_m_0")), class = "text-warning"),
       uploadTableModuleUI(ns("upload_ebv"), "EBV file"),
-      div(textOutput(ns("error_m_1")), class = "text-danger"),
+      div(textOutput(ns("error_m_1")), class = "text-warning"),
       uploadTableModuleUI(ns("upload_benchmark"), "Benchmark index EV file (optional)"),
-      div(textOutput(ns("error_m_2")), class = "text-danger")
+      div(textOutput(ns("error_m_2")), class = "text-warning")
     ),
     h4("All index"),
     wellPanel(
       selectInput(ns("sel_benchmark"), "Select a benchmark index", 
                   choice = c("", "average"))
     ),
-    h4("Plot control"),
+    h4("Plot display control"),
     wellPanel(
       # numericInput(ns("show_n_indexes"), "# indexs to show", 10, 1, 10, 1),
       checkboxInput(ns("fixed_y_scale"), "Y scale fixed 0-1", T),
@@ -40,8 +40,8 @@ aggDxModUI <- function(id) {
     h1("Index correlations"),
     h2("Distribution of correlations between within-cluster indexes and their aggregated index"),
     h3("Scatter plot"),
-    textOutput(ns("error_m")), # input file missing
-    textOutput(ns("warn_m")), # input file format wrong
+    span(textOutput(ns("error_m")), class = "text-warning"), # input file missing
+    span(textOutput(ns("warn_m")), class = "text-warning"), # input file format wrong
     plotOutput(ns("plot_cor_default")),
     tags$table(
       tags$td(downloadPlotModuleUI(ns("dnld_heat_default"))),
@@ -93,10 +93,12 @@ aggDxMod <- function(id, val, transpose = F, clusters = reactive(NULL), dt_ev_ag
     function(input, output, session) {
 cat("aggDxMod\n")
       # INITIALIZE
-      tempVar <- reactiveValues()
+      tempVar <- reactiveValues(
+        cnvrt = data.frame(classifier = c("ID", "ClassVar", "Group", "EBV", "EV"),
+                           colClasses = c(rep("character", 3), rep("numeric", 2))))
      # plot_height <- reactive(input$plot_height)
       # upload intermediate files to replace reactive(val$dt_index), cl()$cluster_obj, cl()$clusters
-      ebv_desc_user <- uploadTableModuleServer("upload_ebv_desc")
+      ebv_desc_user <- uploadTableModuleServer("upload_ebv_desc", what = rep("character", 2))
       
       output$error_m_0 <- renderText({
         validate(
@@ -120,9 +122,11 @@ cat("aggDxMod\n")
           })
         }
         val$dt_description_clean <- ebv_desc_user()
+        tempVar$ebv_colClasses <- dplyr::left_join(val$dt_description_clean, tempVar$cnvrt, by = "classifier")
       })
       
-      ebv_user <- uploadTableModuleServer("upload_ebv", 1, 0)
+      ebv_user <- uploadTableModuleServer("upload_ebv", 1, 0, 
+                                          what = tempVar$ebv_colClasses$colClasses)
       
       output$error_m_1 <- renderText({
         validate(
@@ -605,7 +609,7 @@ aggDxModSidebarUI2 <- function(id) {
       actionButton(ns("run_top"), "Run analysis", icon("running"), 
                    class = "btn btn-primary")
     ),
-    h4("Plot control"),
+    h4("Plot display control"),
     wellPanel(
       # numericInput(ns("show_n_indexes"), "# indexs to show", 10, 1, 10, 1),
       numericInput(ns("font_size"), "Font size", 12, 1, 20, 1)
@@ -617,7 +621,7 @@ aggDxModUI2 <- function(id) {
   ns <- NS(id)
   tagList(
     br(),
-    span(textOutput(ns("error_m")), class = "text-danger"),
+    span(textOutput(ns("error_m")), class = "text-warning"),
     h1("Top individual(s)"),
     h2(textOutput(ns("top_n_title"))),
     h3("Table"),
@@ -775,7 +779,7 @@ cat("aggDxMod2\n")
       }) })#, height = 800)]
 })} # aggDXMod2
         
-        
+#' ClassVar pattern in different aggregated indexes        
 aggDxModSidebarUI3 <- function(id) {
   ns <- NS(id)
   tagList(
@@ -784,7 +788,7 @@ aggDxModSidebarUI3 <- function(id) {
       selectInput(ns("class_var"), "Choose a classification variable:", "", "") 
     ),
     htmltools::HTML(strrep(br(), 35)),
-    h4("Plot control"),
+    h4("Plot display control"),
     wellPanel(
       selectInput(ns("agg_by"), "Select an index type", "", ""),
       checkboxInput(ns("use_count"), "Use count", F),
@@ -800,7 +804,7 @@ aggDxModUI3 <- function(id) {
   tagList(
     br(),
     h1("Aggregated index diagnosis - more"),
-    textOutput(ns("error_m")),
+    span(textOutput(ns("error_m")), class = "text-warning"),
     h2("Classification variable distribution"),
     renderDtTableModuleUI(ns("classvar_summary")),
     br(),br(),
@@ -858,6 +862,8 @@ cat("aggDxMod3\n")
         updateSelectInput(session, "class_var", choices = c("", class_vars))
       }, ignoreInit = T)
       
+      # create table for plots
+      # aggregated_by aggregated_index [group_var] [level] n percent
       classvar_summary <- eventReactive(input$class_var, {
         req(clusters, val$dt_ev_filtered, val$dt_desc_ev_clean, input$class_var!="")
 # cat(" eventreactive input$class_var\n  input$class_var:", input$class_var, "\n")
@@ -877,7 +883,6 @@ cat("aggDxMod3\n")
           right_join(df_cluster, by = "Index")
 # write.table(df_index_classvar_group, "df_index_classvar_group.txt", quote = F, row.names = F, sep = ",")
         # calculate summary stat table
-        # aggregated_by, aggregated_index, group_var, n, percent
         df_summary_table <- do.call(rbind, lapply(group_vars, function(group_var) {
 
           out <- group_by(df_index_classvar_group, 
@@ -894,7 +899,7 @@ cat("aggDxMod3\n")
         updateSelectInput(session, "agg_by", choices = c("", df_summary_table$aggregated_by))
         
         return(df_summary_table)
-      })
+      }) # classvar_summary
         
       classvar_sum_show <- eventReactive(classvar_summary(), {
         req(!is.null(classvar_summary()), input$class_var)
@@ -917,7 +922,7 @@ cat("aggDxMod3\n")
         withProgress(message = 'Plotting ...',
                      detail = 'This may take a while...', value = 0, {
 # cat(" classvar_plot\n class_var:", input$class_var, "\n"); print(classvar_summary()[1,])
-        req(input$class_var!="", input$agg_by!="", input$font_size)
+        req(input$class_var!="", input$agg_by!="", input$font_size, classvar_summary)
 
         width <- session$clientData[[paste0("output_", session$ns("classvar_plot"), "_width")]]
         df <- classvar_summary() %>% 
@@ -928,7 +933,7 @@ cat("aggDxMod3\n")
                              input$font_size)
 # cat("  p:", class(p),"\n");#print(p)
         downloadPlotModuleServer(
-          "dnld_cv_plot", "classvar_by_index", p,
+          "dnld_cv_plot", "classvar_by_agg_index", p,
           # gridExtra::grid.arrange(grobs = ps,
                                   # nrow = min(2, length(unique(df$aggregated_index)))),
           reactive(width))
@@ -936,4 +941,192 @@ cat("aggDxMod3\n")
         return(p) #gridExtra::grid.arrange(grobs = ps,
                                        # nrow = min(2, length(unique(df$aggregated_index)))))
       }) })
+    })}
+
+#' weighting pattern in aggregated indexes
+aggDxModSidebarUI4 <- function(id) {
+  ns <- NS(id)
+  tagList(
+    h4("Table display control"),
+    wellPanel(
+      numericInput(ns("digits"), "Number of decimal places", 0, 0, 20, 1)
+    ),
+    htmltools::HTML(strrep(br(), 35)),
+    h4("Plot display control"),
+    wellPanel(
+      selectInput(ns("weight_var"), "Choose a weighting variable:", "", ""),
+      selectInput(ns("agg_by"), "Select an index type", "", ""),
+      checkboxInput(ns("use_count"), "Use count", F),
+      numericInput(ns("font_size"), "Font size", 12, 1, 20, 1)
+      # checkboxInput(ns("switch_index_classvar"), 
+      # "Switch between indexes and classification variables", F) 
+    )
+  )
+}
+
+aggDxModUI4 <- function(id) {
+  ns <- NS(id)
+  tagList(
+    br(),
+    h1("Aggregated index diagnosis - more"),
+    span(textOutput(ns("error_m")), class = "text-warning"),
+    h2("Classification variable distribution"),
+    renderDtTableModuleUI(ns("weight_summary_show")),
+    br(),br(),
+    h2("Bar chart"),
+    span(textOutput(ns("error_m_plot")), class = "text-warning"),
+    plotOutput(ns("weight_plot"), height = "800px"),
+    downloadPlotModuleUI(ns("dnld_wt_plot"))
+  )
+}
+
+#' Diagnosis tools 4 for aggregated indexes
+#'
+#' @description Show the index weighting pattern of different aggregated indexes. 
+#'              The weighting comes from the EV weighting file
+#' @param id shiny object id
+#' @param val a reactive value object, containing at least 4 objects: 1) \code{clusters}, a reactive
+#'        function of a cluster assignment vector. e.g. a 
+#'        \code{cutree} output \code{val$cl$clusters}. 4) \code{val$dt_desc_ev_clean}, a data.frame
+#'        of 2 columns: column_labelling and classifier/ 5) \code{val$dt_ev_filtered}, a data.frame
+#'         of columns Index, classVar (optional) and trait names
+#' @param dt_ev_agg a reactive object with val$dt_ev_agg in it, which is a data.frame of columns as 
+#'        Index, cluster and traits (EVs).
+#' @return a table and a plot
+aggDxMod4 <- function(id, val, dt_ev_agg = reactive(NULL), dt_w_clean = reactive(NULL), 
+                      clusters = reactive(NULL), ...) {
+  moduleServer(
+    id,
+    function(input, output, session) {
+cat("aggDxMod4\n")      
+      # INITIALIZE
+      tempVar <- reactiveValues()
+      
+      output$error_m <- renderText({
+# cat(" erro_m:");print(input$error_m) # always NULL
+# cat("  names val:");print(names(val)) # all exist
+        validate(need(!is.null(val$dt_desc_ev_clean), "Please upload an EV description file"),
+                 need(!is.null(val$dt_ev_filtered), "Please upload an EV file"),
+                 need(!is.null(dt_ev_agg()), "Please finish Step 1"),
+                 need(!is.null(clusters()), "Please upload a cluster table at Step 1"),
+                 need(!is.null(dt_w_clean()), "Please upload a EV weight file")
+        )
+      })
+      
+      output$error_m_plot <- renderText({
+        validate(need(input$weight_var!="",  "Please select a weighting variable"),
+                 need(input$agg_by!="", "Please select an aggregation variable"))
+      })
+      
+      # update input$class_var
+      observeEvent(dt_w_clean(), { 
+        req(!is.null(dt_w_clean()))
+        
+        weight_cols <- tail(names(dt_w_clean()), -1)
+        updateSelectInput(session, "weight_var", 
+                          choices = c("", weight_cols)) #, selected = weight_cols[1])
+      }, ignoreInit = T)
+      
+      # create table for plots
+      # aggregated_by aggregated_index sum_[weight] # [group_var] [level] n percent
+     weight_summary <- eventReactive({ # doesn't work!!!
+     # observeEvent({
+        dt_ev_agg()
+        dt_w_clean()
+        clusters()
+        input$digits}
+        , {
+cat(" eventReactive weight_summary\n  clusters:"); #print(head(clusters()))
+# cat("  dt_ev_agg:", class(dt_ev_agg()), "\n");print(head(dt_ev_agg()))
+        req(!is.null(clusters()), !is.null(dt_ev_agg()), !is.null(dt_w_clean()))
+          
+        weight_cols <- tail(names(dt_w_clean()), -1)
+
+        class_vars <- val$dt_desc_ev_clean$column_labelling[
+          val$dt_desc_ev_clean$classifier == "ClassVar"]
+        
+        group_vars <- val$dt_desc_ev_clean$column_labelling[
+          val$dt_desc_ev_clean$classifier == "Group"]
+        group_vars <- c(group_vars, "new_index_by_cluster")
+# cat("  weight_cols:");print(weight_cols);cat("  class_vars:");print(class_vars)
+# cat("  group_vars:");print(group_vars)
+        # Merge ClassVar and new index
+        df_ev_agg <- dt_ev_agg()
+        names(df_ev_agg)[1] <- "aggregated_index"
+        
+        df_cluster <- data.frame(Index = names(clusters()), 
+                                 new_index_by_cluster = clusters(), check.names = F)
+
+        df <- left_join(dt_w_clean(), df_cluster, by = "Index") %>% # Index [weight] cluster
+          left_join(df_ev_agg, by = c("new_index_by_cluster"="cluster")) # Index [weight] new_index_by_cluster aggregated_index traits 
+
+        # Index RM State... Group1... new_index_by_cluster [weight] aggregated_index traits 
+        df_index_weight_group <- dplyr::select(
+          val$dt_ev_filtered, Index, matches(all_of(class_vars)), matches(all_of(group_vars))) %>% # Index RM State... Group1...
+          right_join(df_cluster, by = "Index") %>%  # new_index_by_cluster
+          right_join(dt_w_clean(), df_cluster, by = "Index") %>% # [weight]
+          right_join(df_ev_agg, by = c("new_index_by_cluster"="cluster"))
+# cat("  df_index_weight_group:\n");print(head(df_index_weight_group))
+# write.table(df_index_classvar_group, "df_index_classvar_group.txt", quote = F, row.names = F, sep = ",")
+        # calculate summary stat table
+        # aggregated_by aggregated_index sum_[weight] percent_sum_[weight]
+        df_summary_table <- do.call(rbind, lapply(group_vars, function(group_var) {
+          
+          out <- group_by(df_index_weight_group, 
+                          across(all_of(group_var))) %>% 
+            summarise(across(all_of(weight_cols), ~sum(.x, na.rm = T), .names = "sum_{col}")) %>% 
+            mutate(across(starts_with("sum_"), ~./sum(.)*100, .names = "percent_{col}"))
+# cat("  group_var:", group_var, "out:\n");print(head(out))
+          names(out)[1] <- "aggregated_index"
+          
+          return(data.frame(aggregated_by = group_var, out))
+        }))
+        
+        # select input aggregated_by
+        updateSelectInput(session, "agg_by", choices = c("", df_summary_table$aggregated_by))
+        
+     #   tempVar$weight_summary <- df_summary_table 
+        return(df_summary_table)
+      }, ignoreInit = T) # observeEvent weight_summary
+      
+     
+     renderDtTableModuleServer("weight_summary_show", weight_summary, 
+                               extensions = c("FixedHeader", "FixedColumns"),
+                               downloadName = "weighting_summary_in_agg_index",
+                               digits = reactive(input$digits))
+     
+      # select input aggregated_by
+      observeEvent(length(weight_summary())>0, { # tempVar$weight_summary) > 0, {
+        updateSelectInput(session, "agg_by", choices = c("", weight_summary()$aggregated_by)) # tempVar$weight_summary$aggregated_by))
+      })
+      
+      # draw percentage plot
+      output$weight_plot <- renderPlot({
+        withProgress(
+          message = 'Plotting ...', detail = 'This may take a while...', value = 0, {
+# cat(" weight_plot\n weight_var:", input$weight_var, "\n  weight_summary:\n")
+# print(tempVar$weight_summary[1,])
+        req(input$agg_by!="", input$font_size, input$digits, input$weight_var!="",
+            # length(tempVar$weight_summary) >0)
+            length(weight_summary()) >0)
+                       
+        width <- session$clientData[[paste0("output_", session$ns("weight_plot"), "_width")]]
+        df <- weight_summary() %>% # tempVar$weight_summary %>% 
+            dplyr::filter(aggregated_by == input$agg_by)
+# cat("  df:", class(df), "\n");print(sapply(df, class))
+        y <- ifelse(input$use_count, paste0("sum_", input$weight_var), 
+                    paste0("percent_sum_", input$weight_var))
+        p <- plotNumvarBar(
+          df, x = "aggregated_index", y = y, fill = "aggregated_index",
+          input$use_count, input$font_size, input$digits)
+
+        downloadPlotModuleServer("dnld_wt_plot", "weight_by_agg_index", p,
+            # gridExtra::grid.arrange(grobs = ps,
+            # nrow = min(2, length(unique(df$aggregated_index)))),
+            reactive(width))
+                       
+            return(p) #gridExtra::grid.arrange(grobs = ps,
+            # nrow = min(2, length(unique(df$aggregated_index)))))
+        }) })
+      
     })}

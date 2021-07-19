@@ -147,12 +147,8 @@ plotClassvarBar <- function(#input, output, session,
   # fill <- input$class_var
   # }
 # cat("  x:", x, " fill:", fill, "\n")
-  y <- ifelse(use_count, "n", "percent")
-  ylab <- ifelse(use_count, "count", "percent(%)")
   # ps <- lapply(unique(df$aggregated_by), function(agg_by) {
   # df_sub <- dplyr::filter(df, aggregated_by == agg_by)
-  x.text.angle <- ifelse(length(unique(df[,y]))<=10, 0, 90)
-
   if(use_count) {
     y <- "n"; ylab <- "count"
     
@@ -163,7 +159,8 @@ plotClassvarBar <- function(#input, output, session,
       label = T, lab.col = "white", lab.pos = "in", lab.hjust = 1, lab.vjust = -0.5,
       lab.size = max(3, font_size-8),
       # title = agg_by,
-      ylab = ylab, ...)
+      #ylab = ylab,
+      ...)
       
   } else {
     y <- "percent"; ylab <- "percent(%)"
@@ -171,25 +168,77 @@ plotClassvarBar <- function(#input, output, session,
     p <- ggpubr::ggbarplot(
       df, x = x, y = y, fill = fill, color = "white",
       # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
-      position = position_fill(reverse = TRUE),
+      position = position_stack(reverse = TRUE), # position_fill force range 0-1
       label = df$label, lab.col = "white", lab.pos = "in", lab.hjust = 1, lab.vjust = -0.5,
       lab.size = max(3, font_size-8),
       # title = agg_by,
-      ylab = ylab, ...)
+      #ylab = ylab, 
+      ...)
   }
 
-  p <- ggpubr::ggpar(p, orientation = "horiz",
+  p <- ggpubr::ggpar(p, ylab = ylab, orientation = "horiz",
                      font.x = c(font_size, "plain", "black"), # xlab
                      font.y = c(font_size, "plain", "black"), # y lab
                      font.legend = c(font_size, "plain", "black"),
                      font.tickslab = c(font_size+2, "plain", "black"),
                      # font.label = list(size = font_size-1, face = "plain", color = "white"), # doesnt work
-                     x.text.angle = x.text.angle,
                      palette = ggpubr::get_palette("npg", length(unique(df[,fill]))))
     # ggpubr::set_palette(p, ggpubr::get_palette("npg", length(unique(df[,fill])))) +
     # ggpubr::rotate_x_text(angle = x.text.angle)
   return(p)
   #  })
+}
+
+#' Plot a continuous variable (weighting) distribution across indexes of a type
+#'
+#' @param df a data.frame of columns aggregated_by, aggregated_index, sum_[weight]. e.g.
+#'        weight_summary() filtered by aggregated_by
+#'
+plotNumvarBar <- function(df, x, y, fill = "aggregated_index", use_count,
+                          font_size = 12, digits = 0, ...) {
+# cat("plotNumvarBar\n df:", class(df), " x:", x, " y:", y, " fill:", fill, " use_count:", use_count,
+    # "df:\n"); print(head(df))
+  for(i in c(x, fill)) {
+    if(class(df[,i])[1] %in% c("numeric", "integer", "double", "float")) {
+      df[,i] <- as.factor(df[,i])
+    }
+  }
+# print(str(df))  
+  if(use_count) { # ifelse doesn't work with vector well
+    df$label <- round(df[,y], digits = digits)
+  } else {
+    df$label <- paste0(sapply(df[,y], round, digits = digits), "%")
+  }
+# cat(" label:");print(df$label)  
+  if(use_count) {
+    p <- ggpubr::ggbarplot(
+      df, x = x, y = y, fill = fill, color = "white",
+      # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
+     # position = position_stack(reverse = TRUE), # position_fill force range 0-1
+      label = df$label, lab.col = "white", lab.pos = "in", lab.hjust = 1, lab.vjust = -0.5,
+      lab.size = max(3, font_size-8),
+      # title = agg_by,
+      ...)
+    
+  } else {
+    p <- ggpubr::ggbarplot(
+      df, x = x, y = y, fill = fill, color = "white",
+      # sort.val = "desc", sort.by.groups = T, # bug of duplicated factor levels
+     # position = position_stack(reverse = TRUE), # position_fill force range 0-1
+      label = df$label, lab.col = "white", lab.pos = "in", lab.hjust = 1, lab.vjust = -0.5,
+      lab.size = max(3, font_size-8),
+      # title = agg_by,
+      ...)
+  }
+  
+  p <- ggpubr::ggpar(p, ylab = F, legend = "none", orientation = "horiz",
+                     font.x = c(font_size, "plain", "black"), # xlab
+                     # font.y = c(font_size, "plain", "black"), # y lab
+                     # font.legend = c(font_size, "plain", "black"),
+                     font.tickslab = c(font_size+2, "plain", "black"),
+                     palette = ggpubr::get_palette("npg", length(unique(df[,fill]))))
+  
+  return(p)
 }
 
 #' #' Generic bar plot using ggpubr template

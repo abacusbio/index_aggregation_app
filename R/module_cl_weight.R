@@ -16,8 +16,12 @@ calWeiModSidebarUI <- function(id) {
       uploadTableModuleUI(ns("upload_clusters"), "cluster table"),
       span(textOutput(ns("error_m_3")), style = "color:salmon")
     ),
-    htmltools::HTML(strrep(br(), 35)),
-    h4("Plot control"),
+    h4("Table display control"),
+    wellPanel(
+      numericInput(ns("digits"), "Number of decimal places", 3, 0, 20, 1)
+    ),
+    htmltools::HTML(strrep(br(), 31)),
+    h4("Plot display control"),
     wellPanel(
       numericInput(ns("font_size"), "Font size", 12, 1, 20, 1)
       )
@@ -77,13 +81,15 @@ calWeiMod <- function(id, val, transpose = T, ...) {
     function(input, output, session) {
 cat("calWeiMod\n")
       # INITIALIZE AND UPLOAD (OPTIONAL)
-      tempVar <- reactiveValues()
+      tempVar <- reactiveValues(
+        cnvrt = data.frame(classifier = c("ID", "ClassVar", "Group", "EBV", "EV"),
+                           colClasses = c(rep("character", 3), rep("numeric", 2))))
       
       # observeEvent(input$show_corr, { shinyjs::toggle(id = "bi_clust", condition = !input$show_corr) })
       
       # when user starts the app from this step,
       # upload intermediate files to replace reactive(val$dt_index), cl()$cluster_obj, cl()$clusters
-      ev_desc_user <- uploadTableModuleServer("upload_ev_desc")
+      ev_desc_user <- uploadTableModuleServer("upload_ev_desc", what = rep("character", 2))
       
       output$error_m_0 <- renderText({
         validate(
@@ -103,6 +109,8 @@ cat("calWeiMod\n")
           })
         }
         val$dt_desc_ev_clean <- ev_desc_user()
+        tempVar$ev_colClasses <- dplyr::left_join(val$dt_desc_ev_clean, tempVar$cnvrt,
+                                                  by = "classifier")
       })
       
       index_user <- uploadTableModuleServer("upload_index")
@@ -179,7 +187,7 @@ cat("calWeiMod\n")
         val$cl$clusters <- out
       })
       
-      ew_user <- uploadTableModuleServer("upload_ev", 1, 0)
+      ew_user <- uploadTableModuleServer("upload_ev", 1, 0, what = tempVar$ev_colClasses$colClasses)
       
       output$error_m_4 <- renderText({
         validate(
@@ -201,7 +209,7 @@ cat("calWeiMod\n")
         val$dt_ev_filtered <- cleanEVplant(val$dt_desc_ev_clean, ew_user())
       })
       
-      w_user <- uploadTableModuleServer("upload_w", 1, 0)
+      w_user <- uploadTableModuleServer("upload_w", 1, 0, what = c("character", "numeric"))
       
       output$error_m_5 <- renderText({
         validate(
@@ -321,9 +329,10 @@ cat("calWeiMod\n")
       })
       
       renderDtTableModuleServer("index_w", index_w, extensions = "FixedHeader",
-                                downloadName = "index_weight")
+                                downloadName = "index_weight", digits = reactive(input$digits))
       
       # make aggregated EV
+      # Index, cluster, trait1, trait2, ...
       ew_new <- reactive({ # 15june2021 reacted twice...
 # cat("\n reactive ew_new\n")
         req(length(input$error_m)==0, index_w, 
@@ -356,7 +365,8 @@ cat("calWeiMod\n")
       
       renderDtTableModuleServer("ew_new", ew_new, extensions = "FixedHeader",
                                 downloadName = "EW_cluster_", colfilter = "none", 
-                                option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
+                                option_list = list(sDom  = '<"top">lrt<"bottom">ip'), # disable search bar 
+                                digits = reactive(input$digits))
       
       downloadModuleServer("ew_new_t", "EW_cluster_transpose", 
                            t.data.frame(dplyr::select(ew_new(), -cluster)), row.names = T, col.names = F)
@@ -376,4 +386,23 @@ cat("calWeiMod\n")
         downloadPlotModuleServer("dnld_plot_newev", "barchart_new_ev", p, width)
         return(p)
       }) })
+      
+      # # plot aggregated EV*SD(EBV)
+      # output$plot_bar_newevsd <- renderPlot({
+      #   withProgress(message = 'Plotting ...',
+      #                detail = 'This may take a while...', value = 0, {
+      #     req(ew_new, input$font_size) # Index, cluster, trait1, trait2, ...
+      #                  
+      #     width <- session$clientData[[paste0("output_", session$ns("plot_bar_newevsd"), "_width")]]
+      #     
+      #     
+      #                  
+      #     df <- tidyr::pivot_longer(ew_new(), !c(Index, cluster), "trait", values_to = "economic_weight")
+      #     p <- plotGroupedBar(input, output, session, 
+      #                                      df, "trait", "economic_weight", "Index", "Economic weight($)",
+      #                                      reactive(input$font_size))
+      #     downloadPlotModuleServer("dnld_plot_newev", "barchart_new_ev", p, width)
+      #     return(p)
+      #     }) })
+      
     })}
