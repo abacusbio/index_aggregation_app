@@ -333,7 +333,7 @@ cat("aggDxMod\n")
       output$plot_cor_default <- renderPlot({
         withProgress(message = 'Plotting ...',
                      detail = 'This may take a while...', value = 0, {
-        req(cor_default, input$font_size)
+        req(cor_default, input$font_size, input$fixed_y_scale)
 # cat(" renderPlot plot_cor_default\n")
 # cat("  cor_default:");print(head(cor_default()))
         # initial parameters
