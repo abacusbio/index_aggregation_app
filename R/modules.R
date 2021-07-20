@@ -218,11 +218,12 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
         req(!is.null(dat())) # 14oct2020
 
         columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
-        
+cat("renderDtTableModuleServer\n");print(str(dat()))
         # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
         # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
-        for(i in columns) dat()[,i] <- as.numeric(dat()[,i])
-        
+        datt <- dat()
+        for(i in columns) datt[,i] <- as.numeric(datt[,i])
+print(str(datt))        
         optionss = list(
           # searching = T,
           fixedHeader = fixedHeader,
@@ -240,7 +241,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
         optionss <- append(optionss, option_list)
 
         dt_output <-
-          DT::datatable(dat(), rownames = rownames,
+          DT::datatable(datt, rownames = rownames,
                         extensions = extensions,
                         filter = colfilter, # col filter
                         #selection = list(mode = "multiple", target = "row+column"),#"multiple",
@@ -254,15 +255,15 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
 
         if(colourcode()) { # heatmap color coding
           # sanity check
-          if(!typeof(as.matrix(dat())) %in% c("character", "factor") && # numeric matrix
+          if(!typeof(as.matrix(datt)) %in% c("character", "factor") && # numeric matrix
              # diff(dim(dat()))==0 &&                                     # square matrix,
              # ebv~index cor can't display color because not squared
-             (nrow(dat())>2 || ncol(dat())>2)) {                        # dimention > 2
+             (nrow(datt)>2 || ncol(datt)>2)) {                        # dimention > 2
 
-            breaks <- min(max(length(unique(dat()))-1, 2), 9)
-            cuts <- findCuts(dat(), breaks = breaks)
+            breaks <- min(max(length(unique(datt))-1, 2), 9)
+            cuts <- findCuts(datt, breaks = breaks)
 
-            colors <- findColors(dat(), n = breaks + 1) #c(-.0000000001, 0),
+            colors <- findColors(datt, n = breaks + 1) #c(-.0000000001, 0),
             # print("module")
             # print(breaks)
             # print(cuts)
@@ -278,7 +279,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
         return(dt_output)
       }) # withProgress
     
-    downloadModuleServer("download_1", downloadName, dat(), row.names, type)
+    downloadModuleServer("download_1", downloadName, datt, row.names, type)
     return(dt_output)
   }, server = T) #, options = list(stateSave =T)) #, 8sept2020
   #filter = "top") # renderDT/DT::renderDataTable
