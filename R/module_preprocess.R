@@ -137,7 +137,7 @@ cat("preprocessMod\n");
       
       ## EV file
       dat_ev <- uploadTableModuleServer("dat_ev", sheet = sheet, skip = skip, 
-                                        what = tempVar$ebv_colClasses$colClasses)
+                                        what = tempVar$ev_colClasses$colClasses)
       
       output$error_m_4 <- renderText({
         validate(need(

@@ -251,7 +251,6 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
               }))
             }
 # cat(" stat_num:");print(head(stat_num)); print(head(ns))
-            
             # variable   mean    sd   min   max n_missing n prop
             stat_num <- full_join(stat_num, ns) %>% distinct()
             
@@ -264,10 +263,6 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
             stat_num  <- mutate(stat_num, n = as.character(n))
           } # if n_obs in input$functions
           
-          # # 20july2021 test Ajax error rsconnect
-          # idx <- which(sapply(stat_num, class) %in% c("numeric", "integer", "double"))
-          # for(i in idx) stat_num[,i] <- as.numeric(stat_num[,i])
-
           # output table
           renderDtTableModuleServer("stat_num", reactive(stat_num), T,
                                     c("FixedHeader", "FixedColumns"),

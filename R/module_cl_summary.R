@@ -170,7 +170,7 @@ cat("clusterSumStatMod\n")
         tempVar$df_cor <- df_cor
 
         sum_cor <- dplyr::group_by(df_cor, cluster) %>% 
-          dplyr::summarise(n_corr = n(),
+          dplyr::summarise(n_corr = as.integer(n()),
                            mean = mean(cor, na.rm = T), median = median(cor, na.rm = T),
                            sd = sd(cor, na.rm = T), 
                            min = min(cor, na.rm = T), max = max(cor, na.rm = T))

@@ -249,6 +249,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
                         options = optionss, ... # class = "table-primary"
         )
 
+        columns <- which(sapply(data.frame(datt), class) %in% c("numeric", "double"))
         if(length(columns) > 0) { # 25nov2020
          dt_output <- DT::formatRound(dt_output, columns = columns, digits = digits())
         }

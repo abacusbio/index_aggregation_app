@@ -90,9 +90,7 @@ aggDxMod <- function(id, val, transpose = F, clusters = reactive(NULL), dt_ev_ag
     function(input, output, session) {
 cat("aggDxMod\n")
       # INITIALIZE
-      tempVar <- reactiveValues(
-        cnvrt = data.frame(classifier = c("ID", "ClassVar", "Group", "EBV", "EV"),
-                           colClasses = c(rep("character", 3), rep("numeric", 2))))
+      tempVar <- reactiveValues()
      # plot_height <- reactive(input$plot_height)
       # upload intermediate files to replace reactive(val$dt_index), cl()$cluster_obj, cl()$clusters
       
@@ -235,7 +233,7 @@ cat("aggDxMod\n")
       
       # CALCULATE DEFAULT CORRELATION
       cor_default <- eventReactive(
-        {length(val$dt_index_new) > 0
+        {nrow(val$dt_index_new)
           input$sel_benchmark}, 
         {
 # cat(" event reactive val$dt_index_new\n")
@@ -384,7 +382,7 @@ cat("aggDxMod\n")
 # print(head(tempVar$corr_df))
           req("id" %in% colnames(cor_default())) #, input$quantile_default)  # Index aggregated_index correlation id
           
-          n <- round(max(cor_default()$id)*input$quantile_default/100, 0)
+          n <- as.integer(round(max(cor_default()$id)*input$quantile_default/100, 0))
           out <- dplyr::filter(cor_default(), id == n) #%>% 
             #dplyr::select(-Index)
           names(out)[which(names(out)=="id")] <- "n_indexes"
@@ -512,7 +510,7 @@ cat("aggDxMod\n")
 # print(head(tempVar$corr_df))
         req("id" %in% colnames(tempVar$corr_df), input$quantile)  # Index aggregated_index correlation id
 
-        n <- round(max(tempVar$corr_df$id)*input$quantile/100, 0)
+        n <- as.integer(round(max(tempVar$corr_df$id)*input$quantile/100, 0))
         out <- dplyr::filter(tempVar$corr_df, id == n)#  %>% 
           # dplyr::select(-Index)
         names(out)[which(names(out)=="id")] <- "n_indexes"
@@ -673,7 +671,7 @@ cat("aggDxMod2\n")
         df_top_n <- lapply(names(df_index_sub), function( i ){ # by index
           
           idx <- order(df_index_sub[,i], decreasing = T)
-          out <- data.frame(order = 1:length(idx), Index = rep(i, length(idx)),
+          out <- data.frame(order = as.integer(1:length(idx)), Index = rep(i, length(idx)),
                             plant = rownames(df_index_sub)[idx], value = df_index_sub[idx,i], 
                             check.names = F)
           return(head(out, n))
@@ -687,7 +685,7 @@ cat("aggDxMod2\n")
           # names(out) <- paste0(i$Index[1], "_", names(out))
           return(out)
         }))
-        table_top_n <- cbind(order = 1:n, table_top_n)
+        table_top_n <- cbind(order = as.integer(1:n), table_top_n)
         # cat("  table_top_n2:");print(dim(df_index_sub));print(head(table_top_n[,]))
         renderDtTableModuleServer("top_n_index", reactive(table_top_n),
                                   downloadName = paste0("top_", n, ifelse(input$percent, "%", ""),
@@ -838,7 +836,7 @@ cat("aggDxMod3\n")
                           across(unique(c(group_var, input$class_var)))) %>% 
             tally(wt = n()) %>% 
             group_by(.data[[input$class_var]]) %>% 
-            mutate(count = sum(n), percent = n/count*100) %>% dplyr::select(-count)
+            mutate(count = as.integer(sum(n)), percent = n/count*100) %>% dplyr::select(-count)
           names(out)[1] <- "aggregated_index"
 # cat(" df_summary_table:\n");print(head(out))
           return(data.frame(aggregated_by = group_var, out))

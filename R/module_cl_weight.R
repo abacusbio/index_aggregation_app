@@ -366,7 +366,8 @@ cat("calWeiMod\n")
             
           } else if(length(input$choose_w)==1 && input$choose_w == "equal weight") {
             out <- rep(1/length(idx), times = length(idx))
-            out <- data.frame(Index = colnames(index_cov)[idx], cluster = i, weight = out)
+            out <- data.frame(Index = colnames(index_cov)[idx], cluster = as.integer(i), 
+                              weight = out)
             
           # } else if (length(input$choose_w)==1 && input$choose_w == "by index correlation" ) {
           #   out <- diag(index_cov[idx,idx])/sum(diag(index_cov[idx,idx]))
@@ -381,14 +382,15 @@ cat("calWeiMod\n")
     # "\n")
             out <- rowSums(w_percent/length(w_col), na.rm = T)
 # cat("  out len:", length(out), "\n")            
-            out <- data.frame(Index = colnames(index_cov)[idx], cluster = i, weight = out)
+            out <- data.frame(Index = colnames(index_cov)[idx], cluster = as.integer(i),
+                              weight = out)
           }
           
          # out$weight <- out$weight*100
           return(out)
         }))
         
-        val$dt_weight <- index_w
+        val$dt_weight <- arrange(index_w, cluster)
         return(index_w)
       })
       
@@ -415,8 +417,9 @@ cat("calWeiMod\n")
 # cat("  ew_table: dim");print(dim(ew_table));print(ew_table[1:3,1:3])          
           index_new <- colSums(ew_table, na.rm = F) #/100 # vector
 # cat("  index_new: i =", i, ", class", class(index_new), ", length");print(length(index_new));print(head(index_new))
-          return(data.frame(Index = paste0("new_index_", i), cluster = i, t(index_new)))
-        }))
+          return(data.frame(Index = paste0("new_index_", i), cluster = as.integer(i), t(index_new)))
+        })) %>% 
+          arrange(cluster, Index)
         val$dt_ev_agg <- ews_new
         
         # make average EV
