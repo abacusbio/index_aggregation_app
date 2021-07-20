@@ -246,7 +246,7 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
           }) # withProgress
         
         return(dt_output)
-      }, server = T # server-side processing, defaut is TRUE
+      }, server = F # server-side processing, defaut is TRUE # 20july2020 changed to F to test domino Ajax error
       ) # DT::renderDT
       
       observeEvent(input$dataviewer_rows_all, { # when datatable has >0 rows, enable filter and save button

@@ -275,7 +275,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
     
     downloadModuleServer("download_1", downloadName, dat(), row.names, type)
     return(dt_output)
-  }, server = T) #, options = list(stateSave =T)) #, 8sept2020
+  }, server = F) #, options = list(stateSave =T)) #, 8sept2020 # 20july2020 changed to F to test domino Ajax error
   #filter = "top") # renderDT/DT::renderDataTable
 
 # observeEvent(input$table_state, { # 8sept2020 OK
