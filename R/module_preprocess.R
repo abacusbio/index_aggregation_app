@@ -1,6 +1,10 @@
 preprocessUploadModsidebarUI <- function(id, title = "Step 1 file uploads") {
   ns <- NS(id)
   tagList(
+    # actionButton(ns("help_btn"), "", icon("question"), class = "btn btn-outline-light"),
+    div(style="display:inline-block",
+        actionButton(ns("help_btn"), "", icon("question")),# class = "btn btn-outline-dark"),
+        style = "float:right"),
     h4(title),
     helpText("Upload description files before value files"),
     wellPanel(
@@ -23,9 +27,10 @@ preprocessUploadModsidebarUI <- function(id, title = "Step 1 file uploads") {
 preprocessUploadModUI <- function(id) {
   ns <- NS(id)
   tagList(
-    span(textOutput(ns("demo_message")), class = "text-info"),
-    # textOutput(ns("demo_message")),
-    verbatimTextOutput(ns("sanity_message")) 
+   span(textOutput(ns("demo_message")), class = "text-info"),
+   verbatimTextOutput(ns("sanity_message")),
+   shinyjs::hidden(div(id = ns("help_html"),
+                       htmltools::includeMarkdown("help/preprocess.Rmd")))
   )
 }
 
@@ -46,6 +51,14 @@ cat("preprocessMod\n");
       tempVar <- reactiveValues(
         cnvrt = data.frame(classifier = c("ID", "ClassVar", "Group", "EBV", "EV"),
                            colClasses = c(rep("character", 3), rep("numeric", 2))))
+      
+      observeEvent(input$help_btn, {
+       if(input$help_btn %% 2 == 1){
+          shinyjs::show("help_html")
+       }else{
+         shinyjs::hide("help_html")
+       }
+      })
       
       output$demo_message <- renderText({
        req("desc_ebv" %in% names(val))

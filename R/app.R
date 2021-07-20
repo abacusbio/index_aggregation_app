@@ -1,11 +1,5 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+
+# rsconnect::writeManifest("R")
 
 # devtools::load_all()
 # install.packages("https://cran.r-project.org/src/....tar.gz", type = "source", repos = NULL)
@@ -15,21 +9,22 @@ options(repos = c("CRAN" = "https://mran.microsoft.com/snapshot/2019-04-15",
 # options("repos")
 # old.packages()
 
-options(shiny.reactlog = T) # ctrl+F3
+# options(shiny.reactlog = T) # ctrl+F3
 # reactlogReset()
 
 # library(parallel)
 library(shiny)
 library(DT)
-# library(shinyjs) # try lazy loading
-
 library(shinyWidgets)
+# library(shinyjs) # lazy loading
+# library(htmltools) # lazy loading
+
 #library(reactlog)
 
 library(dplyr)
 library(purrr)
 
-#library(RColorBrewer) # try lazy loading
+#library(RColorBrewer) # lazy loading
 library(ggplot2)
 library(pheatmap)
 # library(gplots) # heatmap.2
@@ -64,7 +59,7 @@ source("function_aggregation_dx.R")
 # Define UI for application that draws a histogram
 ui <- fluidPage(
   shinyjs::useShinyjs(),
-  includeCSS("css/bootstrap_minty_edited.css"), # 5june2020 can use to replace tags$head()
+  htmltools::includeCSS("css/bootstrap_minty_edited.css"), # 5june2020 can use to replace tags$head()
   tags$head(
         tags$style(HTML("
       .shiny-output-error-validation {
@@ -315,7 +310,7 @@ server <- function(input, output, session) {
     
   ## OPTIONS ###
   # allow file sizes up to 100MB
-  options(shiny.maxRequestSize = 100 * 1024 ^ 2  , shiny.trace = F
+  options(shiny.maxRequestSize = 100 * 1024 ^ 2, shiny.trace = F
           , shiny.error = NULL #browser
           
   )
