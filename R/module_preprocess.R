@@ -41,7 +41,7 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
   moduleServer(
     id,
     function(input, output, session) {
-# cat("preprocessMod\n");
+cat("preprocessMod\n");
       flag <- F
       tempVar <- reactiveValues(
         cnvrt = data.frame(classifier = c("ID", "ClassVar", "Group", "EBV", "EV"),
@@ -100,7 +100,7 @@ preprocessUploadMod <- function(id, val, # data_name = "data", clean = T, type =
         output$sanity_message <- renderText({ txt })
         if(is.null(txt)) {
           val$desc_ev <- desc_ev()
-          tempVar$ev_colClasses <- dplyr::left_join(val$desc_ev, tempVar$cnvrt, by = "colClasses")
+          tempVar$ev_colClasses <- dplyr::left_join(val$desc_ev, tempVar$cnvrt, by = "classifier")
           
         } else {
           flag <- T
