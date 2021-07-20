@@ -334,6 +334,7 @@ cat("aggDxMod\n")
         withProgress(message = 'Plotting ...',
                      detail = 'This may take a while...', value = 0, {
         req(cor_default, input$font_size)
+                       input$fixed_y_scale # force function to react
 # cat(" renderPlot plot_cor_default\n")
 # cat("  cor_default:");print(head(cor_default()))
         # initial parameters
@@ -476,6 +477,7 @@ cat("aggDxMod\n")
         withProgress(message = 'Plotting ...',
                      detail = 'This may take a while...', value = 0, {
         req(length(tempVar$corr) > 1, input$font_size)
+                       input$fixed_y_scale # force function to react
 # cat(" renderPlot plot_cor\n")
         # initial parameters
         width  <- session$clientData[[paste0("output_", session$ns("plot_cor"), 
