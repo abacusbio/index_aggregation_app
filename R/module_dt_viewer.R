@@ -181,7 +181,7 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
             # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
             # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
             columns <- which(sapply(data.frame(dat), class) %in% c("numeric", "integer", "double"))
-            for(i in columns) dat_new[,i] <- as.numeric(dat[,i])
+            for(i in columns) dat[,i] <- as.numeric(dat[,i])
             
             dat <- select_at(dat, vars(input$view_vars)) # filter col var to show
             
