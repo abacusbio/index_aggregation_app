@@ -6,6 +6,7 @@
 options(repos = c("CRAN" = "https://mran.microsoft.com/snapshot/2019-04-15",
                   "added" = "https://cran.rstudio.com",
                   "added1" = "https://cran.r-project.org"))
+# .libPaths(c("/usr/local/lib/R/site-library/", "/home/ubuntu/R/x86_64-pc-linux-gnu-library/4.0"))
 # options("repos")
 # old.packages()
 
@@ -514,72 +515,72 @@ server <- function(input, output, session) {
                        data.frame(ID = rownames(val$dt_index), val$dt_index), F, "csv")
   downloadModuleServer("dnld_index_group", "index_group", val$dt_sub_index_ids, F, "csv")
   
-  ## Find CLUSTER ##
-  
-  # # a smaller data
-  # votes.repub <- cluster::votes.repub[
-  #   which(apply(cluster::votes.repub, 1, is.na) %>% apply(2, sum) ==0),] # states by features
+  # ## Find CLUSTER ##
   # 
-  # observeEvent(votes.repub,{
-  #   req(length(votes.repub) > 0)
-  #   val$dt_index <- data.frame(t(votes.repub)) # feature x states
-  #   print(dim(val$dt_index))
-  #   })
+  # # # a smaller data
+  # # votes.repub <- cluster::votes.repub[
+  # #   which(apply(cluster::votes.repub, 1, is.na) %>% apply(2, sum) ==0),] # states by features
+  # # 
+  # # observeEvent(votes.repub,{
+  # #   req(length(votes.repub) > 0)
+  # #   val$dt_index <- data.frame(t(votes.repub)) # feature x states
+  # #   print(dim(val$dt_index))
+  # #   })
+  # # 
+  # # cl <- clusteringMod("find_cl", val, dat = reactive(val$dt_index), transpose = F)
   # 
-  # cl <- clusteringMod("find_cl", val, dat = reactive(val$dt_index), transpose = F)
-
-  # return list(cluster_obj, clusters). Create val$cl.
-  # if didn't run finalCluster will return list(cluster_obj, best_method, agg_coefs)
-  # with the simulation it takes 6 min to find an agglomerative method, 6.5 min to run wss for k,
-  # and 6 min to run silhouette for k
-  cl <- clusteringMod("find_cl", val,
-                dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
-                transpose = F)
-  
-  ## CLUSTER SUMMARY STATISTICS ##
-  # need val$dt_index, val$cl
-  clusterSumStatMod("cl_sumstat", val, transpose = F)
-  
-  ## CLUSTER DIAGNOSIS ##
-  
-  # need val$dt_index, val$cl. if upload new files, fill val$cl with list(cluster_obj, clusters)
-  clusterDxMod("Dx", val, 
-               transpose = T, reactive(input$`find_cl-center`), reactive(input$`find_cl-scale`))
-  
-  ## AGGREGATION ##
-  
-  # CREATE INDEX WEIGHT GIVEN CLUSTERING RESULTS #
-  # need val$dt_index,  val$cl, val$dt_ev_filtered, val$dt_desc_ev_clean (for user group)
-  # create val$dt_weight (data.frame), a data.frame of 3 columns: Index, cluster and weight;
-  # val$dt_ev_agg, a data.frame of columns as Index, cluster and traits (EVs); and
-  # val$dt_ev_avg, same structure as above
-  calWeiMod("cl_weight", val, transpose = F) # 15june2021 this occurred twice. 2nd time new_index_1 are NAs
-  
-  # AGGREGATED INDEX DIAGNOSIS #
-  
-  # look at correlations among new and old indexes, and top individual overlap among them
-  # need val$dt_ev_agg, val$dt_ebv_filtered, val$dt_description_clean
-  # create val$dt_index_new. The same as dt_index but with new_index in it.
-  dt_index_sub <- aggDxMod("agg_dx", val, transpose = F, reactive(val$cl$clusters), 
-                           reactive(val$dt_ev_agg), reactive(val$dt_index))
-  
-  # top individual overlap/agreement
-  aggDxMod2("agg_dx2", transpose = F, 
-           dt_index_sub, reactive(val$dt_index),
-           reactive(input$`agg_dx-sel_index`), reactive(input$`agg_dx-sel_agg`),
-           reactive(input$`agg_dx-sel_cluster`) 
-          )
-  
-  # look at classVar pattern among aggregated indexes and user-defined groups
-  # need val$dt_index_new and others in val.
-  aggDxMod3("agg_dx3", val, transpose = F, reactive(val$cl$clusters))
-  
-  # look at EV weighting pattern among aggregated indexes and user-defined groups
-  # need val$dt_w_clean
-  # need val$dt_ev_agg, a data.frame of columns as Index, cluster and traits (EVs); and
-  # val$dt_ev_avg, same structure as above
-  aggDxMod4("agg_dx4", val, 
-            reactive(val$dt_ev_agg), reactive(val$dt_w_clean), reactive(val$cl$clusters))
+  # # return list(cluster_obj, clusters). Create val$cl.
+  # # if didn't run finalCluster will return list(cluster_obj, best_method, agg_coefs)
+  # # with the simulation it takes 6 min to find an agglomerative method, 6.5 min to run wss for k,
+  # # and 6 min to run silhouette for k
+  # cl <- clusteringMod("find_cl", val,
+  #               dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
+  #               transpose = F)
+  # 
+  # ## CLUSTER SUMMARY STATISTICS ##
+  # # need val$dt_index, val$cl
+  # clusterSumStatMod("cl_sumstat", val, transpose = F)
+  # 
+  # ## CLUSTER DIAGNOSIS ##
+  # 
+  # # need val$dt_index, val$cl. if upload new files, fill val$cl with list(cluster_obj, clusters)
+  # clusterDxMod("Dx", val, 
+  #              transpose = T, reactive(input$`find_cl-center`), reactive(input$`find_cl-scale`))
+  # 
+  # ## AGGREGATION ##
+  # 
+  # # CREATE INDEX WEIGHT GIVEN CLUSTERING RESULTS #
+  # # need val$dt_index,  val$cl, val$dt_ev_filtered, val$dt_desc_ev_clean (for user group)
+  # # create val$dt_weight (data.frame), a data.frame of 3 columns: Index, cluster and weight;
+  # # val$dt_ev_agg, a data.frame of columns as Index, cluster and traits (EVs); and
+  # # val$dt_ev_avg, same structure as above
+  # calWeiMod("cl_weight", val, transpose = F) # 15june2021 this occurred twice. 2nd time new_index_1 are NAs
+  # 
+  # # AGGREGATED INDEX DIAGNOSIS #
+  # 
+  # # look at correlations among new and old indexes, and top individual overlap among them
+  # # need val$dt_ev_agg, val$dt_ebv_filtered, val$dt_description_clean
+  # # create val$dt_index_new. The same as dt_index but with new_index in it.
+  # dt_index_sub <- aggDxMod("agg_dx", val, transpose = F, reactive(val$cl$clusters), 
+  #                          reactive(val$dt_ev_agg), reactive(val$dt_index))
+  # 
+  # # top individual overlap/agreement
+  # aggDxMod2("agg_dx2", transpose = F, 
+  #          dt_index_sub, reactive(val$dt_index),
+  #          reactive(input$`agg_dx-sel_index`), reactive(input$`agg_dx-sel_agg`),
+  #          reactive(input$`agg_dx-sel_cluster`) 
+  #         )
+  # 
+  # # look at classVar pattern among aggregated indexes and user-defined groups
+  # # need val$dt_index_new and others in val.
+  # aggDxMod3("agg_dx3", val, transpose = F, reactive(val$cl$clusters))
+  # 
+  # # look at EV weighting pattern among aggregated indexes and user-defined groups
+  # # need val$dt_w_clean
+  # # need val$dt_ev_agg, a data.frame of columns as Index, cluster and traits (EVs); and
+  # # val$dt_ev_avg, same structure as above
+  # aggDxMod4("agg_dx4", val, 
+  #           reactive(val$dt_ev_agg), reactive(val$dt_w_clean), reactive(val$cl$clusters))
 } # server
 
 # options(shiny.reactlog = T) # lzhang April172020
