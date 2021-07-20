@@ -143,6 +143,7 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
 # cat(" filter_cols:");print(filter_cols());cat(" is.null(filter_cols)", is.null(filter_cols()), "\n")
         if (!is.null(filter_cols())) { # filter_cols exists
           dat_new <- datt()
+          
           for(i in 1:length(filter_cols())) {
             # print(filter_cols()[ i ]) # print(filter_levels()[[ i ]])
             dat_new <- filter_at(dat_new, vars(filter_cols()[ i ]),
@@ -176,6 +177,11 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
               # print("use tmp$dat")
               dat <- tmp$dat
             }
+            
+            # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
+            # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
+            columns <- which(sapply(data.frame(dat), class) %in% c("numeric", "integer", "double"))
+            for(i in columns) dat_new[,i] <- as.numeric(dat[,i])
             
             dat <- select_at(dat, vars(input$view_vars)) # filter col var to show
             
@@ -246,7 +252,7 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
           }) # withProgress
         
         return(dt_output)
-      }, server = F # server-side processing, defaut is TRUE # 20july2020 changed to F to test domino Ajax error
+      }, server = T # server-side processing, defaut is TRUE
       ) # DT::renderDT
       
       observeEvent(input$dataviewer_rows_all, { # when datatable has >0 rows, enable filter and save button
