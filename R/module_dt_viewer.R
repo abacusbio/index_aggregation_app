@@ -182,8 +182,8 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
             # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
             columns <- which(sapply(data.frame(dat), class) %in% c("numeric", "integer", "double"))
 cat("dataViewerModuleServer\n");print(str(dat));cat(" columns:");print(columns)
-            for(i in columns) dat[,i] <- as.numeric(dat[,i])
-print(str(dat))            
+            for(i in columns) dat[[i]] <- as.numeric(dat[[i]])
+cat(" dat after:\n");print(str(dat))            
             dat <- select_at(dat, vars(input$view_vars)) # filter col var to show
             
             #         # below will make DT::renderDT run for each column, too

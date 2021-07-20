@@ -218,12 +218,12 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
         req(!is.null(dat())) # 14oct2020
 
         columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
-cat("renderDtTableModuleServer\n");print(str(dat()))
+cat("renderDtTableModuleServer\n dat():");print(str(dat()))
         # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
         # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
         datt <- dat()
-        for(i in columns) datt[,i] <- as.numeric(datt[,i])
-print(str(datt))        
+        for(i in columns) datt[[i]] <- as.numeric(datt[[i]])
+cat(" datt:\n");print(str(datt))        
         optionss = list(
           # searching = T,
           fixedHeader = fixedHeader,
