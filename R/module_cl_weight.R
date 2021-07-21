@@ -460,15 +460,15 @@ cat("calWeiMod\n")
                     detail = 'This may take a while...', value = 0, {
           req(ew_new,  # Index, cluster, trait1, trait2, ...
               val$dt_ebv_filtered, input$font_size)
-# cat(" plot_bar_newevsd\n  dt_ebv\n:");print(head(val$dt_ebv_filtered, 1))
+cat(" plot_bar_newevsd\n  dt_ebv\n:");print(head(val$dt_ebv_filtered, 1))
           width <- session$clientData[[paste0("output_", session$ns("plot_bar_newevsd"), "_width")]]
           
           idx <- na.omit(match(names(ew_new()), names(val$dt_ebv_filtered)))
           df_ebv <- val$dt_ebv_filtered[, idx] # animal x trait
-
-          rew <- sweep(ew_new()[,-c(1:2)], 2, apply(df_ebv, 2, sd, na.rm = T)) # col1*sd1, col2*sd2, ...
+cat("  ebv sd:\n");print(apply(df_ebv, 2, sd, na.rm = T))
+          rew <- sweep(ew_new()[,-c(1:2)], 2, apply(df_ebv, 2, sd, na.rm = T), "*") # col1*sd1, col2*sd2, ...
           rew <- cbind(ew_new()[, 1:2], rew)
-
+cat("  rew:\n");print(rew)
           df <- tidyr::pivot_longer(rew, !c(Index, cluster), "trait", 
                                     values_to = "relative_economic_value")
           p <- plotGroupedBar(input, output, session,
