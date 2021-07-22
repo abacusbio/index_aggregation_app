@@ -58,12 +58,15 @@ calWeiModUI <- function(id) {
     br(),br(),
     h3("Economic value bar Chart"),
     plotOutput(ns("plot_bar_newev")),
-    downloadPlotModuleUI(ns("dnlod_plot_newev")),
+    downloadPlotModuleUI(ns("dnld_plot_newev")),
     br(),br(),
     h3("Relative economic value bar chart"),
     plotOutput(ns("plot_bar_newevsd")),
-    downloadPlotModuleUI(ns("dnlod_plot_newevsd"))
-  )
+    tags$table(
+      tags$td(downloadPlotModuleUI(ns("dnld_plot_newevsd"))),
+      tags$td(downloadModuleUI(ns("dnld_newevsd")))
+    )
+  ) # tagList
 }
 
 #' Calculate the weight for each index within a cluster
@@ -450,7 +453,7 @@ cat("calWeiMod\n")
         p <- plotGroupedBar(input, output, session, 
                             df, "trait", "economic_value", "Index", "Economic value($)",
                             reactive(input$font_size))
-        downloadPlotModuleServer("dnld_plot_newev", "barchart_new_ev", p, width)
+        downloadPlotModuleServer("dnld_plot_newev", "barchart_aggregated_ev", p, reactive(width))
         return(p)
       }) })
       
@@ -476,7 +479,9 @@ cat("calWeiMod\n")
           p <- plotGroupedBar(input, output, session,
                               df, "trait", "relative_economic_value", "Index", 
                               "Relative economic value($)", reactive(input$font_size))
-          downloadPlotModuleServer("dnld_plot_newev", "barchart_new_relative_ev", p, width)
+          downloadPlotModuleServer("dnld_plot_newevsd", "barchart_aggregated_relative_ev", p, 
+                                   reactive(width))
+          downloadModuleServer("dnld_newevsd", "aggregated_relative_ev", rew)
           return(p)
          }) })
       

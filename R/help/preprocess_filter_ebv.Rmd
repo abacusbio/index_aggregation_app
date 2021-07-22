@@ -1,0 +1,67 @@
+---
+title: "Preprocess"
+author: "Luna Zhang"
+date: "22/07/2021"
+output:
+  html_document:
+    toc: true
+    css: ../css/bootstrap_minty_edited.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Step 2: Filter EBV
+This tab is used to select and filter EBV input file for the downstream analysis.
+
+## Table in the main Tab
+
+This is a dynamic table where you can filter directly.
+
+Click the dropdown menu on the top left change the number of entries to show.
+
+In the **search:** search bar on the top, type in the keyword, partial keyword or number to filter rows of the entire table.
+Multiple keywords can be concatenated by `|`. e.g. `1|2`. 
+
+Similar filtering method can be applied to each column filter individually, too, which is under the header of each *ID*, 
+*ClassVar* or *Group* column.
+To reverse filter, use `[^keyword]` format. For example, to remove all "M" in *sex* column, type in `[^M]`. Multiple keywords
+can be concatenated together, e.g. `[^index_1^index_2]`.
+
+The bottom left of the table shows the entries on the screen and the total number of entries.
+
+Use the page buttons on the bottom middle to turn pages.
+
+## Sidebar
+The **Filter and save** button has to be hit to update and save the table for downstream analysis. Without hitting it, the app
+won't do anything after this step. Click it whenever you finish selecting and filtering the input table.
+
+Click the **Download the table** button to download a .csv file to your local drive.
+
+Click the **Download the filter records** button to download your operation records. This shows what filter operation you have
+done to the UI before clicking the **Filter and save** button.
+
+### Variable display controler
+This sidebar has filtering functions that the table in the main tab itself doesn't have or the operation of which is too complicated.
+
+In **Select variables to show:** selection menu, use mouse, Shift, Ctrl, Ctrl+A etc. to select columns.
+
+Use **Decimals** numeric input box to change the number of decimal places to show in the table. However, the full decimal places will
+always be saved for the downstream analysis.
+
+Use **Rename new data as"** input box to change the file name to be downloaded to your local drive.
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

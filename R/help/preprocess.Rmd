@@ -1,33 +1,90 @@
 ---
-title: "preprocess"
+title: "Preprocess Files"
 author: "Luna Zhang"
 date: "21/07/2021"
 # output: html_document
 output:
   html_document:
+    toc: true
     css: ../css/bootstrap_minty_edited.css
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = F)
 ```
 
-## R Markdown
+This menu is for you to upload, filter and inspect your input data.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Step 1: Upload
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Demo
+First time user can click the **Run demo data** button and visit all the tabs from left to right to see the full function of the app.
+The Demo data uses a corn dataset. The traits EBV and EV are simulated using mean, SD and correlaiton from a small real dataset.
 
-```{r cars}
-summary(cars)
+## Upload data
+
+Upload your data from the sidebar menu on the left. The files are:
+
+- **Estimated breeding value (EBV) description file**
+- **EBV file**
+- **Economic value/weight (EV) description file**
+- **EV file**
+- **optional: index weight file**
+
+The two description files have two columns:
+*column_labelling* and *classifier*. Column_labelling column contains the column names in the input file the description file pointing to, 
+e.g. EBV or EV input file. And classifier column describes the type of the corresponding column in the input file. 
+
+Common legal classifiers include:
+
+- **ID**: the unique ID for each row of individual (in EBV file) or index (in EV and index weight file)
+- **ClassVar**: classification variable, such as a character string variable
+- **EBV**: trait EBV
+- **EV**: trait EV
+
+Below is a sample EBV description file used in demo data:
+
+```{r inputfile, warning = F}
+library(ggplot2)
+bv_desc <- readxl::read_xlsx("../data/description_bv.xlsx")
+# knitr::kable(ev_desc)
+bv <- read.csv("../data/bv.csv", header = T, nrows = 6, fileEncoding = "UTF-8-BOM")
+ev_desc <- read.csv("../data/description_ev.csv", header = T, fileEncoding = "UTF-8-BOM")
+ev <- read.csv("../data/ev.csv", header = T, nrows = 6, fileEncoding = "UTF-8-BOM")
+weight <- read.csv("../data/index_weight.csv", header = T, nrows = 6, fileEncoding = "UTF-8-BOM")
+knitr::kable(bv_desc, caption = "EBV description file")
 ```
 
-## Including Plots
+Optional classifiers include
 
-You can also embed plots, for example:
+- **Group**: a character string variable of user-defined group. Can be potentially used to form aggregated index
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+Below is a part of a sample EV description file from demo data. The *sector* variable is a *Group* classifier:
+
+```{r EV_description}
+knitr::kable(ev_desc, caption = "EV description file")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Below are parts of sample EBV and EV files from demo data:
+
+```{r EV_EBV}
+knitr::kable(bv, caption = "EBV file")
+knitr::kable(ev, caption = "EV file")
+```
+
+Index weighting file contains the weightings for each index to be used when some of them are aggregated together:
+
+```{r weight}
+knitr::kable(weight, caption = "Index weighting file")
+```
+
+All files can be in one of `.csv/.xlsx/.txt` format, with comma or space as the delimitor.
+
+Missing values can be empty cell or `NA`. Individuals with missing values in the EBV file will be excluded from calculating index value
+unless they are imputated in the next Tab (filter). Traits with missing EV values in the EV file will be imputed as `0` by default.
+
+## Info, warning and erro messages
+
+In the sidebar and main tab, there will be text message prompting during demo or file uploading. For example, if the uploaded file has
+illegal classifiers, columns names or other things, the warning message will show the illegal element and instruct the user to either
+refresh the browswer and start over or upload a correct file.

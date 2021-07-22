@@ -2,9 +2,8 @@ preprocessUploadModsidebarUI <- function(id, title = "Step 1 file uploads") {
   ns <- NS(id)
   tagList(
     # actionButton(ns("help_btn"), "", icon("question"), class = "btn btn-outline-light"),
-    div(style="display:inline-block",
-        actionButton(ns("help_btn"), "", icon("question")),# class = "btn btn-outline-dark"),
-        style = "float:right"),
+    column(12, div(actionButton(ns("help_btn"), "", icon("question"), 
+                                class = "btn btn-outline-info"), style = "float:right")),
     h4(title),
     helpText("Upload description files before value files"),
     wellPanel(
