@@ -29,7 +29,7 @@ preprocessUploadModUI <- function(id) {
    span(textOutput(ns("demo_message")), class = "text-info"),
    verbatimTextOutput(ns("sanity_message")),
    shinyjs::hidden(div(id = ns("help_html"),
-                      htmltools::includeMarkdown("help/preprocess.md")))
+                      htmltools::includeMarkdown("help/preprocess.Rmd")))
                      # htmltools::includeHTML("help/preprocess.html")))
   )
 }
