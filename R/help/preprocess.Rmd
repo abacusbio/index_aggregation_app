@@ -7,10 +7,11 @@ output:
   html_document:
     toc: true
     css: ../css/bootstrap_minty_edited.css
+    code_folding: hide
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = F)
+knitr::opts_chunk$set(echo = F, eval = T)
 ```
 
 This menu is for you to upload, filter and inspect your input data.
@@ -45,7 +46,6 @@ Common legal classifiers include:
 Below is a sample EBV description file used in demo data:
 
 ```{r inputfile, warning = F}
-library(ggplot2)
 bv_desc <- readxl::read_xlsx("../data/description_bv.xlsx")
 # knitr::kable(ev_desc)
 bv <- read.csv("../data/bv.csv", header = T, nrows = 6, fileEncoding = "UTF-8-BOM")

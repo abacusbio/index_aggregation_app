@@ -89,6 +89,8 @@ ui <- fluidPage(
          
          conditionalPanel(
            condition = "input.upload == 'tab.step2' && input.plant_app == 'tab.upload'",
+           column(12, div(actionButton("help_btn_ebv_filter", "", icon("question"), 
+                                       class = "btn btn-outline-info"), style = "float:right")),
            dataViewerModuleSidebarUI("ebv_filter", defaultName = "filtered_ebv"),
            # checkboxInput("ebv_na", "Include missing EBV (individuals with missing EBV will not have
                          # index values"),
@@ -142,6 +144,8 @@ ui <- fluidPage(
            ),
            
            tabPanel("Step 2: Filter EBV", value = "tab.step2",
+             shinyjs::hidden(div(id = "help_html_ebv_filter",
+                                 htmltools::includeMarkdown("help/preprocess_filter_ebv.Rmd"))),
              br(),
              dataViewerModuleTabUI("ebv_filter")
            ),
@@ -309,8 +313,8 @@ ui <- fluidPage(
 server <- function(input, output, session) {
     
   ## OPTIONS ###
-  # allow file sizes up to 100MB
-  options(shiny.maxRequestSize = 100 * 1024 ^ 2, shiny.trace = F
+  # allow file sizes up to 300MB
+  options(shiny.maxRequestSize = 300 * 1024 ^ 2, shiny.trace = F
           , shiny.error = NULL #browser
           
   )
@@ -398,6 +402,15 @@ server <- function(input, output, session) {
       })
     }
     return(filter_levels)
+  })
+  
+  # show/hide help .Rmd for EBV filter
+  observeEvent(input$help_btn_ebv_filter, {
+    if(input$help_btn_ebv_filter %% 2 == 1){
+      shinyjs::show("help_html_ebv_filter")
+    }else{
+      shinyjs::hide("help_html_ebv_filter")
+    }
   })
   
   # show and download data table. Apply column filters and the search bar.
