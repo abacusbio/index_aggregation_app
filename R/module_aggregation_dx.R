@@ -354,7 +354,7 @@ cat("aggDxMod\n")
         # } else {
         # list(p, df). df cols are Index aggregated_index correlation id
         heat_map <- plotcorrDot(input, output, session,
-                                cor_default(), reactive(input$font_size),
+                                cor_default(), "aggregated_index", reactive(input$font_size),
                                 reactive(input$fixed_y_scale), baseline = T)
         
         downloadPlotModuleServer("dnld_heat_default", 
@@ -485,7 +485,8 @@ cat("aggDxMod\n")
         m <- makeLongCor(input, output, session,
                          tempVar$corr, reactive(input$sel_agg))
         heat_map <- plotcorrDot(input, output, session,
-                                m, reactive(input$font_size), reactive(input$fixed_y_scale))
+                                m, "aggregated_index", reactive(input$font_size), 
+                                reactive(input$fixed_y_scale))
         
         downloadPlotModuleServer("dnld_heat",
           name = paste0("heatmap_", 

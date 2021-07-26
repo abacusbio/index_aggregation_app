@@ -37,7 +37,7 @@ makeLongCor <- function(input, output, session,
 #' @param show_n an integer, the total number of bars to show      
 #' @return either a ggplot object or a list of ggplot object
 plotcorrDot <- function(input, output, session,
-                        m, font_size = reactive(12), fixed_y_scale = reactive(T),
+                        m, fill = "aggregated_index", font_size = reactive(12), fixed_y_scale = reactive(T),
                         baseline = F,
                         # n = 30, show_n = reactive(10), 
                         ...) {
@@ -55,7 +55,7 @@ plotcorrDot <- function(input, output, session,
   } else { palettes = "npg"} 
   
   p <- ggpubr::ggscatter(m, x = "id", y = "correlation",
-                         color = "aggregated_index", alpha = 0.5, 
+                         color = fill, alpha = 0.5, 
                          palette = palettes,          # npg journal color palett. see ?ggpar
                          sort.val = "desc",        # Sort the value in dscending order
                          # sort.by.groups = T,     # Don't sort inside each group
