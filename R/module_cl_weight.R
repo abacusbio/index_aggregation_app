@@ -313,7 +313,8 @@ cat("calWeiMod\n")
 # cat(" observe val$dt_w_clean\n")
         updateSelectInput(session, "choose_w", 
                           choices = c("equal weight",# "by index correlation", 
-                                      names(val$dt_w_clean)[-1]))
+                                      names(val$dt_w_clean)[-1]),
+                          selected = names(val$dt_w_clean)[2])
       })
       
       # MAKE WEIGHTS
