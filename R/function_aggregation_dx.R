@@ -38,6 +38,7 @@ makeLongCor <- function(input, output, session,
 #' @return either a ggplot object or a list of ggplot object
 plotcorrDot <- function(input, output, session,
                         m, font_size = reactive(12), fixed_y_scale = reactive(T),
+                        baseline = F,
                         # n = 30, show_n = reactive(10), 
                         ...) {
 # cat("plotCorrDot\n, m:", class(m));print(dim(m));#print(head(m))
@@ -48,9 +49,14 @@ plotcorrDot <- function(input, output, session,
     ylim <- range(m[["correlation"]])
   }
   
+  if(baseline) {
+    palettes <- c("#808080", # avg_index
+                  ggpubr::get_palette("npg", length(unique(df[,fill]))-1))
+  } else { palettes = "npg"} 
+  
   p <- ggpubr::ggscatter(m, x = "id", y = "correlation",
                          color = "aggregated_index", alpha = 0.5, 
-                         palette = "npg",          # npg journal color palett. see ?ggpar
+                         palette = palettes,          # npg journal color palett. see ?ggpar
                          sort.val = "desc",        # Sort the value in dscending order
                          # sort.by.groups = T,     # Don't sort inside each group
                          ylim = ylim,
@@ -185,7 +191,7 @@ plotClassvarBar <- function(#input, output, session,
                      font.legend = c(font_size, "plain", "black"),
                      font.tickslab = c(font_size+2, "plain", "black"),
                      # font.label = list(size = font_size-1, face = "plain", color = "white"), # doesnt work
-                     palette = tail(ggpubr::get_palette("npg", length(unique(df[,fill]))+1), -1)) # skip red, the 1st color
+                     palette = ggpubr::get_palette("npg", length(unique(df[,fill]))))
     # ggpubr::set_palette(p, ggpubr::get_palette("npg", length(unique(df[,fill])))) +
     # ggpubr::rotate_x_text(angle = x.text.angle)
   return(p)
@@ -242,7 +248,7 @@ plotNumvarBar <- function(df, x, y, fill = "aggregated_index", use_count,
                      # font.y = c(font_size, "plain", "black"), # y lab
                      # font.legend = c(font_size, "plain", "black"),
                      font.tickslab = c(font_size+2, "plain", "black"),
-                     palette = tail(ggpubr::get_palette("npg", length(unique(df[,fill]))+1), -1)) # skip red, the 1st color
+                     palette = ggpubr::get_palette("npg", length(unique(df[,fill]))))
   
   return(p)
 }

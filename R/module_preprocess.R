@@ -26,11 +26,11 @@ preprocessUploadModsidebarUI <- function(id, title = "Step 1 file uploads") {
 preprocessUploadModUI <- function(id) {
   ns <- NS(id)
   tagList(
-   span(textOutput(ns("demo_message")), class = "text-info"),
-   verbatimTextOutput(ns("sanity_message")),
    shinyjs::hidden(div(id = ns("help_html"),
-                      htmltools::includeMarkdown("help/preprocess.Rmd")))
-                     # htmltools::includeHTML("help/preprocess.html")))
+                      # htmltools::includeMarkdown("help/preprocess.Rmd")))
+                     includeHTML(knitr::knit2html("help/preprocess.Rmd", fragment.only = TRUE)))),
+   span(textOutput(ns("demo_message")), class = "text-info"),
+   verbatimTextOutput(ns("sanity_message"))
   )
 }
 

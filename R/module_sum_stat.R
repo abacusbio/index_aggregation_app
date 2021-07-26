@@ -36,7 +36,7 @@ sumstatModUI <- function(id) {
     h3("Distribution"),
     plotOutput(ns("dot_chr"), height = "800px"),
     downloadModuleUI(ns("dnld_dot_chr"))
-    #br(),br(),
+    # br(),br(),
     # h2("Mult-choice variable frequency table"),
     # renderDtTableModuleUI(ns("stat_lst"), "N choice stats")
     # level conversion table for rating vars

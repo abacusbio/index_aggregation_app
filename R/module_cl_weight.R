@@ -452,7 +452,7 @@ cat("calWeiMod\n")
         df <- tidyr::pivot_longer(ew_new(), !c(Index, cluster), "trait", values_to = "economic_value")
         p <- plotGroupedBar(input, output, session, 
                             df, "trait", "economic_value", "Index", "Economic value($)",
-                            reactive(input$font_size))
+                            reactive(input$font_size), baseline = T)
         downloadPlotModuleServer("dnld_plot_newev", "barchart_aggregated_ev", p, reactive(width))
         return(p)
       }) })
@@ -478,7 +478,7 @@ cat("calWeiMod\n")
                                     values_to = "relative_economic_value")
           p <- plotGroupedBar(input, output, session,
                               df, "trait", "relative_economic_value", "Index", 
-                              "Relative economic value($)", reactive(input$font_size))
+                              "Relative economic value($)", reactive(input$font_size), baseline = T)
           downloadPlotModuleServer("dnld_plot_newevsd", "barchart_aggregated_relative_ev", p, 
                                    reactive(width))
           downloadModuleServer("dnld_newevsd", "aggregated_relative_ev", rew)

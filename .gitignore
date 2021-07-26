@@ -20,3 +20,8 @@ test outputs/half_indexes/df
 R/module_index_sumstat.R
 R/help/test_legacy.html
 R/help/test_legacy.Rmd
+R/figure/pressure-1.png
+R/preprocess.html
+R/preprocess.md
+R/preprocess_filter_ebv.html
+R/preprocess_filter_ebv.md

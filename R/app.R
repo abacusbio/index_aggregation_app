@@ -145,7 +145,9 @@ ui <- fluidPage(
            
            tabPanel("Step 2: Filter EBV", value = "tab.step2",
              shinyjs::hidden(div(id = "help_html_ebv_filter",
-                                 htmltools::includeMarkdown("help/preprocess_filter_ebv.Rmd"))),
+                                 # htmltools::includeMarkdown("help/preprocess_filter_ebv.Rmd"))), # doesn't knit table or plot, and show codes even when echo = F
+                                 includeHTML(knitr::knit2html("help/preprocess_filter_ebv.Rmd",
+                                                              fragment.only = TRUE)))),
              br(),
              dataViewerModuleTabUI("ebv_filter")
            ),
