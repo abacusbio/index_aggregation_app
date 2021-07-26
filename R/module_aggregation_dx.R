@@ -355,7 +355,8 @@ cat("aggDxMod\n")
         # list(p, df). df cols are Index aggregated_index correlation id
         heat_map <- plotcorrDot(input, output, session,
                                 cor_default(), "aggregated_index", reactive(input$font_size),
-                                reactive(input$fixed_y_scale), baseline = T)
+                                reactive(input$fixed_y_scale), 
+                                baseline = ifelse(input$sel_benchmark=="", F, T))
         
         downloadPlotModuleServer("dnld_heat_default", 
                                  name = "heatmap_new_and_original_indexes",

@@ -33,7 +33,7 @@ clusteringModSidebarUI <- function(id) {
        tags$td(checkboxInput(ns("center"), "Center columns (features)", T)),
        tags$td(checkboxInput(ns("scale"), "Scale columns (features)", T))
      ),
-     sliderInput(ns("k_slider"), "Choose # of clusters:", 2, 10, 2, step = 1),
+     sliderInput(ns("k_slider"), "Choose # of clusters:", 2, 9, 2, step = 1),
      selectInput(ns("agg_method"), "Choose an agglomeration method:",
                  c(# "average",
                    "single", "complete", "ward", "weighted"), "complete")
@@ -103,7 +103,7 @@ cat("clusteringMod\n")
       
       observeEvent(!is.null(dat() ), { # update k slider max value
         if(transpose) { k_max <- ncol(dat()) - 1 } else { k_max <- nrow(dat()) - 1 }
-        updateSliderInput(session, "k_slider", max = min(k_max, 10))
+        updateSliderInput(session, "k_slider", max = min(k_max, 9))
         shinyjs::enable("bttn")
       }, ignoreInit = T)
       
