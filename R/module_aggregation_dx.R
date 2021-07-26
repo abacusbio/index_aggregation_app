@@ -242,8 +242,8 @@ cat("aggDxMod\n")
 # cat("  clusters unique:");print(unique(clusters()))        
         by_cluster <- do.call(rbind, lapply(unique(clusters()), function(i) {
           
-          sel_agg <- grep(as.character(i), dt_ev_agg()$Index, value = T)
-          sel_cluster <- names(clusters())[grep(i, clusters())]
+          sel_agg <- grep(paste0("_", i, "$"), dt_ev_agg()$Index, value = T)
+          sel_cluster <- names(clusters())[which(clusters()==i)]
           df_index_sub <- dplyr::select(val$dt_index_new, 
                                         dplyr::any_of(c(sel_agg, sel_cluster)))
           m <- cor(df_index_sub, use = "pairwise.complete.obs")
@@ -418,7 +418,7 @@ cat("aggDxMod\n")
         
         # find indexes that belong to the selected cluster
         if(input$sel_cluster[1] %in% clusters()) { # clustering result
-          sel_cluster <- names(clusters())[grep(input$sel_cluster, clusters())]
+          sel_cluster <- names(clusters())[which(clusters()==input$sel_cluster)]
           
         } else if (input$sel_cluster[1]=="" ) {    # not selected
           sel_cluster <- "#"
