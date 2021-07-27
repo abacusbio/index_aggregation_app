@@ -1,0 +1,21 @@
+---
+title: "Index Viewer"
+author: "Luna Zhang"
+date: "27/07/2021"
+output:
+  html_document:
+    css: ../css/bootstrap_minty_edited.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+```
+# Help-Index Viewer
+
+Once you clicked **Filter and save** buttons on **Preprocess Files** step, the dimension of the index matrix will be displayed here
+in the grey text box. The green word *Index calculated. Now you can download and go to the next steps.* will display as a sign that
+your index matrix is successfully calculated.
+
+It's recommended to click the left side download button to save your index file.
+
+--End of help---

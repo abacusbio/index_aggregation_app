@@ -28,7 +28,8 @@ preprocessUploadModUI <- function(id) {
   tagList(
    shinyjs::hidden(div(id = ns("help_html"),
                       # htmltools::includeMarkdown("help/preprocess.Rmd")))
-                     includeHTML(knitr::knit2html("help/preprocess.Rmd", fragment.only = TRUE)))),
+                     includeHTML(knitr::knit2html("help/preprocess.Rmd", fragment.only = TRUE,
+                                                  options = c("toc"))))),
    span(textOutput(ns("demo_message")), class = "text-info"),
    verbatimTextOutput(ns("sanity_message"))
   )

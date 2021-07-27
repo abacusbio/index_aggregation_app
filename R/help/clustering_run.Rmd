@@ -1,0 +1,109 @@
+---
+title: "Clustering-run"
+author: "Luna Zhang"
+date: "27/07/2021"
+output:
+  html_document:
+    toc: true
+    css: ../css/bootstrap_minty_edited.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+```
+
+# Help--Step 1: run cluster
+
+This tab is used to run clustering analysis on selection indexes. We want to group indexes that rank individuals similarly together.
+
+The method is [hierachical clustering](https://en.wikipedia.org/wiki/hierarchical_clustering).
+with Euclidean distance metric. The choice of method is determined by the question itself and the intrinsic quality of selection index. 
+Firstly, we don't know the ground truth, hence unsupervised learning. The index matrix itself is likely to form a convex distance matrix.
+The hierachical clustering method is a flexible method that meet the unsupervised learning and convex data criteria. It also gives users
+ability to change the desired number of clusers *k* according to their needs.
+
+There are two parts: parameter tuning and clustering formation.
+
+<br>
+
+## Step 1) input data preparation
+### Which data form
+In the **Main** menu of the left sidebar, choose input data. There are two choices:
+
+* Index by individual (default)
+* Index correlation matrix
+
+This choice determines how distance matrix will be calculated. When choosing index by individual as the input data, 
+the indexes are the observations and the individuals are the features. The distance matrix will be calculated as
+```{r, echo = T}
+set.seed(1)
+a <- matrix(rnorm(25, 0, 0.5), 5, 5) # input data
+d <- dist(a, method = "euclidean") # distance
+print(a)
+print(d)
+```
+
+When choose the index correlation matrix as the input data, the distance matrix will be calculated as
+
+```{r, echo = T}
+print(1-a)
+d <- as.dist(1-a) # distance
+print(d)
+```
+
+Notice that this distance is equivalent to the lower triangle of the `1-a` matrix.
+
+#### Which one to choose? {.tabset}
+
+##### main
+The default setting is recommended. Here the indexes are the observations and individuals are features.
+When the dimension of the data is too large, e.g. too many indexes, using a index correlation
+matrix can accelerate the clustering speed, since it contains less information than the former.
+
+To understand the difference, read details on the next tab.
+
+##### details
+> Correlation-based distance considers two objects to be similar if their features are highly correlated, even though the observed values may be far apart in terms of Euclidean distance. The distance between two objects is 0 when they are perfectly correlated
+
+>...
+
+>If we want to identify clusters of observations with the same overall profiles regardless of their magnitudes, then we should go with correlation-based distance as a dissimilarity measure. This is particularly the case in gene expression data analysis, where we might want to consider genes similar when they are “up” and “down” together. It is also the case, in marketing if we want to identify group of shoppers with the same preference in term of items, regardless of the volume of items they bought.
+
+>If Euclidean distance is chosen, then observations with high values of features will be clustered together. The same holds true for observations with low values of features.
+
+reference:
+[datanovia](https://www.datanovia.com/en/lessons/clustering-distance-measures/)
+
+<br>
+<br>
+
+### Standardisation?
+Standardisation, or feature scaling, can be done to Index by Individual input data. There are two 2 options:
+
+* Center columns (feature)
+* Scale columns (feature)
+
+The default is to check both boxes. This makes the input data equivalent to Index correlation matrix.
+Standardisation remove the "wrong" difference among features due to different unit or scaling, and the latter could lead to the wrong distance matrix formation. For example, a feature with large value or variance can dominate the distance calculation.
+
+#### Which one to choose? {.tabset}
+
+##### main
+It's the ranking of the animal using index values that we care about, not the absolute values of indexes. Although all indexes use
+the same unit ($ value), they may be at different scales. Therefore it's better to normalise them, aka, both center and scale them.
+
+**Centering** the feature means to shift all index values of an individual towards `0`, and repeat this to all individuals separately.
+Centering index values doesn't change the order of the indexes to that individual.
+
+**Scale** the feature means to divde the orginal value by the column (individual) SD, and repeat this to all individuals separately.
+Scaling index values of each individual make individuals comparable.
+
+##### details
+A counter example of not to **center** is the gene expression data, where the expression level absolute value has a meaning. Shifting
+those values can lead to wrong distance matrix.
+
+A counter example of neither **center** nor **scale** is the geolocation dataset with longitude and latitude.
+
+## Step 2) Parameter tunning
+
+<br>

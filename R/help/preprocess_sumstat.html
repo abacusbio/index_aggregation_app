@@ -9712,58 +9712,75 @@ pre code {
 
 <h1 class="title toc-ignore">Preprocess</h1>
 <h4 class="author">Luna Zhang</h4>
-<h4 class="date">22/07/2021</h4>
+<h4 class="date">27/07/2021</h4>
 
 </div>
 
 <div id="TOC">
 <ul>
-<li><a href="#helpstep-24-filter-ebvev">Help–Step 2/4: Filter EBV/EV</a><ul>
-<li><a href="#table-in-the-main-tab">Table in the main Tab</a></li>
+<li><a href="#helpebvev-summary-statistics">Help–EBV/EV summary statistics</a><ul>
 <li><a href="#sidebar">Sidebar</a><ul>
-<li><a href="#variable-display-controller">Variable display controller</a></li>
-<li><a href="#string-variable-level-filter-controller">String variable level filter controller</a></li>
-<li><a href="#treat-missing-ebv-as-0">Treat missing EBV as 0</a></li>
+<li><a href="#variable-display-controler">Variable display controler</a></li>
+</ul></li>
+<li><a href="#table-in-the-main-tab">Table in the main Tab</a><ul>
+<li><a href="#numerical-variable-summary-statistics">Numerical variable summary statistics</a></li>
+<li><a href="#string-variable-summary-statistics">String variable summary statistics</a></li>
 </ul></li>
 </ul></li>
 </ul>
 </div>
 
-<div id="helpstep-24-filter-ebvev" class="section level1">
-<h1>Help–Step 2/4: Filter EBV/EV</h1>
-<p>This tab is used to select and filter EBV/EV input file for the downstream analysis.</p>
-<div id="table-in-the-main-tab" class="section level2">
-<h2>Table in the main Tab</h2>
-<p>This is a dynamic table where you can filter directly.</p>
-<p>Click the dropdown menu on the top left change the number of entries to show.</p>
-<p>In the <strong>search:</strong> search bar on the top, type in the keyword, partial keyword or number to filter rows of the entire table. Multiple keywords can be concatenated by <code>|</code>. e.g. <code>1|2</code>.</p>
-<p>Similar filtering method can be applied to each column filter individually, too, which is under the header of each <em>ID</em>, <em>ClassVar</em> or <em>Group</em> column. To reverse filter, use <code>[^keyword]</code> format. For example, to remove all “M” in <em>sex</em> column, type in <code>[^M]</code>. Multiple keywords can be concatenated together, e.g. <code>[^index_1^index_2]</code>.</p>
-<p>The bottom left of the table shows the entries on the screen and the total number of entries.</p>
-<p>Use the page buttons on the bottom middle to turn pages.</p>
-</div>
+<div id="helpebvev-summary-statistics" class="section level1">
+<h1>Help–EBV/EV summary statistics</h1>
+<p>This tab is used to select and display filtered EBV/EV table summary statistics.</p>
+<p><br></p>
 <div id="sidebar" class="section level2">
 <h2>Sidebar</h2>
-<p>The <strong>Filter and save</strong> button <em>has</em> to be hit to update and save the table for downstream analysis. Without hitting it, the app won’t do anything after this step. Click it whenever you finish selecting and filtering the input table.</p>
-<p>Click the <strong>Download the table</strong> button to download a .csv file to your local drive.</p>
-<p>Click the <strong>Download the filter records</strong> button to download your operation records. This shows what filter operation you have done to the UI before clicking the <strong>Filter and save</strong> button.</p>
-<div id="variable-display-controller" class="section level3">
-<h3>Variable display controller</h3>
-<p>This sidebar has filtering functions that the table in the main tab itself doesn’t have or the operation of which is too complicated.</p>
-<p>In <strong>Select variables to show:</strong> selection menu, use mouse, Shift, Ctrl, Ctrl+A etc. to select columns.</p>
+<div id="variable-display-controler" class="section level3">
+<h3>Variable display controler</h3>
+<p>In <strong>Select variables to show:</strong> selection menu, use mouse, Shift, Ctrl, Ctrl+A etc. to select columns (variables).</p>
+<p>Select <strong>Group by</strong> variable from the dropdown list to see the summary statistics of the variable by level.</p>
+<p>Select items in the <strong>Apply function(s)</strong> choose which summary statistics to calculate.</p>
+<p>When finished above selection, click <strong>Creat table</strong> button to display tables and graphs on the right.</p>
 <p>Use <strong>Decimals</strong> numeric input box to change the number of decimal places to show in the table. However, the full decimal places will always be saved for the downstream analysis.</p>
-<p>Use <strong>Rename new data as</strong> input box to change the file name to be downloaded to your local drive.</p>
+<p>Use <strong>Font size</strong> input box to change the font size in the graphs.</p>
+<p><br> <br></p>
 </div>
-<div id="string-variable-level-filter-controller" class="section level3">
-<h3>String variable level filter controller</h3>
-<p>This controller is a more convenient version of the column filter in the dynamic table.</p>
-<p>Click the dropdown menu and select <em>all</em> variables where you want to filter. Their individual select-input boxes will pop up right below. Then click-select all the levels under each variable you want to keep.</p>
-<p>When you finish selecting all levels, click <strong>Apply filter</strong> button. Now observe the change in the dynamic table on the right.</p>
-<p>If you want to start over, click <strong>Clear selections</strong> button on the top, then click <strong>Apply filter</strong> button again, the dynamic table will resume to its starting status when no string variable filter was applied.</p>
 </div>
-<div id="treat-missing-ebv-as-0" class="section level3">
-<h3>Treat missing EBV as 0</h3>
-<p>This is an option for you to conver all missing EBV values to 0 so that they won’t be excluded in the analysis. Please be careful about this checkbox, because it can affect the results.</p>
+<div id="table-in-the-main-tab" class="section level2">
+<h2>Table in the main Tab</h2>
+<p><br></p>
+<div id="numerical-variable-summary-statistics" class="section level3">
+<h3>Numerical variable summary statistics</h3>
+<p>Here is the area where numeric variable summary statistics table and graph display.</p>
+<div id="table" class="section level4">
+<h4>Table</h4>
+<p>This is the summary statistic table of numeric variables selected on the left sidebar.</p>
+<p>Click the dropdown menu on the top left change the number of entries to show.</p>
+<p>The bottom left of the table shows the entries on the screen and the total number of entries.</p>
+<p>Use the page buttons on the bottom right to turn pages.</p>
+<p>Click <strong>Numeric sum stats</strong> button with a downloading icon to download the table.</p>
+</div>
+<div id="distribution" class="section level4">
+<h4>Distribution</h4>
+<p>This is the histogram of numeric variables selected on the left sidebar.</p>
+<p>Click <strong>Download the table</strong> button to download the graph with a fixed height and the width shown on your browser. Or move your mouse to the graph, right click, select <strong>save image as</strong> on the menu to save the graph in the same size as shown on your browswer.</p>
+<p><br></p>
+</div>
+</div>
+<div id="string-variable-summary-statistics" class="section level3">
+<h3>String variable summary statistics</h3>
+<p>Here is the area where string (categorical) variable summary statistics table and graph display.</p>
+<div id="table-1" class="section level4">
+<h4>Table</h4>
+<p>See “Table” section of numerical variable.</p>
+</div>
+<div id="distribution-1" class="section level4">
+<h4>Distribution</h4>
+<p>This is the lolipop graph of string variables selected on the left sidebar.</p>
+<p>See “Distribution” selection of numerical variable.</p>
 <p>—End of help—</p>
+</div>
 </div>
 </div>
 </div>

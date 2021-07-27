@@ -12,8 +12,8 @@ output:
 knitr::opts_chunk$set(echo = F)
 ```
 
-# Step 2: Filter EBV
-This tab is used to select and filter EBV input file for the downstream analysis.
+# Help--Step 2/4: Filter EBV/EV
+This tab is used to select and filter EBV/EV input file for the downstream analysis.
 
 ## Table in the main Tab
 
@@ -34,7 +34,7 @@ The bottom left of the table shows the entries on the screen and the total numbe
 Use the page buttons on the bottom middle to turn pages.
 
 ## Sidebar
-The **Filter and save** button has to be hit to update and save the table for downstream analysis. Without hitting it, the app
+The **Filter and save** button *has* to be hit to update and save the table for downstream analysis. Without hitting it, the app
 won't do anything after this step. Click it whenever you finish selecting and filtering the input table.
 
 Click the **Download the table** button to download a .csv file to your local drive.
@@ -42,7 +42,7 @@ Click the **Download the table** button to download a .csv file to your local dr
 Click the **Download the filter records** button to download your operation records. This shows what filter operation you have
 done to the UI before clicking the **Filter and save** button.
 
-### Variable display controler
+### Variable display controller
 This sidebar has filtering functions that the table in the main tab itself doesn't have or the operation of which is too complicated.
 
 In **Select variables to show:** selection menu, use mouse, Shift, Ctrl, Ctrl+A etc. to select columns.
@@ -50,18 +50,22 @@ In **Select variables to show:** selection menu, use mouse, Shift, Ctrl, Ctrl+A 
 Use **Decimals** numeric input box to change the number of decimal places to show in the table. However, the full decimal places will
 always be saved for the downstream analysis.
 
-Use **Rename new data as"** input box to change the file name to be downloaded to your local drive.
+Use **Rename new data as** input box to change the file name to be downloaded to your local drive.
 
-```{r cars}
-summary(cars)
-```
+### String variable level filter controller
+This controller is a more convenient version of the column filter in the dynamic table.
 
-## Including Plots
+Click the dropdown menu and select *all* variables where you want to filter. Their individual select-input boxes will pop up right
+below. Then click-select all the levels under each variable you want to keep.
 
-You can also embed plots, for example:
+When you finish selecting all levels, click **Apply filter** button. Now observe the change in the dynamic table on the right.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+If you want to start over, click **Clear selections** button on the top, then click **Apply filter** button again, the dynamic
+table will resume to its starting status when no string variable filter was applied.
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### Treat missing EBV/EV as 0
+This is an option for you to convert all missing EBV values to 0 so that they won't be excluded in the analysis,
+or to convert all missing EV values to 0 to get a partial index value.
+Please be careful about this checkbox, because it can affect the results.
+
+---End of help---

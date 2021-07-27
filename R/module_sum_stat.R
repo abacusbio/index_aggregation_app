@@ -1,6 +1,8 @@
 sumstatModSidebarUI <- function(id) {
   ns <- NS(id)
   tagList(
+    column(12, div(actionButton(ns("help_btn"), "", icon("question"), 
+                                class = "btn btn-outline-info"), style = "float:right")),
     # selectInput(ns("dat_sel"), "Datasets:", c("None", "gizmo", "score", "ranking", "combined"),
                 # "None"),
     uiOutput(ns("ui_vars")),
@@ -19,6 +21,10 @@ sumstatModSidebarUI <- function(id) {
 sumstatModUI <- function(id) {
   ns <- NS(id)
   tagList(
+    shinyjs::hidden(div(id = ns("help_html"),
+                        # htmltools::includeMarkdown("help/preprocess.Rmd")))
+                        includeHTML(knitr::knit2html("help/preprocess_sumstat.Rmd", fragment.only = TRUE,
+                                                     options = c("toc"))))),
     textOutput(ns("warning1")),
     textOutput(ns("warning2")),
     h2("Numerical variable summary statistics"),
@@ -52,6 +58,14 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
       
       # initialize
       tempVar <- reactiveValues()
+      
+      observeEvent(input$help_btn, {
+        if(input$help_btn %% 2 == 1){
+          shinyjs::show("help_html")
+        }else{
+          shinyjs::hide("help_html")
+        }
+      })
       
       # warning messages
       output$warning1 <- renderText({

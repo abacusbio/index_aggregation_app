@@ -1,0 +1,76 @@
+---
+title: "Preprocess"
+author: "Luna Zhang"
+date: "27/07/2021"
+output:
+  html_document:
+    toc: true
+    css: ../css/bootstrap_minty_edited.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+```
+
+# Help--EBV/EV summary statistics
+This tab is used to select and display filtered EBV/EV table summary statistics.
+
+<br>
+
+## Sidebar
+### Variable display controler
+In **Select variables to show:** selection menu, use mouse, Shift, Ctrl, Ctrl+A etc. to select columns (variables).
+
+Select **Group by** variable from the dropdown list to see the summary statistics of the variable by level.
+
+Select items in the **Apply function(s)** choose which summary statistics to calculate.
+
+When finished above selection, click **Creat table** button to display tables and graphs on the right.
+
+Use **Decimals** numeric input box to change the number of decimal places to show in the table. However, the full decimal places will
+always be saved for the downstream analysis.
+
+Use **Font size** input box to change the font size in the graphs.
+
+<br>
+<br>
+
+
+## Table in the main Tab
+
+<br>
+
+### Numerical variable summary statistics
+Here is the area where numeric variable summary statistics table and graph display.
+
+#### Table
+This is the summary statistic table of numeric variables selected on the left sidebar.
+
+Click the dropdown menu on the top left change the number of entries to show.
+
+The bottom left of the table shows the entries on the screen and the total number of entries.
+
+Use the page buttons on the bottom right to turn pages.
+
+Click **Numeric sum stats** button with a downloading icon to download the table.
+
+#### Distribution
+This is the histogram of numeric variables selected on the left sidebar.
+
+Click **Download the table** button to download the graph with a fixed height and the width shown on your browser. 
+Or move your mouse to the graph, right click, select **save image as** on the menu to save the graph in the same size as shown on your browswer.
+
+<br>
+
+### String variable summary statistics
+Here is the area where string (categorical) variable summary statistics table and graph display.
+
+#### Table
+See "Table" section of numerical variable.
+
+#### Distribution
+This is the lolipop graph of string variables selected on the left sidebar.
+
+See "Distribution" selection of numerical variable.
+
+---End of help---

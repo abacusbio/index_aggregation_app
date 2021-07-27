@@ -111,6 +111,8 @@ ui <- fluidPage(
          
          conditionalPanel(
            condition = "input.upload == 'tab.step3' && input.plant_app == 'tab.upload'",
+           column(12, div(actionButton("help_btn_ev_filter", "", icon("question"), 
+                                       class = "btn btn-outline-info"), style = "float:right")),
            dataViewerModuleSidebarUI("ev_filter", defaultName = "filtered_ev"),
            stefanFilterModUI("stfn_ev"),
            span(textOutput("stefan_filter_error_message_ev"), style = "color:salmon"),
@@ -144,11 +146,12 @@ ui <- fluidPage(
            ),
            
            tabPanel("Step 2: Filter EBV", value = "tab.step2",
+             br(),
              shinyjs::hidden(div(id = "help_html_ebv_filter",
                                  # htmltools::includeMarkdown("help/preprocess_filter_ebv.Rmd"))), # doesn't knit table or plot, and show codes even when echo = F
                                  includeHTML(knitr::knit2html("help/preprocess_filter_ebv.Rmd",
-                                                              fragment.only = TRUE)))),
-             br(),
+                                                              fragment.only = TRUE,
+                                                              options = c("toc"))))),
              dataViewerModuleTabUI("ebv_filter")
            ),
            
@@ -159,6 +162,10 @@ ui <- fluidPage(
            
            tabPanel("Step 3: Filter EV", value = "tab.step3",
              br(),
+             shinyjs::hidden(div(id = "help_html_ev_filter",
+                                 includeHTML(knitr::knit2html("help/preprocess_filter_ebv.Rmd",
+                                                              fragment.only = TRUE,
+                                                              options = c("toc"))))),
              dataViewerModuleTabUI("ev_filter")
            ),
            
@@ -186,7 +193,8 @@ ui <- fluidPage(
        sidebarPanel(
          conditionalPanel(
            condition = "input.view_index == 'tab.index1' && input.plant_app == 'tab.index'",
-           # clusteringSidebarUI("find_cl")
+           column(12, div(actionButton("help_btn_index", "", icon("question"), 
+                                       class = "btn btn-outline-info"), style = "float:right")),
          ),
          width = 4), # sidebarPanel
        
@@ -194,6 +202,10 @@ ui <- fluidPage(
          tabsetPanel(id = "view_index", # id can't have .
            tabPanel("View index", value = "tab.index1",
              # renderDtTableModuleUI("index1") # too long
+             br(),
+             shinyjs::hidden(div(id = "help_html_index",
+                                 includeHTML(knitr::knit2html("help/index_viewer.Rmd",
+                                                              fragment.only = TRUE)))),
              span(textOutput("index_view_warn"), class = "text-success"),
              verbatimTextOutput("index_view_n"),
              downloadModuleUI("dnld_index", "Download the index table"),
@@ -357,6 +369,31 @@ server <- function(input, output, session) {
 # cat("observe input$demo val"); print(sapply(reactiveValuesToList(isolate(val)), head)    )
   })
   
+  ### SHOW/HIDE HELP .Rmd ###
+  observeEvent(input$help_btn_ebv_filter, {
+    if(input$help_btn_ebv_filter %% 2 == 1){
+      shinyjs::show("help_html_ebv_filter")
+    }else{
+      shinyjs::hide("help_html_ebv_filter")
+    }
+  })
+  
+  observeEvent(input$help_btn_ev_filter, {
+    if(input$help_btn_ev_filter %% 2 == 1){
+      shinyjs::show("help_html_ev_filter")
+    }else{
+      shinyjs::hide("help_html_ev_filter")
+    }
+  })
+  
+  observeEvent(input$help_btn_index, {
+    if(input$help_btn_index %% 2 == 1){
+      shinyjs::show("help_html_index")
+    }else{
+      shinyjs::hide("help_html_index")
+    }
+  })
+  
   ## UPLOAD DATA ##
   # return val$desc_ebv, val$desc_ev, val$dat_ebv, val$dat_ev and/or val$dat_w
   preprocessUploadMod("step1", val) # reactive(val))
@@ -405,15 +442,6 @@ server <- function(input, output, session) {
       })
     }
     return(filter_levels)
-  })
-  
-  # show/hide help .Rmd for EBV filter
-  observeEvent(input$help_btn_ebv_filter, {
-    if(input$help_btn_ebv_filter %% 2 == 1){
-      shinyjs::show("help_html_ebv_filter")
-    }else{
-      shinyjs::hide("help_html_ebv_filter")
-    }
   })
   
   # show and download data table. Apply column filters and the search bar.
@@ -553,8 +581,9 @@ server <- function(input, output, session) {
                 transpose = F)
   
   ## CLUSTER SUMMARY STATISTICS ##
+  
   # need val$dt_index, val$cl
-  clusterSumStatMod("cl_sumstat", val, transpose = F)
+  clusterSumStatMod("cl_sumstat", val, cl, transpose = F)
   
   ## CLUSTER DIAGNOSIS ##
   

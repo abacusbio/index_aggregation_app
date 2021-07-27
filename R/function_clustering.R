@@ -11,16 +11,17 @@ runFinalCluster <- function(dat, cor_mat = F, cor_absolute, cluster_object = NUL
                               scale = T, center = T, k = 2, best_method = "complete") {
   
   if(class(cluster_object)[1] == "NULL") { # use raw data
-    dat <- t(scale(t(dat), center, scale))
-    
+     
     # use agnes
     # this cluster the col of dat (observation)
     if(cor_mat) {
       
-      corr <- cor(t(dat))
+      corr <- cor(dat)
       if(cor_absolute) corr <- abs(corr)
       cluster_object <- cluster::agnes(as.dist(1-corr), diss = T, method = best_method)
     } else {
+      
+      dat <- t(scale(t(dat), center, scale))
       cluster_object <- cluster::agnes(t(dat), method = best_method) # same as agnes(daisy(t(dat)), diss = T)
     }
   } else if(!class(cluster_object)[1] %in% c("agnes", "hclust")) { # error
@@ -49,8 +50,6 @@ runFinalCluster <- function(dat, cor_mat = F, cor_absolute, cluster_object = NUL
 #'       \code{TRUE}
 #' @references https://stats.stackexchange.com/questions/9988/can-cluster-analysis-cluster-variables-that-both-positively-and-negatively-corre       
 runCluster <- function(dat, cor_mat = F, cor_absolute = F, scale = T, center = T, n_core = 4) {
-
-  dat <- t(scale(t(dat), center, scale))
 cat("runCluster\n dim dat:");print(dim(dat)) # 999, 2909
   # use agnes to choose the best agglomeration
   # methods to assess
@@ -62,11 +61,12 @@ cat("runCluster\n dim dat:");print(dim(dat)) # 999, 2909
   
   if(cor_mat) {
     
-    corr <- cor(t(dat))
+    corr <- cor(dat)
     if(cor_absolute) corr <- abs(corr)
     ac <- function(x) cluster::agnes(as.dist(1-corr), diss = T, method = x)$ac
     
   } else {
+    dat <- t(scale(t(dat), center, scale))
     ac <- function(x) cluster::agnes(t(dat), method = x)$ac # same as agnes(daisy(t(dat)), diss = T)
   }
 cat(" try agglo methods\n"); t <- Sys.time()

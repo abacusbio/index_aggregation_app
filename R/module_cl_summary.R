@@ -46,12 +46,13 @@ clusterSumStatModUI <- function(id) {
 #'        reactive(val$dt_index). If the data is index by animal, then \code{transpose} should be 
 #'        set to \code{T}. 2) \code{cl_obj}, a class "hclust" or "agnes" object.
 #'        3) \code{clusters} a cluster assignment vector. e.g. a \code{cutree} output.
+#' @param cl a reactive function of a list \code{cl}.
 #' @param k a reactive function of an integer. The number of clusters
 #' @param center a reactive function of 
 #' @return if \code{input$find_k_agg} is on, return texts and graphs to UI, otherwise return a 
 #'        dendrogram and a download button to download a cluster result .csv.
 #'        , cl$cluster_obj, cl$clusters,
-clusterSumStatMod <- function(id, val = NULL, dt_index, cl,
+clusterSumStatMod <- function(id, val = NULL, cl,
                               transpose = T,  center = reactive(T), scale = reactive(T),
                          ...) {
   moduleServer(
@@ -146,8 +147,12 @@ cat("clusterSumStatMod\n")
       })
       
       # observeEvent(input$run_heatmap, {
-      sth <- reactive({
+      sth <- eventReactive({cl()
+      #  clusters_user()
+        }, {
+        # reactive({
 # cat("clusterSumStatMod\n reactive sth\n")
+          # cl()
         req(length(input$error_m)==0, 
             !is.null(val$dt_index), !is.null(val$cl$clusters)) #, !is.null(val$cl$cluster_obj)
         

@@ -14,9 +14,8 @@ output:
 knitr::opts_chunk$set(echo = F, eval = T)
 ```
 
+# Help--Step 1: Upload
 This menu is for you to upload, filter and inspect your input data.
-
-# Step 1: Upload
 
 ## Demo
 First time user can click the **Run demo data** button and visit all the tabs from left to right to see the full function of the app.
@@ -54,7 +53,8 @@ ev <- read.csv("../data/ev.csv", header = T, nrows = 6, fileEncoding = "UTF-8-BO
 weight <- read.csv("../data/index_weight.csv", header = T, nrows = 6, fileEncoding = "UTF-8-BOM")
 knitr::kable(bv_desc, caption = "EBV description file")
 ```
-
+  
+***
 Optional classifiers include
 
 - **Group**: a character string variable of user-defined group. Can be potentially used to form aggregated index
@@ -64,20 +64,20 @@ Below is a part of a sample EV description file from demo data. The *sector* var
 ```{r EV_description}
 knitr::kable(ev_desc, caption = "EV description file")
 ```
-
+***
 Below are parts of sample EBV and EV files from demo data:
 
 ```{r EV_EBV}
 knitr::kable(bv, caption = "EBV file")
 knitr::kable(ev, caption = "EV file")
 ```
-
+***
 Index weighting file contains the weightings for each index to be used when some of them are aggregated together:
 
 ```{r weight}
 knitr::kable(weight, caption = "Index weighting file")
 ```
-
+***
 All files can be in one of `.csv/.xlsx/.txt` format, with comma or space as the delimitor.
 
 Missing values can be empty cell or `NA`. Individuals with missing values in the EBV file will be excluded from calculating index value
@@ -88,3 +88,5 @@ unless they are imputated in the next Tab (filter). Traits with missing EV value
 In the sidebar and main tab, there will be text message prompting during demo or file uploading. For example, if the uploaded file has
 illegal classifiers, columns names or other things, the warning message will show the illegal element and instruct the user to either
 refresh the browswer and start over or upload a correct file.
+
+---End of help---
