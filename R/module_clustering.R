@@ -1,6 +1,8 @@
 clusteringModSidebarUI <- function(id) {
   ns <- NS(id)
   tagList(
+    column(12, div(actionButton(ns("help_btn"), "", icon("question"), 
+                                class = "btn btn-outline-info"), style = "float:right")),
     # data selection ?
     shinyjs::disabled(
       div(id = ns("bttn"),
@@ -30,8 +32,9 @@ clusteringModSidebarUI <- function(id) {
            checkboxInput(ns("absolute"), "Absolute correlation", F)) 
      ),
      tags$table(
-       tags$td(checkboxInput(ns("center"), "Center columns (features)", T)),
-       tags$td(checkboxInput(ns("scale"), "Scale columns (features)", T))
+       tags$td(checkboxInput(ns("center"), "Center individuals", T)),
+       tags$td(checkboxInput(ns("scale"), "Scale individuals", T)),
+       tags$td(checkboxInput(ns("scale_obs"), "Scale observations", T))
      ),
      sliderInput(ns("k_slider"), "Choose # of clusters:", 2, 10, 2, step = 1),
      selectInput(ns("agg_method"), "Choose an agglomeration method:",
@@ -46,6 +49,12 @@ clusteringModUI <- function(id) {
   ns <- NS(id)
   tagList(
     br(),
+    shinyjs::hidden(div(id = ns("help_html"),
+                        # htmltools::includeMarkdown("help/clustering_run.Rmd")
+                        includeHTML(knitr::knit2html("help/clustering_run.Rmd", fragment.only = TRUE,
+                                                     # options = c("toc") # with this plots are not shown!!!
+                                                     )) # can't show tabs because knit2html doesn't use pandoc
+                        )),
     h1("Clustering formation "),
     shinyjs::hidden(span(id = ns("wait"), p("Running...please wait..."), class = "text-danger")),
     shinyjs::hidden(
@@ -99,7 +108,17 @@ clusteringMod <- function(id, val, dat, #= reactive(NULL),
     function(input, output, session) {
 cat("clusteringMod\n")
       req(val, dat)
+      
+      # initialise
       tempVar <- reactiveValues()
+      
+      observeEvent(input$help_btn, {
+        if(input$help_btn %% 2 == 1){
+          shinyjs::show("help_html")
+        }else{
+          shinyjs::hide("help_html")
+        }
+      })
       
       observeEvent(!is.null(dat() ), { # update k slider max value
         if(transpose) { k_max <- ncol(dat()) - 1 } else { k_max <- nrow(dat()) - 1 }
@@ -152,7 +171,8 @@ cat("clusteringMod\n")
           
           # Find optimal agglomeriative method
           cl <- runCluster(dt, cor_mat, input$absolute, input$scale, input$center, 
-                           n_core = max(4, parallel::detectCores()-4))
+                           n_core = max(4, parallel::detectCores()-4),
+                           scale_obs = input$scale_obs) 
           # !!! takes very long time with 2999 indexes
 
           # cl$cluster_obj
@@ -196,7 +216,7 @@ cat(" Done findoptimalcut ");print(Sys.time()-t)
           # list(cluster_obj, clusters)
           cl <- runFinalCluster(dt, cor_mat = F, cluster_object = NULL,
                                 scale = input$scale, center = input$center, k = input$k_slider,
-                                best_method = input$agg_method)
+                                best_method = input$agg_method, scale_obs = input$scale_obs)
           val$cl <- cl # 20april2021
 # cat(" else runFinalCluster\n  val$cl:");print(names(val$cl))
           # create files to download

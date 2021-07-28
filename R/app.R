@@ -149,9 +149,10 @@ ui <- fluidPage(
              br(),
              shinyjs::hidden(div(id = "help_html_ebv_filter",
                                  # htmltools::includeMarkdown("help/preprocess_filter_ebv.Rmd"))), # doesn't knit table or plot, and show codes even when echo = F
-                                 includeHTML(knitr::knit2html("help/preprocess_filter_ebv.Rmd",
+                                 includeHTML(knitr::knit2html("help/preprocess_filter_ebv.Rmd", # this doeson't use pandoc. can be absolete soon
                                                               fragment.only = TRUE,
                                                               options = c("toc"))))),
+             # another solution: https://stackoverflow.com/questions/50429119/sidebarmenu-does-not-function-properly-when-using-includehtml/50820737#50820737
              dataViewerModuleTabUI("ebv_filter")
            ),
            

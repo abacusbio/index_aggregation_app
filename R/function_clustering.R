@@ -7,8 +7,9 @@
 #' @param absolute logical, if T then use the absolute value of the correlation matrix. Only works
 #'        if \code{cor_mat} == T
 #' @return a list of a \code{agnes} output and a \code{cutree} output
-runFinalCluster <- function(dat, cor_mat = F, cor_absolute, cluster_object = NULL,
-                              scale = T, center = T, k = 2, best_method = "complete") {
+runFinalCluster <- function(dat, cor_mat = F, cor_absolute = F, cluster_object = NULL,
+                            scale = T, center = T, k = 2, best_method = "complete",
+                            scale_obs = F) {
   
   if(class(cluster_object)[1] == "NULL") { # use raw data
      
@@ -20,8 +21,13 @@ runFinalCluster <- function(dat, cor_mat = F, cor_absolute, cluster_object = NUL
       if(cor_absolute) corr <- abs(corr)
       cluster_object <- cluster::agnes(as.dist(1-corr), diss = T, method = best_method)
     } else {
-      
+
+      if(scale_obs) {
+        idx <- which(sapply(dat, sd)!=0) # avoid NaN that causes error in agnes
+        dat[,idx] <- scale(dat[,idx])
+      }
       dat <- t(scale(t(dat), center, scale))
+
       cluster_object <- cluster::agnes(t(dat), method = best_method) # same as agnes(daisy(t(dat)), diss = T)
     }
   } else if(!class(cluster_object)[1] %in% c("agnes", "hclust")) { # error
@@ -49,7 +55,8 @@ runFinalCluster <- function(dat, cor_mat = F, cor_absolute, cluster_object = NUL
 #' @param stand logical, whether to standardise dat. The arg will be ignored when \code{cor_mat} is 
 #'       \code{TRUE}
 #' @references https://stats.stackexchange.com/questions/9988/can-cluster-analysis-cluster-variables-that-both-positively-and-negatively-corre       
-runCluster <- function(dat, cor_mat = F, cor_absolute = F, scale = T, center = T, n_core = 4) {
+runCluster <- function(dat, cor_mat = F, cor_absolute = F, scale = T, center = T, n_core = 4,
+                       scale_obs = F) {
 cat("runCluster\n dim dat:");print(dim(dat)) # 999, 2909
   # use agnes to choose the best agglomeration
   # methods to assess
@@ -66,6 +73,10 @@ cat("runCluster\n dim dat:");print(dim(dat)) # 999, 2909
     ac <- function(x) cluster::agnes(as.dist(1-corr), diss = T, method = x)$ac
     
   } else {
+    if(scale_obs) {
+      idx <- which(sapply(dat, sd)!=0) # avoid NaN that causes error in agnes
+      dat[,idx] <- scale(dat[,idx])
+    }
     dat <- t(scale(t(dat), center, scale))
     ac <- function(x) cluster::agnes(t(dat), method = x)$ac # same as agnes(daisy(t(dat)), diss = T)
   }
