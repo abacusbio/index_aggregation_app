@@ -342,31 +342,30 @@ server <- function(input, output, session) {
   
   val <- reactiveValues()
   
-  desc_ebv <- readxl::read_xlsx("data/description_bv.xlsx", col_names = T)
-  desc_ev <- read.csv2("data/description_ev.csv", sep = ",", 
-                       col.names = c("column_labelling", "classifier"))
-  dat_ebv <- read.table("data/bv.csv", 
-                        colClasses = c(rep("character", 2), rep("double", 14)),
-                        header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
-                        quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
-                        strip.white = T)
-  dat_ev <- read.table("data/ev.csv", 
-                       colClasses = c("character", rep("double", 11), rep("character", 2)),
-                       header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
-                       quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
-                       strip.white = T)
-  dat_w <- read.table("data/index_weight.csv",
-                      colClasses = c("character", "double"),
-                      header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
-                      quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
-                      strip.white = T)
-  
   observeEvent(input$demo, {
-    val$desc_ebv <- desc_ebv # column_labelling, classifier; ID, ClassVar, EBV, (Group, Order, Unit)
-    val$desc_ev <- desc_ev # column_labelling, classifer; ID, ClassVar, EV, (Group, )
-    val$dat_ebv <- dat_ebv # ID, (sex, RM, ...), trait1, trait2, ... (trait1_ACC, trait2_ACC...)
-    val$dat_ev <- dat_ev # ID, (line, group1), ... trait1, trait2, ...
-    val$dat_w <- dat_w # Index weight (weight2) ...
+    # column_labelling, classifier; ID, ClassVar, EBV, (Group, Order, Unit)
+    val$desc_ebv <- readxl::read_xlsx("data/description_bv.xlsx", col_names = T) 
+    # column_labelling, classifer; ID, ClassVar, EV, (Group, )
+    val$desc_ev <- read.csv2("data/description_ev.csv", sep = ",", 
+                             col.names = c("column_labelling", "classifier"))
+    # ID, (sex, RM, ...), trait1, trait2, ... (trait1_ACC, trait2_ACC...)
+    val$dat_ebv <- read.table("data/bv.csv", 
+                              colClasses = c(rep("character", 2), rep("double", 14)),
+                              header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
+                              quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
+                              strip.white = T)
+    # ID, (line, group1), ... trait1, trait2, ...
+    val$dat_ev <- read.table("data/ev.csv", 
+                             colClasses = c("character", rep("double", 11), rep("character", 2)),
+                             header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
+                             quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
+                             strip.white = T)
+    # Index weight (weight2) ...
+    val$dat_w <- read.table("data/index_weight.csv",
+                            colClasses = c("character", "double"),
+                            header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
+                            quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
+                            strip.white = T)
 # cat("observe input$demo val"); print(sapply(reactiveValuesToList(isolate(val)), head)    )
   })
   
