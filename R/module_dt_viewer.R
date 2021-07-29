@@ -87,7 +87,7 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
           selectInput(
             session$ns("view_vars"),  # use session$ns() to get inside id being recognized
             "Select variables to show:", choices = vars,
-            selected = vars, #state_multiple("view_vars", vars, vars),
+            selected = vars, # state_multiple("view_vars", vars, vars),
             multiple = TRUE,
             selectize = FALSE, size = min(15, length(vars))
           ))
@@ -180,6 +180,7 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
             
             # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
             # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
+            # 21july2021 this is not the reason of Ajax error in rsconnect
             columns <- which(sapply(data.frame(dat), class) %in% c("numeric", "integer", "double"))
 # cat("dataViewerModuleServer\n");print(str(dat));cat(" columns:");print(columns)
             for(i in columns) dat[[i]] <- getFunction(paste0("as.", class(dat[[i]])))(dat[[i]])

@@ -40,7 +40,7 @@ source("module_preprocess.R", echo = F)
 source("module_dt_viewer.R")
 source("module_data_filter.R")
 source("module_sum_stat.R")
-# source("module_index_sumstat.R")
+source("module_index_sumstat.R")
 source("module_clustering.R", echo = F)
 source("module_cl_dx.R")
 source("module_cl_summary.R")
@@ -50,6 +50,7 @@ source("function_preprocess.R")
 source("function_copied_selindexrevamp.R")
 source("function_clean.R")
 source("function_sum_stat.R")
+source("function_index_sumstat.R")
 source("function_calculate_index.R")
 source("function_clustering.R")
 source("function_cl_dx.R")
@@ -196,6 +197,7 @@ ui <- fluidPage(
            condition = "input.view_index == 'tab.index1' && input.plant_app == 'tab.index'",
            column(12, div(actionButton("help_btn_index", "", icon("question"), 
                                        class = "btn btn-outline-info"), style = "float:right")),
+           indexSumstatModSidebarUI("index_view")
          ),
          width = 4), # sidebarPanel
        
@@ -209,9 +211,7 @@ ui <- fluidPage(
                                                               fragment.only = TRUE)))),
              span(textOutput("index_view_warn"), class = "text-success"),
              verbatimTextOutput("index_view_n"),
-             downloadModuleUI("dnld_index", "Download the index table"),
-             downloadModuleUI("dnld_index_group", 
-                              "Download the index and group table for your own record")
+             indexSumstatModUI("index_view")
              )
                      
          ) # tabsetPanel view_index
@@ -519,7 +519,7 @@ server <- function(input, output, session) {
     req(val$dt_ev_filtered, val$dt_ebv_filtered, val$dt_description_clean, val$dt_desc_ev_clean)
 # cat(" reqs satisfied\n")
 # cat(" dt_ev_filtered:");print(val$dt_ev_filtered$Index)
-    output$index_view_warn <- renderText({"Creating index, please wait..."}) # never showed
+    output$index_view_warn <- renderText({"Creating index, please wait..."})
     
     # ID, sex, ..., trait1, trait2, ... index1, index2, ...
     val$dt_sub_ebv_index_ids <- calculateIndividualBW(input, output, session,
@@ -538,26 +538,21 @@ server <- function(input, output, session) {
     rownames(val$dt_index) <- val$dt_sub_index_ids$ID # rownames may not auto get from original colnames
 # print(match(names(val$dt_sub_index_ids), val$dt_ev_filtered$Index))
 # cat("observe plant_app, dim val$dt_index:");print(dim(val$dt_index));print(val$dt_index[1:3,1:3])
+    output$index_view_warn <- renderText({
+      "Index calculated. Now you can download and go to the next steps."})
   })
   
   ## INDEX STATISTICS ##
-  # takes long time to load
-  observeEvent(val$dt_index, { #"dt_index" %in% names(val), {
+  observeEvent(val$dt_index, { #"dt_index" %in% names(val), { # only observe once
 # cat("observe dt_index, val: ");print(names(val))
     req(!is.null(val$dt_index))
-    output$index_view_warn <- renderText({
-    "Index calculated. Now you can download and go to the next steps."})
-  })
-  
-  output$index_view_n <- renderPrint({
+    
+    output$index_view_n <- renderPrint({
     paste0("You have ", nrow(val$dt_index), " individuals and ", ncol(val$dt_index), " indexes. ",
            "Individuals with missing EBVs are removed.")
+      })
   })
-  
-  # renderDtTableModuleServer("index1", reactive(val$dt_sub_index_ids), T, downloadName = "index")
-  downloadModuleServer("dnld_index", "index", 
-                       data.frame(ID = rownames(val$dt_index), val$dt_index), F, "csv")
-  downloadModuleServer("dnld_index_group", "index_group", val$dt_sub_index_ids, F, "csv")
+  indexSumstatMod("index_view", reactive(val$dt_index), val)
   
   ## Find CLUSTER ##
   

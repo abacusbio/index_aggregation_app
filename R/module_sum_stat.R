@@ -268,13 +268,11 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
             # variable   mean    sd   min   max n_missing n prop
             stat_num <- full_join(stat_num, ns) %>% distinct()
             
-            if("n_missing" %in% names(stat_num)) { # 14/6/2021
+            if("n_missing" %in% names(stat_num)) { # 14june2021
               stat_num <- mutate(stat_num, n_missing = as.integer(n_missing),
-                                 n_obs = as.character(n - n_missing)) %>% 
-                mutate(n_missing = as.integer(n_missing)) # %>%
-            # filter(n != n_missing)
+                                 n_obs = as.integer(n - n_missing)) # as.character(n - n_missing)) %>% # 29july2021 changed to as.integer
             }
-            stat_num  <- mutate(stat_num, n = as.character(n))
+            # stat_num  <- mutate(stat_num, n = as.character(n)) # 29july2021 commented out
           } # if n_obs in input$functions
           
           # output table
@@ -355,11 +353,12 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
               stats$n_missing <- 0
               idx <- which(is.na(stats[[var_chr]]))
               stats$n_missing[idx] <- stats$n[idx]
-              # cat("   if n_missing\n"); print(head(stats))
-              stats$n_obs <- stats$n - stats$n_missing # 14june2021
-              stats$n_missing <- as.character(stats$n_missing)
-              stats$n <- as.character(stats$n)
-              stats$n_obs <- as.character(stats$n_obs)
+# cat("   if n_missing\n"); print(head(stats))
+              stats$n_obs <- as.integer(stats$n - stats$n_missing) # 29july2021 changed lines below to as.integer
+              stats$n_missing <- as.integer(stats$n_missing)
+              stats$n <- as.integer(stats$n)
+              # stats$n_obs <- as.character(stats$n_obs)
+              stats$prop <- stats$n_obs/sum(stats$n_obs)
             }
             
             names(stats)[which(names(stats)==var_chr)] <- "level"
