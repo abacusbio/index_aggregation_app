@@ -49,11 +49,11 @@ calWeiModUI <- function(id) {
     selectInput(ns("choose_w"), "Choose a weight(s)",
                 choices = c("equal weight"),# "by index correlation"),
                 selected = "equal weight", selectize = T),
-    renderDtTableModuleUI(ns("index_w"), "Download the new index weight file"),
+    renderDataTableModuleUI(ns("index_w"), "Download the new index weight file"),
     br(),br(),
     h2("New economic valuess"),
     h3("Table"),
-    renderDtTableModuleUI(ns("ew_new"), "Download the new EW file"),
+    renderTableModuleUI(ns("ew_new"), "Download the new EW file"),
     downloadModuleUI(ns("ew_new_t"), "Download the transposed new EW file"),
     br(),br(),
     h3("Economic value bar Chart"),
@@ -398,7 +398,7 @@ cat("calWeiMod\n")
         return(index_w)
       })
       
-      renderDtTableModuleServer("index_w", index_w, extensions = "FixedHeader",
+      renderDataTableModuleServer("index_w", index_w, extensions = "FixedHeader",
                                 downloadName = "index_weight", digits = reactive(input$digits))
       
       # make aggregated EV
@@ -434,7 +434,7 @@ cat("calWeiMod\n")
         return(rbind(ews_new, ews_avg))
       })
       
-      renderDtTableModuleServer("ew_new", ew_new, extensions = "FixedHeader",
+      renderTableModuleServer("ew_new", ew_new, extensions = "FixedHeader",
                                 downloadName = "EW_cluster_", colfilter = "none", 
                                 option_list = list(sDom  = '<"top">lrt<"bottom">ip'), # disable search bar 
                                 digits = reactive(input$digits))

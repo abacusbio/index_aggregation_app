@@ -281,7 +281,6 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
               )
           } # if
         } # if colourcode
-       #  return(dt_output)
       }) # withProgress
     
     downloadModuleServer("download_1", downloadName, datt, row.names, type)
@@ -330,8 +329,9 @@ renderDataTableModuleServer <- function(id, dat = reactive(), rownames = F,
   moduleServer(
     id,
     function(input, output, session){
-      
+# cat("renderDataTableModuleServer\n")      
       optionss = list(
+        pageLength = 10,
         # searching = T,
         fixedHeader = fixedHeader,
         fixedColumns = list(leftColumns = leftColumns, # 1 column on the left most
@@ -356,7 +356,7 @@ renderDataTableModuleServer <- function(id, dat = reactive(), rownames = F,
           message = 'Loading table...', value = 0,
           {
             req(!is.null(dat())) # 14oct2020
-            
+      
             columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
             # cat("renderDtTableModuleServer\n dat():");print(str(dat()))
             # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
@@ -371,9 +371,9 @@ renderDataTableModuleServer <- function(id, dat = reactive(), rownames = F,
               datt[[i]] <- round(datt[[i]], digits())
             }
           }) # withProgress
-        
+
         return(datt)
-      }) # , options = optionss) # shiny:renderDataTable
+      }, options = optionss) # shiny:renderDataTable
     })} # renderDataTableModuleServer
 
 #'Render a \object{table} UI object.
@@ -406,20 +406,22 @@ renderTableModuleServer <- function(id, dat = reactive(), rownames = F,
           {
             req(!is.null(dat())) # 14oct2020
             
+            downloadModuleServer("download_1", downloadName, dat(), row.names, type)
+            
             columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
             # cat("renderDtTableModuleServer\n dat():");print(str(dat()))
             # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
             # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
             datt <- dat()
-            for(i in columns) datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
+            for(i in columns) {
+              datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
+              datt[[i]] <- round(datt[[i]], digits())
+            }
             # cat(" datt:\n");print(str(datt))        
-            
-            downloadModuleServer("download_1", downloadName, datt, row.names, type)
-            
-            return(datt)
           }) # withProgress
         
-      }, rownames = rownames, digits = digits(), server = T) #, options = list(stateSave =T)) #, 8sept2020
+        return(datt)
+      }, rownames = rownames, server = T) #, options = list(stateSave =T)) #, 8sept2020
       #filter = "top") # renderDT/DT::renderDataTable
     })} # renderTableModuleServer
 

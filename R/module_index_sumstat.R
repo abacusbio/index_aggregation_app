@@ -26,7 +26,7 @@ indexSumstatModUI <- function(id) {
     br(),br(),
     h2("Table"),
     # renderDtTableModuleUI(ns("stat_num")),
-    renderTableModuleUI(ns("stat_num")),
+    renderDataTableModuleUI(ns("stat_num")),
     br(),br(),
     h2("Boxplot (up to 100 indexes)"),
     plotOutput(ns("boxplot"), height = "800px")

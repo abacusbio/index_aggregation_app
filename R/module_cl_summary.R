@@ -31,7 +31,7 @@ clusterSumStatModUI <- function(id) {
     h3("Table"),
     textOutput(ns("warn_m")),
     textOutput(ns("error_m")),
-    renderDtTableModuleUI(ns("sum_cor")),
+    renderTableModuleUI(ns("sum_cor")),
     br(),br(),
     h3("Histogram"),
     plotOutput(ns("hist_cor"), height = "600px"),
@@ -189,7 +189,7 @@ cat("clusterSumStatMod\n")
         return(sum_cor)
         })
       
-      renderDtTableModuleServer("sum_cor", sth, extensions = "FixedHeader",
+      renderTableModuleServer("sum_cor", sth, extensions = "FixedHeader",
                                 downloadName = "index_cor_summary", digits = reactive(input$digit))
       
       output$hist_cor <- renderPlot({

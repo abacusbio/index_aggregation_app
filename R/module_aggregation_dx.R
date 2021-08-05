@@ -46,7 +46,7 @@ aggDxModUI <- function(id) {
     br(),br(),
     h3("Minimum correlation given a quantile"),
     numericInput(ns("quantile_default"), "Enter a quantile", 100, 1, 100, 1),
-    renderDtTableModuleUI(ns("quantile_table_default")),
+    renderTableModuleUI(ns("quantile_table_default")),
     downloadModuleUI(ns("poor_cor_index"), "Download poorly correlated index table"),
     br(),br(),
     h2(textOutput(ns("corr_title"))),
@@ -60,7 +60,7 @@ aggDxModUI <- function(id) {
     br(),br(),
     h3("Minimum correlation given a quantile"),
     numericInput(ns("quantile"), "Enter a quantile", 100, 1, 100, 1),
-    renderDtTableModuleUI(ns("quantile_table")),
+    renderTableModuleUI(ns("quantile_table")),
     downloadModuleUI(ns("poor_cor_index_sub"), "Download poorly correlated index table")
   )
 }
@@ -400,7 +400,7 @@ cat("aggDxMod\n")
           return(out)
         })
       
-      renderDtTableModuleServer("quantile_table_default", q_table_default, 
+      renderTableModuleServer("quantile_table_default", q_table_default, 
                                 extensions = c("FixedHeader", "FixedColumns"),
                                 downloadName = paste0("min_corr_at_", input$quantile, "%"))
       
@@ -530,7 +530,7 @@ cat("aggDxMod\n")
         return(out)
       })
       
-      renderDtTableModuleServer("quantile_table", q_table, 
+      renderTableModuleServer("quantile_table", q_table, 
                                 extensions = c("FixedHeader", "FixedColumns"),
                                 downloadName = paste0("min_corr"), # _at_", input$quantile, "%"), # doesn't react to input$quantile change?
                                 option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
@@ -576,7 +576,7 @@ aggDxModUI2 <- function(id) {
     h1("Top individual(s)"),
     h2(textOutput(ns("top_n_title"))),
     h3("Table"),
-    renderDtTableModuleUI(ns("top_n_index")),
+    renderDataTableModuleUI(ns("top_n_index")),
     br(),br(),
     h3("Scatter plot"),
     plotOutput(ns("plot_top_n")),# height = "800px"),
@@ -691,7 +691,7 @@ cat("aggDxMod2\n")
         }))
         table_top_n <- cbind(order = as.integer(1:n), table_top_n)
         # cat("  table_top_n2:");print(dim(df_index_sub));print(head(table_top_n[,]))
-        renderDtTableModuleServer("top_n_index", reactive(table_top_n),
+        renderDataTableModuleServer("top_n_index", reactive(table_top_n),
                                   downloadName = paste0("top_", n, ifelse(input$percent, "%", ""),
                                                         "_by_index"), 
                                   option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
@@ -757,7 +757,7 @@ aggDxModUI3 <- function(id) {
     h1("Aggregated index diagnosis - more"),
     span(textOutput(ns("error_m")), class = "text-warning"),
     h2("Classification variable distribution"),
-    renderDtTableModuleUI(ns("classvar_summary")),
+    renderTableModuleUI(ns("classvar_summary")),
     br(),br(),
     h2("Bar chart"),
     plotOutput(ns("classvar_plot"), height = "800px"),
@@ -859,7 +859,7 @@ cat("aggDxMod3\n")
                            names_from = input$class_var, values_from = c(n, percent)))
       })
       
-      renderDtTableModuleServer("classvar_summary", classvar_sum_show, 
+      renderTableModuleServer("classvar_summary", classvar_sum_show, 
                                 extensions = c("FixedHeader", "FixedColumns"),
                                 downloadName = "class_var_summary_in_agg_index")
       
@@ -922,7 +922,7 @@ aggDxModUI4 <- function(id) {
     h1("Aggregated index diagnosis - more"),
     span(textOutput(ns("error_m")), class = "text-warning"),
     h2("Classification variable distribution"),
-    renderDtTableModuleUI(ns("weight_summary_show")),
+    renderDataTableModuleUI(ns("weight_summary_show")),
     br(),br(),
     h2("Bar chart"),
     span(textOutput(ns("error_m_plot")), class = "text-warning"),
@@ -1041,7 +1041,7 @@ cat("aggDxMod4\n")
       }, ignoreInit = T) # observeEvent weight_summary
       
      
-     renderDtTableModuleServer("weight_summary_show", weight_summary, 
+     renderDataTableModuleServer("weight_summary_show", weight_summary, 
                                extensions = c("FixedHeader", "FixedColumns"),
                                downloadName = "weighting_summary_in_agg_index",
                                digits = reactive(input$digits))
