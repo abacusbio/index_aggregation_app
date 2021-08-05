@@ -230,8 +230,11 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
           fixedColumns = list(leftColumns = leftColumns, # 1 column on the left most
                               rightColumns = 0,    # no column on the right most
                               fluidColumns = TRUE, # flexible column width
-                              scrollX = scrollX)
+                              scrollX = scrollX),
           # stateSave = T # 8Sept2020
+          # 5aug2021 test Ajax error in rsconnect https://rstudio.github.io/DT/server.html
+          ajax = list(serverSide = TRUE, processing = TRUE,
+                      url = DT::dataTableAjax(session, datt, outputId = id))
         )
         if("Buttons" %in% extensions) {
           optionss$dom <- dom
@@ -247,7 +250,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
                         #selection = list(mode = "multiple", target = "row+column"),#"multiple",
                         editable = editable,
                         options = optionss, ... # class = "table-primary"
-        )
+                        )
 
         columns <- which(sapply(data.frame(datt), class) %in% c("numeric", "double"))
         if(length(columns) > 0) { # 25nov2020
@@ -272,8 +275,8 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
             # if(length(colors)!=length(cuts)+1) {stop(cat(length(cuts), "", length(colors)))}
 
             dt_output <- dt_output %>%
-              formatStyle(columns = columns,
-                          backgroundColor = styleInterval(cuts = cuts, values = colors)
+              DT::formatStyle(columns = columns,
+                              backgroundColor = styleInterval(cuts = cuts, values = colors)
               )
           } # if
         } # if colourcode

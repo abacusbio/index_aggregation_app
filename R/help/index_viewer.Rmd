@@ -18,4 +18,15 @@ your index matrix is successfully calculated.
 
 It's recommended to click the left side download button to save your index file.
 
+## Sidebar
+
+You can either choose or not choose a **Group by** variable. When it is not chosen (by default), the main tab shows summary statistics
+table of all the indexes, and boxplots of 100 randomly chosen indexes. When a group variable is chosen, the table shows summary statistics
+of all indexes in each level, so do the boxplots.
+
+Use **Decimals** numeric input box to change the number of decimal places to show in the table. However, the full decimal places will
+always be saved for the downstream analysis.
+
+Use **font size** numeric input box to change the size of the texts in the graph.
+
 --End of help---

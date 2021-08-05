@@ -1,6 +1,8 @@
 indexSumstatModSidebarUI <- function(id) {
   ns <- NS(id)
   tagList(
+    column(12, div(actionButton(ns("help_btn"), "", icon("question"), 
+                                class = "btn btn-outline-info"), style = "float:right")),
     uiOutput(ns("ui_group")),
     h4("Table and graph display controller"),
     wellPanel(
@@ -15,6 +17,10 @@ indexSumstatModSidebarUI <- function(id) {
 indexSumstatModUI <- function(id) {
   ns <- NS(id)
   tagList(
+    shinyjs::hidden(div(id = ns("help_html"),
+                        # htmltools::includeMarkdown("help/preprocess.Rmd")))
+                        includeHTML(knitr::knit2html("help/index_viewer.Rmd", fragment.only = TRUE,
+                                                     options = c("toc"))))),
     textOutput(ns("warning1")),
     downloadModuleUI(ns("dnld_index"), "Download the index table"),
     br(),br(),
@@ -38,6 +44,15 @@ indexSumstatMod <- function(id, index = reactive(NULL), val,
 cat("indexSumstatMod\n")    
       # initialize
       tempVar <- reactiveValues()
+      
+      observeEvent(input$help_btn, {
+        if(input$help_btn %% 2 == 1){
+          shinyjs::show("help_html")
+        }else{
+          shinyjs::hide("help_html")
+        }
+      })
+      
       if(any(grepl("windows", Sys.getenv(), ignore.case = T))) {
         windows_env <- T
       } else { windows_env <- F }
