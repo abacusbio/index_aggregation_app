@@ -281,7 +281,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
               )
           } # if
         } # if colourcode
-        return(dt_output)
+       #  return(dt_output)
       }) # withProgress
     
     downloadModuleServer("download_1", downloadName, datt, row.names, type)
@@ -311,7 +311,6 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
 renderDataTableModuleUI <- function(id, label = "Download the table") {
   ns <- NS(id)
   tagList(
-    #div(DT::dataTableOutput(ns("table"))) #style = 'overflow-x: scroll',
     div(shiny::dataTableOutput(ns("table"))),
     downloadModuleUI(ns("download_1"), label)
   )
@@ -371,12 +370,10 @@ renderDataTableModuleServer <- function(id, dat = reactive(), rownames = F,
               datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
               datt[[i]] <- round(datt[[i]], digits())
             }
-            
-            return(datt)
           }) # withProgress
         
-      }, options = optionss)
-      #filter = "top") # renderDT/DT::renderDataTable
+        return(datt)
+      }) # , options = optionss) # shiny:renderDataTable
     })} # renderDataTableModuleServer
 
 #'Render a \object{table} UI object.
