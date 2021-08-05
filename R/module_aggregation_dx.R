@@ -400,9 +400,12 @@ cat("aggDxMod\n")
           return(out)
         })
       
-      renderTableModuleServer("quantile_table_default", q_table_default, 
+      observeEvent({q_table_default()
+        input$quantile},
+        renderTableModuleServer("quantile_table_default", q_table_default, 
                                 extensions = c("FixedHeader", "FixedColumns"),
                                 downloadName = paste0("min_corr_at_", input$quantile, "%"))
+      )
       
       # CALCULATE SELECTED CORRELATION
       observeEvent(input$run_analysis,{
@@ -530,11 +533,13 @@ cat("aggDxMod\n")
         return(out)
       })
       
-      renderTableModuleServer("quantile_table", q_table, 
+      observeEvent({q_table()
+        input$quantile},
+        renderTableModuleServer("quantile_table", q_table, 
                                 extensions = c("FixedHeader", "FixedColumns"),
                                 downloadName = paste0("min_corr"), # _at_", input$quantile, "%"), # doesn't react to input$quantile change?
                                 option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
-      
+      )
       
       return(reactive(tempVar$df_for_dx2))
     })}
@@ -859,10 +864,11 @@ cat("aggDxMod3\n")
                            names_from = input$class_var, values_from = c(n, percent)))
       })
       
+      observeEvent(classvar_sum_show(),
       renderTableModuleServer("classvar_summary", classvar_sum_show, 
                                 extensions = c("FixedHeader", "FixedColumns"),
                                 downloadName = "class_var_summary_in_agg_index")
-      
+      )
       # # select input aggregated_by
       # observeEvent(length(df_summary_table()) > 0, {
       #   updateSelectInput(session, "agg_by", choices = c("", df_summary_table()$aggregated_by))

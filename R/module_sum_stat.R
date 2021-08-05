@@ -278,11 +278,18 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
           } # if n_obs in input$functions
           
           # output table
-          renderTableModuleServer("stat_num", reactive(stat_num), T,
+          observeEvent(
+            {
+              reactive(stat_num)()
+              input$view_dec
+            },
+            renderTableModuleServer("stat_num", reactive(stat_num), T,
                                     c("FixedHeader", "FixedColumns"),
-                                    digits = reactive(input$view_dec), downloadName = "sum_stat_num",
+                                    digits = input$view_dec, downloadName = "sum_stat_num",
                                     editable = F, colfilter = "none", 
                                     option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
+          )
+          
           
           # make df for histogram
 # cat("  group_vars:", !is.null(group_vars), "df_num:\n");print(head(df_num))
@@ -371,11 +378,17 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
           # group_var variable level n prop n_missing
           stat_chr <- stat_chr %>% purrr::reduce(full_join) %>% distinct()
 # cat("  3 stat_chr\n"); print(head(stat_chr))
+          observeEvent(
+            {
+              reactive(stat_chr)()
+              input$view_dec
+            },
           renderTableModuleServer("stat_chr", reactive(stat_chr), T,
                                     c("FixedHeader", "FixedColumns"),
                                     digits = reactive(input$view_dec),
                                     downloadName = "sum_stat_chr", editable = F, colfilter = "none", 
                                     option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
+          )
           
           # make df for lolipop/dot or barchart
           dff <- stat_chr

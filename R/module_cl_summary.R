@@ -189,8 +189,11 @@ cat("clusterSumStatMod\n")
         return(sum_cor)
         })
       
-      renderTableModuleServer("sum_cor", sth, extensions = "FixedHeader",
+      observeEvent({sth()
+        input$digit},
+        renderTableModuleServer("sum_cor", sth, extensions = "FixedHeader",
                                 downloadName = "index_cor_summary", digits = reactive(input$digit))
+      )
       
       output$hist_cor <- renderPlot({
         withProgress(message = 'Plotting ...',

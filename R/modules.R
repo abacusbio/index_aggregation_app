@@ -390,7 +390,7 @@ renderTableModuleServer <- function(id, dat = reactive(), rownames = F,
                                       extensions = c("FixedHeader", "FixedColumns", "Buttons"),
                                       fixedHeader = F, leftColumns = 0, # fixed left most column
                                       scrollX = F,
-                                      digits = reactive(3),
+                                      digits = 3,
                                       colourcode = reactive(FALSE),
                                       dom = "Bfrtip", buttons = I('colvis'),
                                       downloadName = "test_download", row.names = F, type = "csv",
@@ -399,11 +399,11 @@ renderTableModuleServer <- function(id, dat = reactive(), rownames = F,
   moduleServer(
     id,
     function(input, output, session){
-      
-      output$table <- shiny::renderTable({
-        withProgress(
-          message = 'Loading table...', value = 0,
-          {
+     output$table <- shiny::renderTable({
+cat("renderTableMod, digits:", digits, "\n")      
+     #   withProgress(
+      #    message = 'Loading table...', value = 0,
+       #   {
             req(!is.null(dat())) # 14oct2020
             
             downloadModuleServer("download_1", downloadName, dat(), row.names, type)
@@ -415,13 +415,13 @@ renderTableModuleServer <- function(id, dat = reactive(), rownames = F,
             datt <- dat()
             for(i in columns) {
               datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
-              datt[[i]] <- round(datt[[i]], digits())
+            #  datt[[i]] <- round(datt[[i]], digits())
             }
             # cat(" datt:\n");print(str(datt))        
-          }) # withProgress
+     #     }) # withProgress
         
         return(datt)
-      }, rownames = rownames, server = T) #, options = list(stateSave =T)) #, 8sept2020
+      }, rownames = rownames, server = T, digits = digits) #, options = list(stateSave =T)) #, 8sept2020
       #filter = "top") # renderDT/DT::renderDataTable
     })} # renderTableModuleServer
 

@@ -405,7 +405,7 @@ cat("calWeiMod\n")
       # Index, cluster, trait1, trait2, ...
       ew_new <- reactive({ # 15june2021 reacted twice...
 # cat("\n reactive ew_new\n")
-        req(length(input$error_m)==0, index_w, 
+        req(length(input$error_m)==0, !is.null(index_w()), 
             !is.null(val$dt_desc_ev_clean), !is.null(val$dt_ev_filtered))
 # cat("  dt_ev_filtered:");print(dim(val$dt_ev_filtered))
 # cat("  dt_desc_ev_clean:");print(dim(val$dt_desc_ev_clean))     
@@ -434,10 +434,13 @@ cat("calWeiMod\n")
         return(rbind(ews_new, ews_avg))
       })
       
+      observeEvent({ew_new()
+        input$digits},
       renderTableModuleServer("ew_new", ew_new, extensions = "FixedHeader",
                                 downloadName = "EW_cluster_", colfilter = "none", 
                                 option_list = list(sDom  = '<"top">lrt<"bottom">ip'), # disable search bar 
                                 digits = reactive(input$digits))
+      )
       
       downloadModuleServer("ew_new_t", "EW_cluster_transpose", 
                            t.data.frame(dplyr::select(ew_new(), -cluster)), row.names = T, col.names = F)
