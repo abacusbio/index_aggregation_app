@@ -400,7 +400,7 @@ renderTableModuleServer <- function(id, dat = reactive(), rownames = F,
     id,
     function(input, output, session){
      output$table <- shiny::renderTable({
-cat("renderTableMod, digits:", digits, "\n")      
+# cat("renderTableMod, digits:", digits, "\n")      
      #   withProgress(
       #    message = 'Loading table...', value = 0,
        #   {
@@ -413,11 +413,8 @@ cat("renderTableMod, digits:", digits, "\n")
             # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
             # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
             datt <- dat()
-            for(i in columns) {
-              datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
-            #  datt[[i]] <- round(datt[[i]], digits())
-            }
-            # cat(" datt:\n");print(str(datt))        
+            for(i in columns) datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
+# cat(" datt:\n");print(str(datt))        
      #     }) # withProgress
         
         return(datt)
