@@ -230,11 +230,12 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
           fixedColumns = list(leftColumns = leftColumns, # 1 column on the left most
                               rightColumns = 0,    # no column on the right most
                               fluidColumns = TRUE, # flexible column width
-                              scrollX = scrollX),
+                              scrollX = scrollX)
           # stateSave = T # 8Sept2020
           # 5aug2021 test Ajax error in rsconnect https://rstudio.github.io/DT/server.html
-          ajax = list(serverSide = TRUE, processing = TRUE,
-                      url = DT::dataTableAjax(session, datt, outputId = id))
+          # doesn't work
+          # ajax = list(serverSide = TRUE, processing = TRUE,
+                      # url = DT::dataTableAjax(session, datt, outputId = id))
         )
         if("Buttons" %in% extensions) {
           optionss$dom <- dom
@@ -305,6 +306,125 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
 #  # d9 <<- editData(d9, input$x9_cell_edit, 'x9', rownames = FALSE)
 # })
   })} # renderDtTableModuleServer
+
+#'Render a \code[shiny]{DataTable} UI object.
+renderDataTableModuleUI <- function(id, label = "Download the table") {
+  ns <- NS(id)
+  tagList(
+    #div(DT::dataTableOutput(ns("table"))) #style = 'overflow-x: scroll',
+    div(shiny::dataTableOutput(ns("table"))),
+    downloadModuleUI(ns("download_1"), label)
+  )
+}
+
+#' Same as above but not using \code{DT} package
+renderDataTableModuleServer <- function(id, dat = reactive(), rownames = F,
+                                    extensions = c("FixedHeader", "FixedColumns", "Buttons"),
+                                    fixedHeader = F, leftColumns = 0, # fixed left most column
+                                    scrollX = F,
+                                    digits = reactive(3),
+                                    colourcode = reactive(FALSE),
+                                    dom = "Bfrtip", buttons = I('colvis'),
+                                    downloadName = "test_download", row.names = F, type = "csv",
+                                    editable = T, colfilter = "top",
+                                    option_list = NULL, ...) {
+  moduleServer(
+    id,
+    function(input, output, session){
+      
+      optionss = list(
+        # searching = T,
+        fixedHeader = fixedHeader,
+        fixedColumns = list(leftColumns = leftColumns, # 1 column on the left most
+                            rightColumns = 0,    # no column on the right most
+                            fluidColumns = TRUE, # flexible column width
+                            scrollX = scrollX)
+        # stateSave = T # 8Sept2020
+        # 5aug2021 test Ajax error in rsconnect https://rstudio.github.io/DT/server.html
+        # doesn't work
+        # ajax = list(serverSide = TRUE, processing = TRUE,
+        # url = DT::dataTableAjax(session, datt, outputId = id))
+      )
+      if("Buttons" %in% extensions) {
+        optionss$dom <- dom
+        optionss$buttons <- buttons
+      }
+      
+      optionss <- append(optionss, option_list)
+      
+      output$table <- shiny::renderDataTable({
+        withProgress(
+          message = 'Loading table...', value = 0,
+          {
+            req(!is.null(dat())) # 14oct2020
+            
+            columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
+            # cat("renderDtTableModuleServer\n dat():");print(str(dat()))
+            # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
+            # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
+            
+            # cat(" datt:\n");print(str(datt))        
+            downloadModuleServer("download_1", downloadName, dat(), row.names, type)
+            
+            datt <- dat()
+            for(i in columns) {
+              datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
+              datt[[i]] <- round(datt[[i]], digits())
+            }
+            
+            return(datt)
+          }) # withProgress
+        
+      }, options = optionss)
+      #filter = "top") # renderDT/DT::renderDataTable
+    })} # renderDataTableModuleServer
+
+#'Render a \object{table} UI object.
+renderTableModuleUI <- function(id, label = "Download the table") {
+  ns <- NS(id)
+  tagList(
+    div(shiny::tableOutput(ns("table"))), # 5aug2021
+    downloadModuleUI(ns("download_1"), label)
+  )
+}
+
+#' Same as above but use \code[shiny]{renderTable} instead of \code{DT} package
+renderTableModuleServer <- function(id, dat = reactive(), rownames = F,
+                                      extensions = c("FixedHeader", "FixedColumns", "Buttons"),
+                                      fixedHeader = F, leftColumns = 0, # fixed left most column
+                                      scrollX = F,
+                                      digits = reactive(3),
+                                      colourcode = reactive(FALSE),
+                                      dom = "Bfrtip", buttons = I('colvis'),
+                                      downloadName = "test_download", row.names = F, type = "csv",
+                                      editable = T, colfilter = "top",
+                                      option_list = NULL, ...) {
+  moduleServer(
+    id,
+    function(input, output, session){
+      
+      output$table <- shiny::renderTable({
+        withProgress(
+          message = 'Loading table...', value = 0,
+          {
+            req(!is.null(dat())) # 14oct2020
+            
+            columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
+            # cat("renderDtTableModuleServer\n dat():");print(str(dat()))
+            # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
+            # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
+            datt <- dat()
+            for(i in columns) datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
+            # cat(" datt:\n");print(str(datt))        
+            
+            downloadModuleServer("download_1", downloadName, datt, row.names, type)
+            
+            return(datt)
+          }) # withProgress
+        
+      }, rownames = rownames, digits = digits(), server = T) #, options = list(stateSave =T)) #, 8sept2020
+      #filter = "top") # renderDT/DT::renderDataTable
+    })} # renderTableModuleServer
 
 #'Download button UI function
 downloadPlotModuleUI <- function(id) {

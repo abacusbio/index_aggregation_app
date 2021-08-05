@@ -25,7 +25,8 @@ indexSumstatModUI <- function(id) {
     downloadModuleUI(ns("dnld_index"), "Download the index table"),
     br(),br(),
     h2("Table"),
-    renderDtTableModuleUI(ns("stat_num")),
+    # renderDtTableModuleUI(ns("stat_num")),
+    renderTableModuleUI(ns("stat_num")),
     br(),br(),
     h2("Boxplot (up to 100 indexes)"),
     plotOutput(ns("boxplot"), height = "800px")
@@ -184,7 +185,7 @@ cat(" observe index,  group_vars:", input$group_vars, length(input$group_vars), 
           if("n" %in% names(stat_num)) stat_num$prop = stat_num$n/sum(stat_num$n)
           
           # output table
-          renderDtTableModuleServer("stat_num", reactive(stat_num), T,
+          renderDataTableModuleServer("stat_num", reactive(stat_num), T,
                                     c("FixedHeader", "FixedColumns"),
                                     digits = reactive(input$view_dec), 
                                     downloadName = "sum_stat_index", editable = F, colfilter = "none")

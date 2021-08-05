@@ -29,7 +29,8 @@ sumstatModUI <- function(id) {
     textOutput(ns("warning2")),
     h2("Numerical variable summary statistics"),
     h3("Table"),
-    renderDtTableModuleUI(ns("stat_num"), "Numeric sum stats"),
+    # renderDtTableModuleUI(ns("stat_num"), "Numeric sum stats"),
+    renderTableModuleUI(ns("stat_num"), "Numeric sum stats"),
     br(),br(),
     h3("Distribution"),
     plotOutput(ns("hist_num"), height = "600px"), # default 400px
@@ -37,7 +38,8 @@ sumstatModUI <- function(id) {
     br(),br(),
     h2("String variable summary statistics"),
     h3("Table"),
-    renderDtTableModuleUI(ns("stat_chr"), "String sum stats"),
+    # renderDtTableModuleUI(ns("stat_chr"), "String sum stats"),
+    renderTableModuleUI(ns("stat_chr"), "String sum stats"),
     br(),br(),
     h3("Distribution"),
     plotOutput(ns("dot_chr"), height = "800px"),
@@ -276,7 +278,7 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
           } # if n_obs in input$functions
           
           # output table
-          renderDtTableModuleServer("stat_num", reactive(stat_num), T,
+          renderTableModuleServer("stat_num", reactive(stat_num), T,
                                     c("FixedHeader", "FixedColumns"),
                                     digits = reactive(input$view_dec), downloadName = "sum_stat_num",
                                     editable = F, colfilter = "none", 
@@ -369,7 +371,7 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
           # group_var variable level n prop n_missing
           stat_chr <- stat_chr %>% purrr::reduce(full_join) %>% distinct()
 # cat("  3 stat_chr\n"); print(head(stat_chr))
-          renderDtTableModuleServer("stat_chr", reactive(stat_chr), T,
+          renderTableModuleServer("stat_chr", reactive(stat_chr), T,
                                     c("FixedHeader", "FixedColumns"),
                                     digits = reactive(input$view_dec),
                                     downloadName = "sum_stat_chr", editable = F, colfilter = "none", 
