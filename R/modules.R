@@ -205,7 +205,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
                                      colourcode = reactive(FALSE),
                                      dom = "Bfrtip", buttons = I('colvis'),
                                      downloadName = "test_download", row.names = F, type = "csv",
-                                     editable = T, colfilter = "top",
+                                     editable = F, colfilter = "top",
                                      option_list = NULL, ...) {
   moduleServer(
     id,

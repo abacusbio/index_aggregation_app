@@ -3,11 +3,12 @@
 
 # devtools::load_all()
 # install.packages("https://cran.r-project.org/src/....tar.gz", type = "source", repos = NULL)
-options(repos = c("CRAN" = "https://mran.microsoft.com/snapshot/2019-04-15",
-                  "added" = "https://cran.rstudio.com",
+options(repos = c(#"added" = "https://mran.microsoft.com/snapshot/2019-04-15",
+                  "CRAN" = "https://cran.rstudio.com",
                   "added1" = "https://cran.r-project.org"))
 # options("repos")
 # old.packages()
+# rsconnect::appDependencies()
 
 # options(shiny.reactlog = T) # ctrl+F3
 # reactlogReset()
