@@ -49,7 +49,7 @@ calWeiModUI <- function(id) {
     selectInput(ns("choose_w"), "Choose a weight(s)",
                 choices = c("equal weight"),# "by index correlation"),
                 selected = "equal weight", selectize = T),
-    renderRctTableModuleUI(ns("index_w"), "Download the new index weight file"),
+    renderDataTableModuleUI(ns("index_w"), "Download the new index weight file"),
     br(),br(),
     h2("New economic valuess"),
     h3("Table"),
@@ -398,7 +398,7 @@ cat("calWeiMod\n")
         return(index_w)
       })
       
-      renderRctTableModuleServer("index_w", index_w, # extensions = "FixedHeader",
+      renderDataTableModuleServer("index_w", index_w, extensions = "FixedHeader",
                                 downloadName = "index_weight", digits = reactive(input$digits))
       
       # make aggregated EV

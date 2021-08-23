@@ -21,7 +21,7 @@ aggDxModSidebarUI <- function(id) {
     h4("User select indexes"),
     wellPanel(
       selectInput(ns("sel_agg"), "Select an aggregated index", choice = "", multiple = T),
-      selectizeInput(ns("sel_index"), "Select an original index", choices = ""),
+      selectInput(ns("sel_index"), "Select an original index", choices = ""),
       selectInput(ns("sel_cluster"), "Or select all indexes from a cluster", choices = ""),
       actionButton(ns("run_analysis"), "Run analysis", icon("running"), 
                    class = "btn btn-primary")
@@ -155,7 +155,7 @@ cat("aggDxMod\n")
        req(val$dt_ev_filtered)
         
        updateSelectInput(session, "sel_cluster", choices = c("", unique(clusters())))
-        updateSelectizeInput(session, "sel_index",
+        updateSelectInput(session, "sel_index",
                          choices = c("", paste0(names(clusters()), "{", clusters(), "}")))
       })
       
@@ -581,7 +581,7 @@ aggDxModUI2 <- function(id) {
     h1("Top individual(s)"),
     h2(textOutput(ns("top_n_title"))),
     h3("Table"),
-    renderRctTableModuleUI(ns("top_n_index")),
+    renderDataTableModuleUI(ns("top_n_index")),
     br(),br(),
     h3("Scatter plot"),
     plotOutput(ns("plot_top_n")),# height = "800px"),
@@ -696,10 +696,10 @@ cat("aggDxMod2\n")
         }))
         table_top_n <- cbind(order = as.integer(1:n), table_top_n)
         # cat("  table_top_n2:");print(dim(df_index_sub));print(head(table_top_n[,]))
-        renderRctTableModuleServer("top_n_index", reactive(table_top_n),
+        renderDataTableModuleServer("top_n_index", reactive(table_top_n),
                                   downloadName = paste0("top_", n, ifelse(input$percent, "%", ""),
-                                                        "_by_index"), searchable = F)
-                                 # option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
+                                                        "_by_index"), 
+                                  option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
       }) # observe input$run_top
       
       # TOP N individual agreement plot
@@ -928,7 +928,7 @@ aggDxModUI4 <- function(id) {
     h1("Aggregated index diagnosis - more"),
     span(textOutput(ns("error_m")), class = "text-warning"),
     h2("Classification variable distribution"),
-    renderRctTableModuleUI(ns("weight_summary_show")),
+    renderDataTableModuleUI(ns("weight_summary_show")),
     br(),br(),
     h2("Bar chart"),
     span(textOutput(ns("error_m_plot")), class = "text-warning"),
@@ -1047,8 +1047,8 @@ cat("aggDxMod4\n")
       }, ignoreInit = T) # observeEvent weight_summary
       
      
-     renderRctTableModuleServer("weight_summary_show", weight_summary, 
-                              # extensions = c("FixedHeader", "FixedColumns"),
+     renderDataTableModuleServer("weight_summary_show", weight_summary, 
+                               extensions = c("FixedHeader", "FixedColumns"),
                                downloadName = "weighting_summary_in_agg_index",
                                digits = reactive(input$digits))
      
