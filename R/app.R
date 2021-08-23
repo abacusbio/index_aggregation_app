@@ -19,7 +19,7 @@ library(DT)
 library(shinyWidgets)
 # library(shinyjs) # lazy loading
 # library(htmltools) # lazy loading
-
+library(reactable)
 #library(reactlog)
 
 library(dplyr)

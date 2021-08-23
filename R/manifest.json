@@ -224,7 +224,7 @@
     },
     "RColorBrewer": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "RColorBrewer",
         "Version": "1.1-2",
@@ -376,7 +376,7 @@
     },
     "abind": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "abind",
         "Version": "1.4-5",
@@ -397,7 +397,7 @@
     },
     "askpass": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "askpass",
         "Type": "Package",
@@ -451,7 +451,7 @@
     },
     "base64enc": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "base64enc",
         "Version": "0.1-3",
@@ -498,7 +498,7 @@
     },
     "brew": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "brew",
         "Type": "Package",
@@ -707,7 +707,7 @@
     },
     "cellranger": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "cellranger",
         "Title": "Translate Spreadsheet Cell Ranges to Rows and Columns",
@@ -849,7 +849,7 @@
     },
     "commonmark": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "commonmark",
         "Type": "Package",
@@ -1478,7 +1478,7 @@
     },
     "flashClust": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "flashClust",
         "Version": "1.01-2",
@@ -1763,7 +1763,7 @@
     },
     "ggsci": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "ggsci",
         "Type": "Package",
@@ -1904,7 +1904,7 @@
     },
     "gridExtra": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "gridExtra",
         "Authors@R": "c(person(\"Baptiste\", \"Auguie\",\n    email = \"baptiste.auguie@gmail.com\",\n    role = c(\"aut\", \"cre\")), person(\"Anton\", \"Antonov\",\n    email = \"tonytonov@gmail.com\",\n    role = c(\"ctb\")))",
@@ -1928,7 +1928,7 @@
     },
     "gtable": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "gtable",
         "Title": "Arrange 'Grobs' in Tables",
@@ -2153,7 +2153,7 @@
     },
     "ini": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "ini",
         "Type": "Package",
@@ -2365,7 +2365,7 @@
     },
     "lazyeval": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "lazyeval",
         "Version": "0.2.2",
@@ -2651,7 +2651,7 @@
     },
     "minqa": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "minqa",
         "Type": "Package",
@@ -2674,7 +2674,7 @@
     },
     "munsell": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "munsell",
         "Type": "Package",
@@ -2890,7 +2890,7 @@
     },
     "pheatmap": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "pheatmap",
         "Type": "Package",
@@ -3047,7 +3047,7 @@
     },
     "polynom": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "polynom",
         "Version": "1.4-0",
@@ -3069,7 +3069,7 @@
     },
     "praise": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "praise",
         "Title": "Praise Users",
@@ -3326,6 +3326,63 @@
         "Built": "R 4.0.3; ; 2020-12-13 08:19:49 UTC; windows"
       }
     },
+    "reactR": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "reactR",
+        "Type": "Package",
+        "Title": "React Helpers",
+        "Version": "0.4.4",
+        "Date": "2021-02-20",
+        "Authors@R": "c(\n      person(\n        \"Facebook\", \"Inc\"\n        , role = c(\"aut\", \"cph\")\n        , comment = \"React library in lib, https://reactjs.org/; see AUTHORS for full list of contributors\"\n      ),\n      person(\n        \"Michel\",\"Weststrate\",\n        , role = c(\"aut\", \"cph\")\n        , comment = \"mobx library in lib, https://github.com/mobxjs\"\n      ),\n      person(\n        \"Kent\", \"Russell\"\n        , role = c(\"aut\", \"cre\")\n        , comment = \"R interface\"\n        , email = \"kent.russell@timelyportfolio.com\"\n      ),\n      person(\n        \"Alan\", \"Dipert\"\n        , role = c(\"aut\")\n        , comment = \"R interface\"\n        , email = \"alan@rstudio.com\"\n      )\n    )",
+        "Maintainer": "Kent Russell <kent.russell@timelyportfolio.com>",
+        "Description": "Make it easy to use 'React' in R with 'htmlwidget' scaffolds,\n              helper dependency functions, an embedded 'Babel' 'transpiler',\n              and examples.",
+        "URL": "https://github.com/react-R/reactR",
+        "BugReports": "https://github.com/react-R/reactR/issues",
+        "License": "MIT + file LICENSE",
+        "LazyData": "TRUE",
+        "Encoding": "UTF-8",
+        "Imports": "htmltools",
+        "Suggests": "htmlwidgets (>= 1.5.3), rmarkdown, shiny, V8, knitr, usethis,\njsonlite",
+        "RoxygenNote": "7.1.1",
+        "VignetteBuilder": "knitr",
+        "NeedsCompilation": "no",
+        "Packaged": "2021-02-21 15:11:04 UTC; kentr",
+        "Author": "Facebook Inc [aut, cph] (React library in lib, https://reactjs.org/;\n    see AUTHORS for full list of contributors),\n  Michel Weststrate [aut, cph] (mobx library in lib,\n    https://github.com/mobxjs),\n  Kent Russell [aut, cre] (R interface),\n  Alan Dipert [aut] (R interface)",
+        "Repository": "CRAN",
+        "Date/Publication": "2021-02-22 14:50:06 UTC",
+        "Built": "R 4.0.5; ; 2021-08-07 05:23:46 UTC; windows"
+      }
+    },
+    "reactable": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "reactable",
+        "Type": "Package",
+        "Title": "Interactive Data Tables Based on 'React Table'",
+        "Version": "0.2.3",
+        "Authors@R": "c(\n    person(\"Greg\", \"Lin\", email = \"glin@glin.io\", role = c(\"aut\", \"cre\")),\n    person(\"Tanner\", \"Linsley\", role = c(\"ctb\", \"cph\"), comment = \"React Table library\"),\n    person(family = \"Emotion team and other contributors\", role = c(\"ctb\", \"cph\"),\n           comment = \"Emotion library\")\n    )",
+        "Description": "Interactive data tables for R, based on the 'React Table'\n    JavaScript library. Provides an HTML widget that can be used in 'R Markdown'\n    documents and 'Shiny' applications, or viewed from an R console.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://glin.github.io/reactable/,\nhttps://github.com/glin/reactable",
+        "BugReports": "https://github.com/glin/reactable/issues",
+        "Depends": "R (>= 3.1)",
+        "Imports": "digest, htmltools, htmlwidgets, jsonlite, reactR",
+        "Suggests": "covr, crosstalk, dplyr, leaflet, MASS, rmarkdown, shiny,\nsparkline, testthat",
+        "Encoding": "UTF-8",
+        "LazyData": "true",
+        "RoxygenNote": "7.1.1",
+        "NeedsCompilation": "no",
+        "Packaged": "2020-10-04 21:31:55 UTC; greg",
+        "Author": "Greg Lin [aut, cre],\n  Tanner Linsley [ctb, cph] (React Table library),\n  Emotion team and other contributors [ctb, cph] (Emotion library)",
+        "Maintainer": "Greg Lin <glin@glin.io>",
+        "Repository": "CRAN",
+        "Date/Publication": "2020-10-04 21:50:02 UTC",
+        "Built": "R 4.0.5; ; 2021-08-07 05:25:51 UTC; windows"
+      }
+    },
     "readr": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com",
@@ -3362,7 +3419,7 @@
     },
     "readxl": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "readxl",
         "Title": "Read Excel Files",
@@ -3391,7 +3448,7 @@
     },
     "rematch": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "rematch",
         "Title": "Match Regular Expressions with a Nicer 'API'",
@@ -3778,7 +3835,7 @@
     },
     "scatterplot3d": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "scatterplot3d",
         "Version": "0.3-41",
@@ -3800,7 +3857,7 @@
     },
     "sessioninfo": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "sessioninfo",
         "Title": "R Session Information",
@@ -3909,7 +3966,7 @@
     },
     "sourcetools": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "sourcetools",
         "Type": "Package",
@@ -3987,7 +4044,7 @@
     },
     "stringr": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "stringr",
         "Title": "Simple, Consistent Wrappers for Common String Operations",
@@ -4483,7 +4540,7 @@
     },
     "xopen": {
       "Source": "CRAN",
-      "Repository": "https://mran.microsoft.com/snapshot/2019-04-15",
+      "Repository": "https://cran.rstudio.com",
       "description": {
         "Package": "xopen",
         "Title": "Open System Files, 'URLs', Anything",
@@ -4584,7 +4641,7 @@
   },
   "files": {
     "app.R": {
-      "checksum": "085bd9011ad2964f251772b7acfd7dd2"
+      "checksum": "b898db50cf56951211758b9789334c8e"
     },
     "clustering_run.html": {
       "checksum": "43ad68156425eeedd539958bfb15b385"
@@ -4725,7 +4782,7 @@
       "checksum": "c29b78c6975b3d7aca020b3dc89510fe"
     },
     "module_aggregation_dx.R": {
-      "checksum": "66941899f4143a3999641a0cdbf98b37"
+      "checksum": "6ad005e420d25eb8a66e64a883edf0a4"
     },
     "module_cl_dx.R": {
       "checksum": "7d5c2e7951ef82a5d108147b55f65c0f"
@@ -4734,7 +4791,7 @@
       "checksum": "8dc0a55a881de9afc48a4e3871d1055b"
     },
     "module_cl_weight.R": {
-      "checksum": "f821b61417906c8ae28fadec57773c28"
+      "checksum": "f695288e25300a5658cd784f21c72639"
     },
     "module_clustering.R": {
       "checksum": "9be5cc5ec79ab3b3e13ff7ad4977683b"
@@ -4746,7 +4803,7 @@
       "checksum": "0022a49566dc31cc2a3fb490e01505e2"
     },
     "module_index_sumstat.R": {
-      "checksum": "24151c609ab95c1466c6c14b038931d7"
+      "checksum": "262dd33f326d9ff31fe2effb2bcb922c"
     },
     "module_inspect_cluster.R": {
       "checksum": "ec5e0eed61fc036ff32dbf7e0b099fdf"
@@ -4761,7 +4818,7 @@
       "checksum": "380118b7445e23024c3d8d8ceaae2799"
     },
     "modules.R": {
-      "checksum": "2a997641a6c92bf03ace76ad282d68e1"
+      "checksum": "f256041b05480a25df45b414ec03a062"
     },
     "preprocess.html": {
       "checksum": "39669946e9a19f2ad02c2027a12b2daf"

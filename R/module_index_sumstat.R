@@ -26,7 +26,7 @@ indexSumstatModUI <- function(id) {
     br(),br(),
     h2("Table"),
     # renderDtTableModuleUI(ns("stat_num")),
-    renderDataTableModuleUI(ns("stat_num")),
+    renderRctTableModuleUI(ns("stat_num")),
     br(),br(),
     h2("Boxplot (up to 100 indexes)"),
     plotOutput(ns("boxplot"), height = "800px")
@@ -185,10 +185,11 @@ cat(" observe index,  group_vars:", input$group_vars, length(input$group_vars), 
           if("n" %in% names(stat_num)) stat_num$prop = stat_num$n/sum(stat_num$n)
           
           # output table
-          renderDataTableModuleServer("stat_num", reactive(stat_num), T,
-                                    c("FixedHeader", "FixedColumns"),
+          renderRctTableModuleServer("stat_num", reactive(stat_num), T,
+                                    # c("FixedHeader", "FixedColumns"),
                                     digits = reactive(input$view_dec), 
-                                    downloadName = "sum_stat_index", editable = F, colfilter = "none")
+                                    downloadName = "sum_stat_index", #editable = F, 
+                                    colfilter = F) #"none")
           
           # make df for histogram
 # cat("  group_vars:", !is.null(group_vars), "df_num:\n");print(head(df_num))

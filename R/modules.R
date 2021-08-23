@@ -306,76 +306,6 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
 # })
   })} # renderDtTableModuleServer
 
-#'Render a \code[shiny]{DataTable} UI object.
-renderDataTableModuleUI <- function(id, label = "Download the table") {
-  ns <- NS(id)
-  tagList(
-    div(shiny::dataTableOutput(ns("table"))),
-    downloadModuleUI(ns("download_1"), label)
-  )
-}
-
-#' Same as above but not using \code{DT} package
-renderDataTableModuleServer <- function(id, dat = reactive(), rownames = F,
-                                    extensions = c("FixedHeader", "FixedColumns", "Buttons"),
-                                    fixedHeader = F, leftColumns = 0, # fixed left most column
-                                    scrollX = F,
-                                    digits = reactive(3),
-                                    colourcode = reactive(FALSE),
-                                    dom = "Bfrtip", buttons = I('colvis'),
-                                    downloadName = "test_download", row.names = F, type = "csv",
-                                    editable = T, colfilter = "top",
-                                    option_list = NULL, ...) {
-  moduleServer(
-    id,
-    function(input, output, session){
-# cat("renderDataTableModuleServer\n")      
-      optionss = list(
-        pageLength = 10,
-        # searching = T,
-        fixedHeader = fixedHeader,
-        fixedColumns = list(leftColumns = leftColumns, # 1 column on the left most
-                            rightColumns = 0,    # no column on the right most
-                            fluidColumns = TRUE, # flexible column width
-                            scrollX = scrollX)
-        # stateSave = T # 8Sept2020
-        # 5aug2021 test Ajax error in rsconnect https://rstudio.github.io/DT/server.html
-        # doesn't work
-        # ajax = list(serverSide = TRUE, processing = TRUE,
-        # url = DT::dataTableAjax(session, datt, outputId = id))
-      )
-      if("Buttons" %in% extensions) {
-        optionss$dom <- dom
-        optionss$buttons <- buttons
-      }
-      
-      optionss <- append(optionss, option_list)
-      
-      output$table <- shiny::renderDataTable({
-        withProgress(
-          message = 'Loading table...', value = 0,
-          {
-            req(!is.null(dat())) # 14oct2020
-      
-            columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
-            # cat("renderDtTableModuleServer\n dat():");print(str(dat()))
-            # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
-            # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
-            
-            # cat(" datt:\n");print(str(datt))        
-            downloadModuleServer("download_1", downloadName, dat(), row.names, type)
-            
-            datt <- dat()
-            for(i in columns) {
-              datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
-              datt[[i]] <- round(datt[[i]], digits())
-            }
-          }) # withProgress
-
-        return(datt)
-      }, options = optionss) # shiny:renderDataTable
-    })} # renderDataTableModuleServer
-
 #'Render a \object{table} UI object.
 renderTableModuleUI <- function(id, label = "Download the table") {
   ns <- NS(id)
@@ -421,6 +351,160 @@ renderTableModuleServer <- function(id, dat = reactive(), rownames = F,
       }, rownames = rownames, server = T, digits = digits) #, options = list(stateSave =T)) #, 8sept2020
       #filter = "top") # renderDT/DT::renderDataTable
     })} # renderTableModuleServer
+
+#'Render a \code[reactable]{reactable} UI object.
+renderRctTableModuleUI <- function(id, label = "Download the table") {
+  ns <- NS(id)
+  tagList(
+    #div(DT::dataTableOutput(ns("table"))) #style = 'overflow-x: scroll',
+    div(reactable::reactableOutput(ns("table"))),
+    downloadButton(ns("download_table"), label, class = "btn btn-outline-primary")
+  )
+}
+
+#'Render a \code[reactable]{reactable} object.
+#'
+#'@param dat a reactive function. The data table to render
+#'@param scrollX horizontal scrolling. Can be boolen or width,
+#'       e.g. \code{False} means cannot scroll, or \code{"200px"}
+#'       means fixed width and can scroll
+#'@param digits a reactive function taken from \code{input$signdigit}
+#'@param colourcode a reactive function, logical, whether to show heatmap
+#'       colours in the table
+#'@param colfilter a logical value, show or hide column filter
+#'
+#'@references  https://dev.to/awwsmm/reactive-datatables-in-r-with-persistent-filters-l26
+#' basic https://shiny.rstudio.com/gallery/datatables-options.html
+#' filter https://yihui.shinyapps.io/DT-info/
+#' interactive https://laustep.github.io/stlahblog/posts/DTcallbacks.html
+renderRctTableModuleServer <- function(id, dat = reactive(NULL), rownames = F,
+                                       leftColumns = 0, # fixed left most column
+                                       scrollX = F,
+                                       digits = reactive(3),
+                                       colourcode = reactive(FALSE),
+                                       downloadName = "test_download", row.names = F, type = "csv",
+                                       colfilter = F, searchable = T, ...){
+  moduleServer(
+    id,
+    function(input, output, session){
+      
+  output$table <- reactable::renderReactable({
+    #   withProgress(
+    #     message = 'Loading data', value = 1,
+    #    {
+    req(length(dat()) > 0)
+# cat("renderRctTableModuleServer, downloadName:", downloadName, "\n")        
+    # download module
+    output$download_table <- downloadHandler( # 12june2020
+      filename = paste0(downloadName, "-", Sys.Date(), ".csv"),
+      content = function(file) {
+        write.csv(dat(), file, row.names = row.names)
+      }
+    )
+# cat("renderRctTabelModuleServer\n")    
+    # make sure col classes are correct
+    columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
+    # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
+    # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
+    if("data.frame" %in% class(dat())) {
+      datt <- dat()
+    } else {datt <- as.data.frame(dat(), stringsAsFactors = F)}
+    
+    for(i in columns) {
+      # print(class(datt[[i]]))
+      datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
+    }
+# cat(" datt:\n");print(str(datt))
+    # initiate colDef
+    allColDefs <- list()
+    
+    ## colDef for 1st column
+    if(leftColumns==1) {
+      firstColdefs <- list( colDef(
+        style = list(position = "sticky", left = 0, zIndex = 1),
+        headerStyle = list(position = "sticky", left = 0, zIndex = 1)
+      ))
+      names(firstColdefs) <- names(datt)[1]
+      allColDefs <- append(allColDefs, firstColdefs  )
+    }
+    
+    ## colDef for numeric columns  
+    columns <- which(sapply(data.frame(datt), class) %in% c("numeric", "double"))
+    # cat(" columns:");print(columns)
+    if(length(columns > 0)) { # 23dec2020 avoid error
+      
+      numColdefs <- list( colDef(format = colFormat(digits = digits())))
+      numColdefs <- rep(numColdefs,length(columns))
+      names(numColdefs) <- names(datt)[columns]
+      allColDefs <- append(allColDefs, numColdefs)
+    }
+    # cat(" numcoldefs name:");print(names(numColdefs));cat(" allColDefs name:");print(names(allColDefs))
+    dt <- reactable::reactable(
+      datt,
+      height = ifelse(class(scrollX)=="character", scrollX, "auto"),
+      filterable = colfilter, searchable = searchable, rownames = rownames,
+      showPageSizeOptions = ifelse(class(scrollX)=="character", F, !scrollX), 
+      striped = T, highlight = T, resizable = T, 
+      theme = reactableTheme(backgroundColor = "#ffffff00", # transparent
+                             headerStyle = list(color = "white", background = "#78c2ad")),
+      # defaultColDef = 
+      columns = if(length(allColDefs)==0) {NULL} else {allColDefs}
+    ) 
+    
+    if(colourcode()) { # This can't force ranging -1, 1 now. Cheryl doesn't like it
+      # sanity check
+      if(!typeof(as.matrix(datt)) %in% c("character", "factor", "logical") && # numeric matrix
+         # diff(dim(dat()))==0 &&                                     # square matrix,
+         # ebv~index cor can't display color because not squared
+         (nrow(datt)>2 || ncol(datt)>2)) {                        # dimention > 2
+        
+        # breaks <- min(max(length(unique(dat()))-1, 2), 9)
+        # cuts <- findCuts(dat(), breaks = breaks)
+        # colors <- findColors(dat(), n = breaks + 1, cuts = cuts) #c(-.0000000001, 0),
+        # sorted <- sort(dat())
+        
+        # make color palette function
+        makeColPal <- function(colors, bias = 1) {
+          get_color <- colorRamp(colors, bias = bias)
+          function(x) rgb(get_color(x), maxColorValue = 255)
+        }
+        
+        if(all(datt<=0)) {
+          c("steelblue3", "white")
+        } else if(all(datt>=0)) {
+          colors <- c("white", "coral")
+        } else {
+          colors <- c("steelblue3", "coral")
+        }
+        
+        heatmapcol <- makeColPal(colors, bias = 2)
+        
+        numColdefs <- list(colDef(format = colFormat(digits = digits()),
+                                  style = function(value) {
+                                    # cat("  value", value, "\n")
+                                    value <- ifelse(value < 0, 0, value)
+                                    value <- ifelse(value > 1, 1, value)
+                                    return(list(background = heatmapcol(value)))
+                                  }))
+        numColdefs <- rep(numColdefs, ncol(datt))
+        names(numColdefs) <- names(datt)
+        
+        dt <- reactable::reactable(
+          datt,
+          height = ifelse(class(scrollX)=="character", scrollX, "auto"),
+          filterable = colfilter, searchable = searchable, rownames = rownames,
+          showPageSizeOptions = ifelse(class(scrollX)=="character", F, !scrollX),
+          striped = T, highlight = T, resizable = T,
+          theme = reactableTheme(backgroundColor = "#ffffff00", # transparent
+                                 headerStyle = list(color = "white", background = "#0a8a98")),
+          columns =  numColdefs
+        )
+      } # if all cols are numeric
+    } # if colourcode
+    #      }) # withProgress
+    return(dt)
+  }) # renderReactable
+})} # renderRctModuleServer
 
 #'Download button UI function
 downloadPlotModuleUI <- function(id) {
