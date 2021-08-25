@@ -169,7 +169,8 @@ renderDtTableModuleUI <- function(id, label = "Download the table") {
   tagList(
     #div(DT::dataTableOutput(ns("table"))) #style = 'overflow-x: scroll',
     div(DT::DTOutput(ns("table"))),
-    downloadModuleUI(ns("download_1"), label)
+    downloadModuleUI(ns("download_1"), label),
+    verbatimTextOutput(ns("clientdataText")) # 26aug2021
   )
 }
 
@@ -211,11 +212,26 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
     id,
     function(input, output, session){
 
-      output$table <- try(DT::renderDT({
-        withProgress(
+      output$table <- DT::renderDT({
+        try(withProgress(
           message = 'Loading table...', value = 0,
           {
         req(!is.null(dat())) # 14oct2020
+            
+            ### client side error handling 26aug2021 ###
+            # Store in a convenience variable
+            cdata <- session$clientData
+            
+            # Values from cdata returned as text
+            output$clientdataText <- renderText({
+              cnames <- names(cdata)
+              
+              allvalues <- lapply(cnames, function(name) {
+                paste(name, cdata[[name]], sep = " = ")
+              })
+              paste(allvalues, collapse = "\n")
+            })
+            ### end client side error handling ###
 
         columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
 # cat("renderDtTableModuleServer\n dat():");print(str(dat()))
@@ -255,10 +271,6 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
                         options = optionss, ... # class = "table-primary"
                         )
         
-        # if(class(t)=="try-error") {
-          # print(t)
-        # }
-        
         columns <- which(sapply(data.frame(datt), class) %in% c("numeric", "double"))
         if(length(columns) > 0) { # 25nov2020
          dt_output <- DT::formatRound(dt_output, columns = columns, digits = digits())
@@ -287,10 +299,14 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
               )
           } # if
         } # if colourcode
-    
-      }) # withProgress
+      })) # withProgress
+        
+        if(class(t)=="try-error") {
+          print(t)
+        }
+        
     return(dt_output)
-  }, server = T)) #, options = list(stateSave =T)) #, 8sept2020
+  }, server = T) #, options = list(stateSave =T)) #, 8sept2020
   #filter = "top") # renderDT/DT::renderDataTable
 
 # observeEvent(input$table_state, { # 8sept2020 OK)
