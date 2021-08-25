@@ -352,7 +352,7 @@ renderDataTableModuleServer <- function(id, dat = reactive(), rownames = F,
       optionss <- append(optionss, option_list)
       
       output$table <- shiny::renderDataTable({
-        withProgress(
+        t <- try(withProgress(
           message = 'Loading table...', value = 0,
           {
             req(!is.null(dat())) # 14oct2020
@@ -370,9 +370,13 @@ renderDataTableModuleServer <- function(id, dat = reactive(), rownames = F,
               datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
               datt[[i]] <- round(datt[[i]], digits())
             }
-          }) # withProgress
-
-        return(datt)
+          })) # withProgress
+        
+        if(class(t)!="try-error") {
+          return(datt) 
+        } else {
+          print(t)
+        }
       }, options = optionss) # shiny:renderDataTable
     })} # renderDataTableModuleServer
 
