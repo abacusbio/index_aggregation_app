@@ -325,7 +325,7 @@ server <- function(input, output, session) {
     
   ## OPTIONS ###
   # allow file sizes up to 300MB
-  options(shiny.maxRequestSize = 300 * 1024 ^ 2, shiny.trace = F, # shiny.error = browser, 
+  options(shiny.maxRequestSize = 300 * 1024 ^ 2, shiny.trace = T, # shiny.error = browser, 
           shiny.error = NULL, #browser,# reactive.error = browser, # 25aug2021
           rsconnect.max.bundle.size = 8192 * 1024^2 # largest memory size available
           
