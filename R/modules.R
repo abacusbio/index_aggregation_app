@@ -211,10 +211,10 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
     id,
     function(input, output, session){
 
-  output$table <- DT::renderDT({
-    withProgress(
-      message = 'Loading table...', value = 0,
-      {
+      output$table <- try(DT::renderDT({
+        withProgress(
+          message = 'Loading table...', value = 0,
+          {
         req(!is.null(dat())) # 14oct2020
 
         columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
@@ -223,7 +223,9 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
         # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
         datt <- dat()
         for(i in columns) datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
-# cat(" datt:\n");print(str(datt))        
+# cat(" datt:\n");print(str(datt))    
+        downloadModuleServer("download_1", downloadName, datt, row.names, type)
+        
         optionss = list(
           # searching = T,
           fixedHeader = fixedHeader,
@@ -252,7 +254,11 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
                         editable = editable,
                         options = optionss, ... # class = "table-primary"
                         )
-
+        
+        # if(class(t)=="try-error") {
+          # print(t)
+        # }
+        
         columns <- which(sapply(data.frame(datt), class) %in% c("numeric", "double"))
         if(length(columns) > 0) { # 25nov2020
          dt_output <- DT::formatRound(dt_output, columns = columns, digits = digits())
@@ -281,14 +287,13 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
               )
           } # if
         } # if colourcode
-      }) # withProgress
     
-    downloadModuleServer("download_1", downloadName, datt, row.names, type)
+      }) # withProgress
     return(dt_output)
-  }, server = T) #, options = list(stateSave =T)) #, 8sept2020
+  }, server = T)) #, options = list(stateSave =T)) #, 8sept2020
   #filter = "top") # renderDT/DT::renderDataTable
 
-# observeEvent(input$table_state, { # 8sept2020 OK
+# observeEvent(input$table_state, { # 8sept2020 OK)
 #   print("input$table_state")
 #   #print(input$table_rows_all[1:3])
 #     print(input$table_state$columns[1:3])

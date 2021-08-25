@@ -161,7 +161,7 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
       })
       
       ## datatable on tabPanel
-      output$dataviewer <- DT::renderDT({
+      output$dataviewer <- try(DT::renderDT({
         withProgress(
           message = "Loading table...", value = 1,
           {
@@ -255,8 +255,13 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
         
         return(dt_output)
       }, server = T # server-side processing, defaut is TRUE
-      ) # DT::renderDT
+      )) # DT::renderDT
       
+      # if(class(t)!="try-error") {
+      #   return(dt_output) 
+      # } else {
+      #   print(t)
+      # }
       observeEvent(input$dataviewer_rows_all, { # when datatable has >0 rows, enable filter and save button
         if(!is.null(input$dataviewer_rows_all)) shinyjs::enable(id = "bttn")
       })

@@ -30,7 +30,7 @@ sumstatModUI <- function(id) {
     h2("Numerical variable summary statistics"),
     h3("Table"),
     # renderDtTableModuleUI(ns("stat_num"), "Numeric sum stats"),
-    renderTableModuleUI(ns("stat_num"), "Numeric sum stats"),
+    renderDtTableModuleUI(ns("stat_num"), "Numeric sum stats"),
     br(),br(),
     h3("Distribution"),
     plotOutput(ns("hist_num"), height = "600px"), # default 400px
@@ -39,7 +39,7 @@ sumstatModUI <- function(id) {
     h2("String variable summary statistics"),
     h3("Table"),
     # renderDtTableModuleUI(ns("stat_chr"), "String sum stats"),
-    renderTableModuleUI(ns("stat_chr"), "String sum stats"),
+    renderDtTableModuleUI(ns("stat_chr"), "String sum stats"),
     br(),br(),
     h3("Distribution"),
     plotOutput(ns("dot_chr"), height = "800px"),
@@ -283,9 +283,9 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
               reactive(stat_num)()
               input$view_dec
             },
-            renderTableModuleServer("stat_num", reactive(stat_num), T,
+            renderDtTableModuleServer("stat_num", reactive(stat_num), T,
                                     c("FixedHeader", "FixedColumns"),
-                                    digits = input$view_dec, downloadName = "sum_stat_num",
+                                    digits = reactive(input$view_dec), downloadName = "sum_stat_num",
                                     editable = F, colfilter = "none", 
                                     option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
           )
@@ -383,7 +383,7 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
               reactive(stat_chr)()
               input$view_dec
             },
-          renderTableModuleServer("stat_chr", reactive(stat_chr), T,
+          renderDtTableModuleServer("stat_chr", reactive(stat_chr), T,
                                     c("FixedHeader", "FixedColumns"),
                                     digits = reactive(input$view_dec),
                                     downloadName = "sum_stat_chr", editable = F, colfilter = "none", 
