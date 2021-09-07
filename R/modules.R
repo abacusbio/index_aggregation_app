@@ -168,6 +168,7 @@ renderDtTableModuleUI <- function(id, label = "Download the table") {
   ns <- NS(id)
   tagList(
     #div(DT::dataTableOutput(ns("table"))) #style = 'overflow-x: scroll',
+    verbatimTextOutput(ns("status1")), # 7sept2021
     div(DT::DTOutput(ns("table"))),
     downloadModuleUI(ns("download_1"), label),
     verbatimTextOutput(ns("clientdataText")) # 26aug2021
@@ -213,11 +214,17 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
     function(input, output, session){
 
       output$table <- DT::renderDT({
+        
+        t <- Sys.time()
+        
         try(withProgress(
-          message = 'Loading table...', value = 0,
+          message = 'Loading table...', min = 0, max = 1, value = 0,
           {
-        req(!is.null(dat())) # 14oct2020
             
+        req(!is.null(dat())) # 14oct2020
+            incProgress(0.1, detail = paste0("1/10, dat has", nrow(dat()), "rows"))
+            output$status1 <- renderText({
+              paste0("1/10, dat has ", nrow(dat()), " rows. Used", Sys.time()-t, " sec to load.")})
             ### client side error handling 26aug2021 ###
             # Store in a convenience variable
             cdata <- session$clientData
@@ -232,14 +239,16 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
               paste(allvalues, collapse = "\n")
             })
             ### end client side error handling ###
-
+            incProgress(0.1, detail = "2/10, clientData generated")
+            
         columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
 # cat("renderDtTableModuleServer\n dat():");print(str(dat()))
         # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
         # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
         datt <- dat()
         for(i in columns) datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
-# cat(" datt:\n");print(str(datt))    
+# cat(" datt:\n");print(str(datt))
+        incProgress(0.1, "3/10, changed column classes.")
         downloadModuleServer("download_1", downloadName, datt, row.names, type)
         
         optionss = list(
@@ -261,7 +270,8 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
         }
         
         optionss <- append(optionss, option_list)
-
+        incProgress(0.1, detail = "4/10, options finished.")
+        
         dt_output <-
           DT::datatable(datt, rownames = rownames,
                         extensions = extensions,
@@ -270,12 +280,14 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
                         editable = editable,
                         options = optionss, ... # class = "table-primary"
                         )
+        incProgress(0.1, "5/10, dt_output generated.")
         
         columns <- which(sapply(data.frame(datt), class) %in% c("numeric", "double"))
         if(length(columns) > 0) { # 25nov2020
          dt_output <- DT::formatRound(dt_output, columns = columns, digits = digits())
         }
-
+        incProgress(0.1, "6/10, formatted dt_output.")
+        
         if(colourcode()) { # heatmap color coding
           # sanity check
           if(!typeof(as.matrix(datt)) %in% c("character", "factor") && # numeric matrix
@@ -299,6 +311,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
               )
           } # if
         } # if colourcode
+        incProgress(0.4, "10/10, cell background colored.", )
       })) # withProgress
         
         if(class(t)=="try-error") {
