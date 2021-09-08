@@ -873,17 +873,17 @@ cat("aggDxMod3\n")
       # observeEvent(length(df_summary_table()) > 0, {
       #   updateSelectInput(session, "agg_by", choices = c("", df_summary_table()$aggregated_by))
       # })
-      
+      agg_by <- debounce(reactive(input$agg_by), 2000)
       # draw percentage plot
       output$classvar_plot <- renderPlot({
         withProgress(message = 'Plotting ...',
                      detail = 'This may take a while...', value = 0, {
 # cat(" classvar_plot\n class_var:", input$class_var, "\n"); print(classvar_summary()[1,])
-        req(input$class_var!="", input$agg_by!="", input$font_size, classvar_summary)
+        req(input$class_var!="", agg_by()!="", input$font_size, classvar_summary)
 
         width <- session$clientData[[paste0("output_", session$ns("classvar_plot"), "_width")]]
         df <- classvar_summary() %>% 
-          dplyr::filter(aggregated_by == input$agg_by)
+          dplyr::filter(aggregated_by == agg_by())
 # cat("  df:", class(df), "\n");print(sapply(df, class))
         p <- plotClassvarBar(# input, output, session,
                              df, input$class_var, "aggregated_index", input$use_count,

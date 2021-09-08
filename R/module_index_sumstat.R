@@ -69,7 +69,7 @@ cat("indexSumstatMod\n")
       
       # renderDtTableModuleServer("index1", reactive(val$dt_sub_index_ids), T, downloadName = "index")
       observeEvent(index(), {
-cat(" observeevent index\n")        
+# cat(" observeevent index\n")        
         req(!is.null(index()))
         
         downloadModuleServer("dnld_index", "index", 
@@ -96,22 +96,22 @@ cat(" observeevent index\n")
                       selected = ""))
       })
       
+      group_vars_d <- debounce(reactive(input$group_vars), 4000) # 8sept2021
+      
       # sum stat
       observeEvent({
         index()
-        input$group_vars
+        group_vars_d() # input$group_vars
         }, {
-          
-        group_vars_d <- debounce(reactive(input$group_vars), 2000) # 8sept2021
-cat(" observe index,  group_vars:", input$group_vars, length(input$group_vars), "\n")        
+# cat(" observe index, group_vars_d:", group_vars_d(), "\n")
         req(!is.null(index()), !is.null(val$dt_ev_filtered), length(input$group_vars) > 0)
-
+          
         if(group_vars_d()!="") {
           group_vars <- isolate(sapply(strsplit(group_vars_d(), "\\{"), head, 1) %>% unlist())
         } else {
           group_vars <- group_vars_d()
         }
-# cat("  group_vars:", group_vars, "\n")        
+          
         index_vars <- names(index())
    
         index_t <- data.frame(t(index())) %>% # Index x animal
