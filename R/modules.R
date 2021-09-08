@@ -220,7 +220,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
   moduleServer(
     id,
     function(input, output, session){
-
+# cat("renderDtTableModuleServer\n")
       output$table <- DT::renderDT({
         output$status0 <- renderText({paste0("0/10, start DT::renderDT at ", t)})
         t <- Sys.time()
@@ -230,11 +230,11 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
         colourcode <- debounce(colourcode, 1000, 98)
         output$status1 <- renderText({
           paste0("1/10, debounced at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
+# cat(" domain:");print(getDefaultReactiveDomain()) # different in different module calls
         
       test <- try(withProgress(
           message = 'Loading table...', min = 0, max = 1, value = 0,
           {
-            
         req(!is.null(dat())) # 14oct2020
           #  incProgress(0.1, detail = paste0("1/10, dat has", nrow(dat()), "rows"))
             output$status2 <- renderText({
@@ -341,7 +341,7 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
           paste0("10/10, cell background colored at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
       })) # withProgress
         
-        if(class(test)=="try-error") {
+        if(class(test)[1]=="try-error") {
           print(test)
         } else print(class(test))
         
