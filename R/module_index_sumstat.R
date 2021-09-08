@@ -101,13 +101,15 @@ cat(" observeevent index\n")
         index()
         input$group_vars
         }, {
+          
+        group_vars_d <- debounce(reactive(input$group_vars), 2000) # 8sept2021
 cat(" observe index,  group_vars:", input$group_vars, length(input$group_vars), "\n")        
         req(!is.null(index()), !is.null(val$dt_ev_filtered), length(input$group_vars) > 0)
 
-        if(input$group_vars!="") {
-          group_vars <- isolate(sapply(strsplit(input$group_vars, "\\{"), head, 1) %>% unlist())
+        if(group_vars_d()!="") {
+          group_vars <- isolate(sapply(strsplit(group_vars_d(), "\\{"), head, 1) %>% unlist())
         } else {
-          group_vars <- input$group_vars
+          group_vars <- group_vars_d()
         }
 # cat("  group_vars:", group_vars, "\n")        
         index_vars <- names(index())
@@ -204,7 +206,7 @@ cat(" observe index,  group_vars:", input$group_vars, length(input$group_vars), 
 
             output$boxplot <- renderPlot({
               withProgress(
-                message = "Plotting. This may take some time...", value = 1,
+                message = "Plotting. This may take some time...",
                 {
               req(df, input$font_size)
               width  <- session$clientData[[paste0("output_", session$ns("boxplot"), "_width")]]
