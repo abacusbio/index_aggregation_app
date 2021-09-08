@@ -73,6 +73,13 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
     id,
     function(input, output, session){
       
+      datt <- debounce(datt, millis = 1000, priority = 100, domain = getDefaultReactiveDomain())
+      filter_cols <- debounce(filter_cols, 1000, 99)
+      filter_levels <- debounce(filter_levels, 1000, 98)
+      na_include <- debounce(na_include, 1000, 97)
+      na_to_0 <- debounce(na_to_0, 1000, 96)
+      apply <- debounce(apply, 1000, 95)
+      
       # r_state <- reactiveValues(view_vars = NULL, dataviewer_state = list(),
       #                           dataviewer_search_columns = NULL)
       

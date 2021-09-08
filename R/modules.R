@@ -168,8 +168,18 @@ renderDtTableModuleUI <- function(id, label = "Download the table") {
   ns <- NS(id)
   tagList(
     #div(DT::dataTableOutput(ns("table"))) #style = 'overflow-x: scroll',
+    verbatimTextOutput(ns("status0")), # 7sept2021
+    verbatimTextOutput(ns("status1")),
+    verbatimTextOutput(ns("status2")), 
+    verbatimTextOutput(ns("status3")), 
+    verbatimTextOutput(ns("status4")), 
+    verbatimTextOutput(ns("status5")), 
+    verbatimTextOutput(ns("status6")), 
+    verbatimTextOutput(ns("status7")), 
+    verbatimTextOutput(ns("status8")),
     div(DT::DTOutput(ns("table"))),
-    downloadModuleUI(ns("download_1"), label)
+    downloadModuleUI(ns("download_1"), label),
+    verbatimTextOutput(ns("clientdataText")) # 26aug2021
   )
 }
 
@@ -198,96 +208,146 @@ renderDtTableModuleUI <- function(id, label = "Download the table") {
 #' interactive https://laustep.github.io/stlahblog/posts/DTcallbacks.html
 #' disable search bar: http://legacy.datatables.net/usage/options
 renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
-                                     extensions = c("FixedHeader", "FixedColumns", "Buttons"),
-                                     fixedHeader = F, leftColumns = 0, # fixed left most column
-                                     scrollX = F,
-                                     digits = reactive(3),
-                                     colourcode = reactive(FALSE),
-                                     dom = "Bfrtip", buttons = I('colvis'),
-                                     downloadName = "test_download", row.names = F, type = "csv",
-                                     editable = F, colfilter = "top",
-                                     option_list = NULL, ...) {
+                                      extensions = c("FixedHeader", "FixedColumns", "Buttons"),
+                                      fixedHeader = F, leftColumns = 0, # fixed left most column
+                                      scrollX = F,
+                                      digits = reactive(3),
+                                      colourcode = reactive(FALSE),
+                                      dom = "Bfrtip", buttons = I('colvis'),
+                                      downloadName = "test_download", row.names = F, type = "csv",
+                                      editable = F, colfilter = "top",
+                                      option_list = NULL, ...) {
   moduleServer(
     id,
     function(input, output, session){
-
-  output$table <- DT::renderDT({
-    withProgress(
-      message = 'Loading table...', value = 0,
-      {
-        req(!is.null(dat())) # 14oct2020
-
-        columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
-# cat("renderDtTableModuleServer\n dat():");print(str(dat()))
-        # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
-        # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
-        datt <- dat()
-        for(i in columns) datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
-# cat(" datt:\n");print(str(datt))        
-        optionss = list(
-          # searching = T,
-          fixedHeader = fixedHeader,
-          fixedColumns = list(leftColumns = leftColumns, # 1 column on the left most
-                              rightColumns = 0,    # no column on the right most
-                              fluidColumns = TRUE, # flexible column width
-                              scrollX = scrollX)
-          # stateSave = T # 8Sept2020
-          # 5aug2021 test Ajax error in rsconnect https://rstudio.github.io/DT/server.html
-          # doesn't work
-          # ajax = list(serverSide = TRUE, processing = TRUE,
-                      # url = DT::dataTableAjax(session, datt, outputId = id))
-        )
-        if("Buttons" %in% extensions) {
-          optionss$dom <- dom
-          optionss$buttons <- buttons
-        }
+      # cat("renderDtTableModuleServer\n")
+      output$table <- DT::renderDT({
+        output$status0 <- renderText({paste0("0/10, start DT::renderDT at ", t)})
+        t <- Sys.time()
         
-        optionss <- append(optionss, option_list)
-
-        dt_output <-
-          DT::datatable(datt, rownames = rownames,
-                        extensions = extensions,
-                        filter = colfilter, # col filter
-                        #selection = list(mode = "multiple", target = "row+column"),#"multiple",
-                        editable = editable,
-                        options = optionss, ... # class = "table-primary"
-                        )
-
-        columns <- which(sapply(data.frame(datt), class) %in% c("numeric", "double"))
-        if(length(columns) > 0) { # 25nov2020
-         dt_output <- DT::formatRound(dt_output, columns = columns, digits = digits())
-        }
-
-        if(colourcode()) { # heatmap color coding
-          # sanity check
-          if(!typeof(as.matrix(datt)) %in% c("character", "factor") && # numeric matrix
-             # diff(dim(dat()))==0 &&                                     # square matrix,
-             # ebv~index cor can't display color because not squared
-             (nrow(datt)>2 || ncol(datt)>2)) {                        # dimention > 2
-
-            breaks <- min(max(length(unique(datt))-1, 2), 9)
-            cuts <- findCuts(datt, breaks = breaks)
-
-            colors <- findColors(datt, n = breaks + 1) #c(-.0000000001, 0),
-            # print("module")
-            # print(breaks)
-            # print(cuts)
-            # print(colors)
-            # if(length(colors)!=length(cuts)+1) {stop(cat(length(cuts), "", length(colors)))}
-
-            dt_output <- dt_output %>%
-              DT::formatStyle(columns = columns,
-                              backgroundColor = styleInterval(cuts = cuts, values = colors)
+        dat <- debounce(dat, millis = 1000, priority = 100, domain = getDefaultReactiveDomain())
+        digits <- debounce(digits, 1000, priority = 99)
+        colourcode <- debounce(colourcode, 1000, 98)
+        output$status1 <- renderText({
+          paste0("1/10, debounced at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
+        # cat(" domain:");print(getDefaultReactiveDomain()) # different in different module calls
+        
+        test <- try(withProgress(
+          message = 'Loading table...', min = 0, max = 1, value = 0,
+          {
+            req(!is.null(dat())) # 14oct2020
+            #  incProgress(0.1, detail = paste0("1/10, dat has", nrow(dat()), "rows"))
+            output$status2 <- renderText({
+              paste0("2/10, dat has ", nrow(dat()), " rows at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
+            ### client side error handling 26aug2021 ###
+            # Store in a convenience variable
+            cdata <- session$clientData
+            
+            # Values from cdata returned as text
+            output$clientdataText <- renderText({
+              cnames <- names(cdata)
+              
+              allvalues <- lapply(cnames, function(name) {
+                paste(name, cdata[[name]], sep = " = ")
+              })
+              paste(allvalues, collapse = "\n")
+            })
+            ### end client side error handling ###
+            # incProgress(0.1, detail = "2/10, clientData generated")
+            output$status3 <- renderText({
+              paste0("3/10, clientData generated at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
+            
+            columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
+            # cat("renderDtTableModuleServer\n dat():");print(str(dat()))
+            # 20july2021 test Ajax error rsconnect https://github.com/rstudio/DT/issues/266
+            # each column inside a data.fram has to be a vector instead of an array(>=1 dimensions)
+            datt <- dat()
+            for(i in columns) datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
+            # cat(" datt:\n");print(str(datt))
+            # incProgress(0.1, "3/10, changed column classes.")
+            output$status4 <- renderText({
+              paste0("4/10, changed column classes at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
+            
+            downloadModuleServer("download_1", downloadName, datt, row.names, type)
+            
+            optionss = list(
+              # searching = T,
+              fixedHeader = fixedHeader,
+              fixedColumns = list(leftColumns = leftColumns, # 1 column on the left most
+                                  rightColumns = 0,    # no column on the right most
+                                  fluidColumns = TRUE, # flexible column width
+                                  scrollX = scrollX)
+              # stateSave = T # 8Sept2020
+              # 5aug2021 test Ajax error in rsconnect https://rstudio.github.io/DT/server.html
+              # doesn't work
+              # ajax = list(serverSide = TRUE, processing = TRUE,
+              # url = DT::dataTableAjax(session, datt, outputId = id))
+            )
+            if("Buttons" %in% extensions) {
+              optionss$dom <- dom
+              optionss$buttons <- buttons
+            }
+            
+            optionss <- append(optionss, option_list)
+            # incProgress(0.1, detail = "4/10, options finished.")
+            output$status5 <- renderText({
+              paste0("5/10, options finished at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
+            
+            dt_output <-
+              DT::datatable(datt, rownames = rownames,
+                            extensions = extensions,
+                            filter = colfilter, # col filter
+                            #selection = list(mode = "multiple", target = "row+column"),#"multiple",
+                            editable = editable,
+                            options = optionss, ... # class = "table-primary"
               )
-          } # if
-        } # if colourcode
-      }) # withProgress
-    
-    downloadModuleServer("download_1", downloadName, datt, row.names, type)
-    return(dt_output)
-  }, server = T) #, options = list(stateSave =T)) #, 8sept2020
-  #filter = "top") # renderDT/DT::renderDataTable
-
+            # incProgress(0.1, "5/10, dt_output generated.")
+            output$statu6 <- renderText({
+              paste0("6/10, dt_output generated at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
+            
+            columns <- which(sapply(data.frame(datt), class) %in% c("numeric", "double"))
+            if(length(columns) > 0) { # 25nov2020
+              dt_output <- DT::formatRound(dt_output, columns = columns, digits = digits())
+            }
+            # incProgress(0.1, "6/10, formatted dt_output.")
+            output$status7 <- renderText({
+              paste0("7/10, formatted dt_output at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
+            
+            if(colourcode()) { # heatmap color coding
+              # sanity check
+              if(!typeof(as.matrix(datt)) %in% c("character", "factor") && # numeric matrix
+                 # diff(dim(dat()))==0 &&                                     # square matrix,
+                 # ebv~index cor can't display color because not squared
+                 (nrow(datt)>2 || ncol(datt)>2)) {                        # dimention > 2
+                
+                breaks <- min(max(length(unique(datt))-1, 2), 9)
+                cuts <- findCuts(datt, breaks = breaks)
+                
+                colors <- findColors(datt, n = breaks + 1) #c(-.0000000001, 0),
+                # print("module")
+                # print(breaks)
+                # print(cuts)
+                # print(colors)
+                # if(length(colors)!=length(cuts)+1) {stop(cat(length(cuts), "", length(colors)))}
+                
+                dt_output <- dt_output %>%
+                  DT::formatStyle(columns = columns,
+                                  backgroundColor = styleInterval(cuts = cuts, values = colors)
+                  )
+              } # if
+            } # if colourcode
+            # incProgress(0.4, "10/10, cell background colored.", )
+            output$status8 <- renderText({
+              paste0("10/10, cell background colored at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
+          })) # withProgress
+        
+        if(class(test)[1]=="try-error") {
+          print(test)
+        } else print(class(test))
+        
+        return(dt_output)
+      }, server = T) #, options = list(stateSave =T)) #, 8sept2020
+      #filter = "top") # renderDT/DT::renderDataTable
 # observeEvent(input$table_state, { # 8sept2020 OK
 #   print("input$table_state")
 #   #print(input$table_rows_all[1:3])
