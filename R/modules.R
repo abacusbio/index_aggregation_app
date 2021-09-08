@@ -168,13 +168,15 @@ renderDtTableModuleUI <- function(id, label = "Download the table") {
   ns <- NS(id)
   tagList(
     #div(DT::dataTableOutput(ns("table"))) #style = 'overflow-x: scroll',
-    verbatimTextOutput(ns("status1")), # 7sept2021
+    verbatimTextOutput(ns("status0")), # 7sept2021
+    verbatimTextOutput(ns("status1")),
     verbatimTextOutput(ns("status2")), 
     verbatimTextOutput(ns("status3")), 
     verbatimTextOutput(ns("status4")), 
     verbatimTextOutput(ns("status5")), 
     verbatimTextOutput(ns("status6")), 
     verbatimTextOutput(ns("status7")), 
+    verbatimTextOutput(ns("status8")),
     div(DT::DTOutput(ns("table"))),
     downloadModuleUI(ns("download_1"), label),
     verbatimTextOutput(ns("clientdataText")) # 26aug2021
