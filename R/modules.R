@@ -220,8 +220,14 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
     function(input, output, session){
 
       output$table <- DT::renderDT({
-        
+        output$status0 <- renderText({paste0("0/10, start DT::renderDT at ", t)})
         t <- Sys.time()
+        
+        dat <- debounce(dat, millis = 1000, priority = 100, domain = getDefaultReactiveDomain())
+        digits <- debounce(digits, 1000, priority = 99)
+        colourcode <- debounce(colourcode, 1000, 98)
+        output$status1 <- renderText({
+          paste0("1/10, debounced at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
         
       test <- try(withProgress(
           message = 'Loading table...', min = 0, max = 1, value = 0,
@@ -229,8 +235,8 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
             
         req(!is.null(dat())) # 14oct2020
           #  incProgress(0.1, detail = paste0("1/10, dat has", nrow(dat()), "rows"))
-            output$status1 <- renderText({
-              paste0("1/10, dat has ", nrow(dat()), " rows. Used ", Sys.time()-t, " sec to load.")})
+            output$status2 <- renderText({
+              paste0("2/10, dat has ", nrow(dat()), " rows at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
             ### client side error handling 26aug2021 ###
             # Store in a convenience variable
             cdata <- session$clientData
@@ -246,8 +252,8 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
             })
             ### end client side error handling ###
            # incProgress(0.1, detail = "2/10, clientData generated")
-            output$status2 <- renderText({
-              paste0("2/10, clientData generated. At ", Sys.time()-t, " sec.")})
+            output$status3 <- renderText({
+              paste0("3/10, clientData generated at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
             
         columns <- which(sapply(data.frame(dat()), class) %in% c("numeric", "integer", "double"))
 # cat("renderDtTableModuleServer\n dat():");print(str(dat()))
@@ -257,8 +263,8 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
         for(i in columns) datt[[i]] <- getFunction(paste0("as.", class(datt[[i]])))(datt[[i]])
 # cat(" datt:\n");print(str(datt))
         # incProgress(0.1, "3/10, changed column classes.")
-        output$status3 <- renderText({
-          paste0("3/10, changed column classes. At ", Sys.time()-t, " sec.")})
+        output$status4 <- renderText({
+          paste0("4/10, changed column classes at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
         
         downloadModuleServer("download_1", downloadName, datt, row.names, type)
         
@@ -282,8 +288,8 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
         
         optionss <- append(optionss, option_list)
         # incProgress(0.1, detail = "4/10, options finished.")
-        output$status4 <- renderText({
-          paste0("4/10, options finished. At ", Sys.time()-t, " sec.")})
+        output$status5 <- renderText({
+          paste0("5/10, options finished at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
         
         dt_output <-
           DT::datatable(datt, rownames = rownames,
@@ -294,16 +300,16 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
                         options = optionss, ... # class = "table-primary"
                         )
         # incProgress(0.1, "5/10, dt_output generated.")
-        output$statu5 <- renderText({
-          paste0("5/10, dt_output generated. At ", Sys.time()-t, " sec.")})
+        output$statu6 <- renderText({
+          paste0("6/10, dt_output generated at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
         
         columns <- which(sapply(data.frame(datt), class) %in% c("numeric", "double"))
         if(length(columns) > 0) { # 25nov2020
          dt_output <- DT::formatRound(dt_output, columns = columns, digits = digits())
         }
         # incProgress(0.1, "6/10, formatted dt_output.")
-        output$status6 <- renderText({
-          paste0("6/10, formatted dt_output. At ", Sys.time()-t, " sec.")})
+        output$status7 <- renderText({
+          paste0("7/10, formatted dt_output at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
         
         if(colourcode()) { # heatmap color coding
           # sanity check
@@ -329,8 +335,8 @@ renderDtTableModuleServer <- function(id, dat = reactive(), rownames = F,
           } # if
         } # if colourcode
         # incProgress(0.4, "10/10, cell background colored.", )
-        output$status7 <- renderText({
-          paste0("10/10, cell background colored. At ", Sys.time()-t, " sec.")})
+        output$status8 <- renderText({
+          paste0("10/10, cell background colored at ", Sys.time(), " diff t: ", round(Sys.time()-t, 4))})
       })) # withProgress
         
         if(class(test)=="try-error") {
