@@ -1,19 +1,19 @@
 # 24Feb2021
 # PCA: variables are Gaussian and non-independent (y is a function of x), can have linear 
 # combination to form uncorrelated PC,  
-#     if vars were meatured in different scale and you want to constrain the influence of variables 
-#     of large variance, then scale or use correlaiton matrix.
+#     if vars were measured in different scale and you want to constrain the influence of variables 
+#     of large variance, then scale or use correlation matrix.
 #     if standardisation will make noise (or outlier) close to signal, then don't scale
 #     if the raw number have meanings e.g. RGB 0-256, then don't center.
 #     optimisation: 
 #       1. XV
 #       2. VALIDATION VIA MATRIX COMPLETION
 #       3. Nuclear normal penalties
-# PCA via SVD: SVD looks for underlying lantent variables that are non Gaussian.
+# PCA via SVD: SVD looks for underlying latent variables that are non Gaussian.
 #      Cons: when a variable has no correlation with others, factor analysis ignore it whereas PCA
 #      takes the largest variance no matter what correlation there is
 # Sparse PCA: use if p>>n to give penalty to V
-#             how to determin p? For uncorrelated features, the optimal feature size is N−1 (where N
+#             how to determine p? For uncorrelated features, the optimal feature size is N−1 (where N
 #             is sample size). As feature correlation increases, and the optimal feature size
 #             becomes proportional to sqrt(N) for highly correlated features.
 # kernel PCA: if PC(s) is a non-linear combination of raw variables, use kernel PCA
@@ -22,11 +22,11 @@
 #' 
 #' @param dat a matrix or data.frame object with features in the rows and observations in the 
 #'        columns. The objective is to reduce the feature dimension and cluster observations.
-#' @param center logical, whether to centerize each feature. if the raw number have meanings e.g. 
+#' @param center logical, whether to centerise each feature. if the raw number have meanings e.g. 
 #'        RGB 0-256, then don't center.
-#' @param scaling logical, whether to scale all features to ~N(0, 1). if vars were meatured in 
+#' @param scaling logical, whether to scale all features to ~N(0, 1). if vars were measured in 
 #'        different scale and you want to constrain the influence of variables of large variance,
-#'        then scale or use correlaiton matrix. if standardisation will make noise (or outlier) 
+#'        then scale or use correlation matrix. if standardisation will make noise (or outlier) 
 #'        close to signal, then don't scale.
 #' @param obs a string vector that matches the observation names (dat colnames) to be highlighted on
 #'        the PC score plot.
@@ -160,6 +160,7 @@ plotPCscore <- function(dat, pc_scores, n_pc = 2, obs = NULL, group = NULL) {
 }
 
 #' Plot PC loadings in bar charts
+#' 
 #' @param rotation a matrix of features by rotated PCs, e.g. "rotation" object of prcomp output
 #' @param n_pc an integer, the number of largest PC to plot
 #' 

@@ -25,7 +25,8 @@ dataViewerModuleSidebarUI <- function(id, defaultName = "") {
     h4("Variable display controller"),
     wellPanel(
       #   actionLink(ns("view_clear"), "Clear settings", icon = icon("refresh"), style = "color:black"),
-      uiOutput(ns("ui_view_vars")),
+      selectInput(ns("view_vars"), "Select variables to show:", "", "",
+                  multiple = T, selectize = F, size = 15),
       # sustitute decimal places with digits below
       numericInput(ns("view_dec"), "Decimals:", value = 2, min = 0),
       #tags$table(
@@ -84,20 +85,20 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
       #                           dataviewer_search_columns = NULL)
       
       ## col var selection panel at sidebar
-      output$ui_view_vars <- renderUI({
+      observeEvent(datt(), {
         req(!is.null(datt()))
-        
+
         # if(is.null(vars())) {
-        vars <- names(datt())  # varnames() # 9sept2020
+          vars <- names(datt())  # varnames() # 9sept2020
         # } else { vars <- vars()}
-        return(
-          selectInput(
-            session$ns("view_vars"),  # use session$ns() to get inside id being recognized
-            "Select variables to show:", choices = vars,
-            selected = vars, # state_multiple("view_vars", vars, vars),
-            multiple = TRUE,
-            selectize = FALSE, size = min(15, length(vars))
-          ))
+
+        updateSelectInput(session,
+            "view_vars",  # use session$ns() to get inside id being recognized
+            choices = vars,
+            selected = vars #state_multiple("view_vars", vars, vars),
+           )
+
+			
       }) # ui_view_vars
       
       # ## store changes made by the user
