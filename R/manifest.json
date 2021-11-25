@@ -4127,32 +4127,6 @@
         "Built": "R 4.0.4; x86_64-w64-mingw32; 2021-02-15 17:12:28 UTC; windows"
       }
     },
-    "thematic": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com",
-      "description": {
-        "Package": "thematic",
-        "Title": "Unified and Automatic 'Theming' of 'ggplot2', 'lattice', and\n'base' R Graphics",
-        "Version": "0.1.2.1",
-        "Authors@R": "c(\n  person(\"Carson\", \"Sievert\", role = c(\"aut\", \"cre\"), email = \"carson@rstudio.com\", comment = c(ORCID = \"0000-0002-4958-2844\")),\n  person(\"Barret\", \"Schloerke\", email = \"barret@rstudio.com\", role = \"aut\", comment = c(ORCID = \"0000-0001-9986-114X\")),\n  person(\"Joe\", \"Cheng\", role = \"aut\", email = \"joe@rstudio.com\"),\n  person(family = \"RStudio\", role = \"cph\")\n  )",
-        "Description": "\n  Theme 'ggplot2', 'lattice', and 'base' graphics based on a few choices, including foreground color, background color, accent color,\n  and font family. Fonts that aren't available on the system, but are available via download on 'Google Fonts',\n  can be automatically downloaded, cached, and registered for use with the 'showtext' and 'ragg' packages.",
-        "URL": "https://rstudio.github.io/thematic/,\nhttps://github.com/rstudio/thematic#readme",
-        "Depends": "R (>= 3.0.0)",
-        "Imports": "utils, graphics, grDevices, grid, farver, rlang, scales,\nrstudioapi (>= 0.8), rappdirs, ggplot2 (>= 3.3.0)",
-        "Suggests": "lattice, stats, withr, sysfonts, showtext, Cairo,\nsystemfonts, ragg, knitr, rmarkdown, htmltools, shiny (>=\n1.5.0), bslib, testthat, gganimate, vdiffr (>= 1.0.0), svglite,\njsonlite, curl",
-        "License": "MIT + file LICENSE",
-        "Encoding": "UTF-8",
-        "RoxygenNote": "7.1.1",
-        "Collate": "'auto.R' 'base.R' 'cache.R' 'gfonts.R' 'ggplot.R' 'globals.R'\n'hooks.R' 'imports.R' 'knitr.R' 'lattice.R' 'onLoad.R'\n'thematic-save-plot.R' 'thematic.R' 'utils.R'\n'view-shinytest.R'",
-        "NeedsCompilation": "no",
-        "Packaged": "2021-06-09 21:16:17 UTC; cpsievert",
-        "Author": "Carson Sievert [aut, cre] (<https://orcid.org/0000-0002-4958-2844>),\n  Barret Schloerke [aut] (<https://orcid.org/0000-0001-9986-114X>),\n  Joe Cheng [aut],\n  RStudio [cph]",
-        "Maintainer": "Carson Sievert <carson@rstudio.com>",
-        "Repository": "CRAN",
-        "Date/Publication": "2021-06-09 21:50:02 UTC",
-        "Built": "R 4.0.2; ; 2021-07-08 01:48:57 UTC; windows"
-      }
-    },
     "tibble": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com",
@@ -4649,17 +4623,8 @@
     "clustering_run.md": {
       "checksum": "293cc618f937e75d54ca10ebf83f0611"
     },
-    "css/bootstrap.min_minty.css": {
-      "checksum": "b239dbb9e5e60231a00a7cfc9b1cba0c"
-    },
-    "css/bootstrap_minty.css": {
-      "checksum": "5de067136df3c0a44d57f3c8e3563fd7"
-    },
     "css/bootstrap_minty_edited.css": {
-      "checksum": "2802698da32d942d28f88c817e662459"
-    },
-    "css/bootstrap_solar.css": {
-      "checksum": "7e59315e2fdd6a0ac2ac09bcfb2f7c6b"
+      "checksum": "388977d5453a20cfc34fe8eb1e2f76e2"
     },
     "data/bv.csv": {
       "checksum": "6a9f104f17641a669259af059385c232"
@@ -4681,9 +4646,6 @@
     },
     "data/lib_list.txt": {
       "checksum": "4b6ee3f7fedd9280890b0929be52614b"
-    },
-    "desktop.ini": {
-      "checksum": "15478b340a8362bb79fd2a6ea0dde1a0"
     },
     "figure/dendrogram-1.png": {
       "checksum": "fc9ab7f3074fb408656a8e482d4590c3"
@@ -4725,7 +4687,7 @@
       "checksum": "49407f67cd0c68667eb91dddfedd9f49"
     },
     "function_pca.R": {
-      "checksum": "d19bc1bd8166bd6348bd8885682b07e6"
+      "checksum": "329c32c6abc8f0bb8c6dc30fab6bdf7d"
     },
     "function_preprocess.R": {
       "checksum": "8398e312389bdadca2efe51b13a358b1"
@@ -4738,9 +4700,6 @@
     },
     "help/clustering_run.html": {
       "checksum": "bcfa393b47590cf3408f92f61e93525a"
-    },
-    "help/clustering_run.md": {
-      "checksum": "8e7a88e357a224fa13be6ce89ac8d9f1"
     },
     "help/clustering_run.Rmd": {
       "checksum": "8b52f783cb7d4ada7431f64ac9f76bc5"
@@ -4766,12 +4725,6 @@
     "help/preprocess_sumstat.Rmd": {
       "checksum": "85250eea9e24da516f8416a55b817781"
     },
-    "help/test_legacy.html": {
-      "checksum": "fef72061f2bad177dcaf2aeeb09b50a7"
-    },
-    "help/test_legacy.Rmd": {
-      "checksum": "c78db6b73d1378995f2f99634c91f710"
-    },
     "index_viewer.html": {
       "checksum": "71a8b7e0d93daeebce43d4253a5c7524"
     },
@@ -4782,7 +4735,7 @@
       "checksum": "c29b78c6975b3d7aca020b3dc89510fe"
     },
     "module_aggregation_dx.R": {
-      "checksum": "6ad005e420d25eb8a66e64a883edf0a4"
+      "checksum": "d84a0eacf52ae6dd0a58caff4fbfe783"
     },
     "module_cl_dx.R": {
       "checksum": "7d5c2e7951ef82a5d108147b55f65c0f"
@@ -4800,10 +4753,10 @@
       "checksum": "e04ccb4e4dc1ac11e1caa461d03590e8"
     },
     "module_dt_viewer.R": {
-      "checksum": "0022a49566dc31cc2a3fb490e01505e2"
+      "checksum": "b1b84df9999f80d7603a422945c3af11"
     },
     "module_index_sumstat.R": {
-      "checksum": "262dd33f326d9ff31fe2effb2bcb922c"
+      "checksum": "80de58be7ac2a26a7b199bfac0a50be7"
     },
     "module_inspect_cluster.R": {
       "checksum": "ec5e0eed61fc036ff32dbf7e0b099fdf"
@@ -4818,7 +4771,7 @@
       "checksum": "380118b7445e23024c3d8d8ceaae2799"
     },
     "modules.R": {
-      "checksum": "f256041b05480a25df45b414ec03a062"
+      "checksum": "5df4eb88eaf7eae4d5a26987ba1f0c73"
     },
     "preprocess.html": {
       "checksum": "39669946e9a19f2ad02c2027a12b2daf"
