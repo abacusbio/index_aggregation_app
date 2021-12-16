@@ -90,3 +90,24 @@ suppressMessages(desc_ev <- read_csv(
 suppressMessages(desc_ev_tr_mismatch <- read_csv(
   "../data/description_ev_trait_mismatch.csv")
   )
+
+# -----------------
+# Breeding values
+# -----------------
+# Normal'good'data.Has just the required columns and values.
+suppressMessages(
+  bv <- read.table(
+    "../data/bv.csv",
+    header = T,
+    colClasses = c("numeric", "character", rep("double", 14)),
+    sep = ",",
+    fileEncoding = "UTF-8-BOM",
+    stringsAsFactors = F,
+    quote = "\"",
+    fill = T,
+    comment.char = "",
+    dec = ".",
+    check.names = F,
+    strip.white = T,
+  )
+)
