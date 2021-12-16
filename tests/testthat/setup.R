@@ -7,6 +7,19 @@
 # For data formats and required fields see the index testing app at
 # https://abacusbio.shinyapps.io/selection_index_revamp/
 
+#  We want a clean test report with less clutter.
+suppressWarnings({
+  suppressPackageStartupMessages({
+    library(testthat)
+    library(readxl)
+    library(tidyverse)
+  })
+})
+
+# ----------------------------------
+# Breeding value file descriptions
+# ----------------------------------
+
 # Normal'good'data.Has just the required columns and values.
 desc_bv <- read_xlsx(
   "../data/description_bv.xlsx",
@@ -18,9 +31,8 @@ desc_bv <- read_xlsx(
 )
 
 # Normal'good'data but with optional fields.
-suppressMessages(
-  desc_bv_opt <- read_csv("../data/description_bv_optional.csv")
-  )
+suppressMessages(desc_bv_opt <-
+                   read_csv("../data/description_bv_optional.csv"))
 
 
 # Has duplicate column headers.
@@ -49,22 +61,32 @@ test_desc_bv <-
   )
 
 # Has identical order values in trait label/EBV rows.
-suppressMessages(
-  desc_bv_identical_odr <- read_csv(
-    "../data/description_bv_identical_order.csv"
-    )
+suppressMessages(desc_bv_identical_odr <- read_csv(
+  "../data/description_bv_identical_order.csv")
   )
 
 # Has missing order values in trait label/EBV rows.
-suppressMessages(
-  desc_bv_missing_odr <- read_csv(
-    "../data/description_bv_missing_order.csv"
-    )
+suppressMessages(desc_bv_missing_odr <- read_csv(
+  "../data/description_bv_missing_order.csv")
   )
 
 # Has missing group values in trait label/EBV rows.
-suppressMessages(
-  desc_bv_missing_grp <- read_csv(
-    "../data/description_bv_missing_group.csv"
-    )
+suppressMessages(desc_bv_missing_grp <- read_csv(
+  "../data/description_bv_missing_group.csv")
+  )
+
+
+# ----------------------------------
+# Economic value file descriptions
+# ----------------------------------
+
+# Normal'good'data.Has just the required columns and values.
+suppressMessages(desc_ev <- read_csv(
+  "../data/description_ev.csv")
+  )
+
+# Column_labelling contents are not identical to those in the 
+# EBV description file.
+suppressMessages(desc_ev_tr_mismatch <- read_csv(
+  "../data/description_ev_trait_mismatch.csv")
   )
