@@ -111,3 +111,93 @@ suppressMessages(
     strip.white = T,
   )
 )
+
+# -----------------
+# Economic values
+# -----------------
+
+suppressMessages({
+  # Normal'good'data.Has just the required columns and values.
+  ev <- read.table(
+    "../data/ev.csv",
+    header = T,
+    colClasses = c("character", rep("double", 10), rep("character", 2)),
+    sep = ",",
+    fileEncoding = "UTF-8-BOM",
+    stringsAsFactors = F,
+    quote = "\"",
+    fill = T,
+    comment.char = "",
+    dec = ".",
+    check.names = F,
+    strip.white = T,
+  )
+  
+  # 'Index' column is duplicated.
+  ev_dup_hdr <- read.table(
+    "../data/ev_dup_hdr.csv",
+    header = T,
+    colClasses = c("character", rep("double", 10), rep("character", 3)),
+    sep = ",",
+    fileEncoding = "UTF-8-BOM",
+    stringsAsFactors = F,
+    quote = "\"",
+    fill = T,
+    comment.char = "",
+    dec = ".",
+    check.names = F,
+    strip.white = T,
+  )
+  
+  # Indices are not unique.
+  ev_dup_index <- read.table(
+    "../data/ev_dup_index.csv",
+    header = T,
+    colClasses = c("character", rep("double", 10), rep("character", 2)),
+    sep = ",",
+    fileEncoding = "UTF-8-BOM",
+    stringsAsFactors = F,
+    quote = "\"",
+    fill = T,
+    comment.char = "",
+    dec = ".",
+    check.names = F,
+    strip.white = T,
+  )
+  
+  ev_mismatch_hdr <- read.table(
+    "../data/ev_mismatch_hdr.csv",
+    header = T,
+    colClasses = c("character", rep("double", 11), rep("character", 2)),
+    sep = ",",
+    fileEncoding = "UTF-8-BOM",
+    stringsAsFactors = F,
+    quote = "\"",
+    fill = T,
+    comment.char = "",
+    dec = ".",
+    check.names = F,
+    strip.white = T,
+  )
+  
+  ev_invalid_hdr <- read.table(
+    "../data/ev_invalid_hdr.csv",
+    header = T,
+    colClasses = c("character", rep("double", 11), rep("character", 2)),
+    sep = ",",
+    fileEncoding = "UTF-8-BOM",
+    stringsAsFactors = F,
+    quote = "\"",
+    fill = T,
+    comment.char = "",
+    dec = ".",
+    check.names = F,
+    strip.white = T,
+  )
+  
+  suppressMessages(
+    desc_ev_match <- read_csv(
+      "../data/description_ev_match.csv")
+    )
+})
+

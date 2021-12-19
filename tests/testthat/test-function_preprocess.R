@@ -8,28 +8,26 @@
 # Only needed if your project is not a package.
 source("../../R/function_preprocess.R")
 
-# --------------------------
-# sanityCheckEBVdesc() tests
-# --------------------------
-
-# 1]
-# Check if the function does its job when the input file
-# just has the required  column_labelling and classifier columns.
-# test_that("sanityCheckEVdesc() works for basic valid data", {
+# # --------------------------
+# # sanityCheckEBVdesc() tests
+# # --------------------------
+# 
+# # 1]
+# # Check if the function does its job when the input file
+# # just has the required  column_labelling and classifier columns.
+#  test_that("sanityCheckEVdesc() works for basic valid data", {
 #   txt <- sanityCheckEVdesc(desc_ev, desc_bv)
-#   print(txt)
 #   expect_true(is.null(txt)) # a NULL text means everythin's ok !
-# })
-# --------------------------
-# sanityCheckEVdesc() tests
-# --------------------------
-
+#  })
+# # --------------------------
+# # sanityCheckEVdesc() tests
+# # --------------------------
+# 
 # # 1]
 # # Check if the function does its job when the input file
 # # just has the required  column_labelling and classifier columns.
 # test_that("sanityCheckEVdesc() works for basic valid data", {
 #   txt <- sanityCheckEVdesc(desc_ev, desc_bv)
-#   print(txt)
 #   expect_true(is.null(txt)) # a NULL text means everythin's ok !
 # })
 # 
@@ -42,6 +40,7 @@ source("../../R/function_preprocess.R")
 #   txt <- sanityCheckEVdesc(bad_desc_ev, desc_bv)
 #   expect_false(is.null(txt))
 # })
+# 
 # 
 # # 3]
 # # Check if the function can return the correct error message
@@ -56,6 +55,7 @@ source("../../R/function_preprocess.R")
 #   expect_true(grepl(msg, txt))
 # })
 # 
+# 
 # # 4]
 # # Check if the function can return the correct error message
 # # if duplicate headers are detected in the input file.
@@ -66,7 +66,6 @@ source("../../R/function_preprocess.R")
 #   msg <- "Duplicated headers"
 #   expect_true(grepl(msg, txt))
 # })
-# 
 # 
 # # 5]
 # # Check if the function can return the correct error message
@@ -106,6 +105,7 @@ source("../../R/function_preprocess.R")
 #   expect_true(grepl(msg, txt))
 # })
 # 
+# 
 # # 8]
 # # Check if the function can return the correct error message
 # # when the column_labelling contents in the input file are not
@@ -120,55 +120,155 @@ source("../../R/function_preprocess.R")
 #     expect_true(grepl(msg, txt, fixed = TRUE))
 #   }
 # )
+# 
+# # --------------------------
+# # sanityCheckEBV() tests
+# # --------------------------
+# 
+# # 1]
+# # Check if the function does its job when the input file
+# # just has the required columns in the correct format.
+# test_that("sanityCheckEBV() works for basic valid data", {
+#   txt <- sanityCheckEBV(bv,desc_bv)
+#   expect_true(is.null(txt)) # a NULL text means everythin's ok !
+# })
+# 
+# 
+# # 2]
+# # Check if the function can return the correct error message
+# # if duplicate headers are detected in the input file.
+# test_that("sanityCheckEBV() reports duplicate headers", {
+#   dup_bv <- bv
+#   colnames(dup_bv)[5] <- "ANTHRAC"
+#   txt <- sanityCheckEBV(dup_bv, desc_bv)
+#   msg <- "Duplicated headers"
+#   expect_true(grepl(msg, txt))
+# })
+# 
+# 
+# # 3]
+# # # Check if the function can return the correct error message
+# # # when the list of column headers in the input file is not
+# # # identical to that in the EBV description file.
+# test_that("sanityCheckEBV() checks if the list of trait(s) in the 
+#     EBV data file matches with that in the EBV description file", {
+#   tr_mismatch_bv <- bv[ , !names(bv) %in% "TARSPOT"]
+#   txt <- sanityCheckEBV(tr_mismatch_bv, desc_bv)
+#   msg <- "Breeding value column header do not match file description"
+#   expect_true(grepl(msg, txt))
+# })
+# 
+# 
+# # 4]
+# # Check if the function can return the correct error messag
+# # when column headers in the input file are not present
+# # in the EBV description file.
+# test_that("sanityCheckEBV() checks if traits in the EBV data file
+#     are present in the EBV description file", {
+#       no_desc_trait_bv <- bv
+#       no_desc_trait_bv$ANTHRAC_NZ = bv$ANTHRAC
+#       txt <- sanityCheckEBV(no_desc_trait_bv, desc_bv)
+#       msg <- "does not exist in description file"
+#       expect_true(grepl(msg, txt))
+#     })
+# 
+# 
+# # 5]
+# # Check if the function can return the correct error message
+# # when the input file contains character strings instead of numeric types.
+# test_that("sanityCheckEBV() checks if traits values in the EBV data file
+#     are character strings instead of numbers", {
+#       char_trait_bv <- bv
+#       char_trait_bv[, 4] <- sapply(char_trait_bv[, 4], as.character)
+#       txt <- sanityCheckEBV(char_trait_bv, desc_bv)
+#       msg <- "Character strings detected"
+#       expect_true(grepl(msg, txt))
+#     })
 
-# --------------------------
-# sanityCheckEBV() tests
-# --------------------------
+
+# -------------------------
+# sanityCheckEV() tests
+# -------------------------
 
 # 1]
-# Check if the function does its job when the input file
-# just has the required  column_labelling and classifier columns.
-test_that("sanityCheckEBV() works for basic valid data", {
-  txt <- sanityCheckEBV(bv,desc_bv)
-  print(txt)
+# Check if the function does its job when the input file just has
+# the required  columns in the correct format.
+test_that("sanityCheckEV() works for basic valid data", {
+  txt <- sanityCheckEV(ev, desc_ev_match)
   expect_true(is.null(txt)) # a NULL text means everythin's ok !
 })
 
 
 # 2]
-# Check if the function can return the correct error message
-# if duplicate headers are detected in the input file.
-test_that("sanityCheckEBV() reports duplicate headers", {
-  dup_bv <- bv
-  colnames(dup_bv)[5] <- "ANTHRAC"
-  txt <- sanityCheckEBV(dup_bv, desc_bv)
-  msg <- "Duplicated headers"
-  expect_true(grepl(msg, txt))
+# Check if the function can return the correct error message when
+# the first column in the input file is not 'Index'.
+test_that(
+  "sanityCheckEV() checks if first column is Index",
+  {
+    no_first_index_ev <- ev
+    no_first_index_ev <-
+      no_first_index_ev %>% relocate(Index, .after = TARSPOT)
+    txt <- sanityCheckEV(no_first_index_ev, desc_ev_match)
+    msg <- "First column name should be 'Index'"
+    expect_true(grepl(msg, txt))
+
 })
 
 
 # 3]
-# # Check if the function can return the correct error message
-# # when the list of column headers in the input file is not
-# # identical to that in the EBV description file.
-test_that("sanityCheckEBV() checks if the list of trait(s) in the 
-    EBV data file matches with that in the EBV description file", {
-  tr_mismatch_bv <- bv[ , !names(bv) %in% "TARSPOT"]
-  txt <- sanityCheckEBV(tr_mismatch_bv, desc_bv)
-  msg <- "Breeding value column header do not match file description"
-  expect_true(grepl(msg, txt))
-})
+# Check if the function can return the correct error message when
+# the 'Indices' are not unique in the input file.
+test_that(
+  "sanityCheckEV() checks if 'Index' column is duplicated",
+  {
+    txt <- sanityCheckEV(ev_dup_index, desc_ev_match)
+    msg <- "Duplicated indexes"
+    expect_true(grepl(msg, txt))
 
+  })
 
 # 4]
-# # Check if the function can return the correct error message
-# # when column headers in the input file are not present
-# # in the EBV description file.
-test_that("sanityCheckEBV() checks if traits in the EBV data file
-    are present in the EBV description file", {
-      no_desc_trait_bv <- bv
-      no_desc_trait_bv$ANTHRAC_NZ = bv$ANTHRAC
-      txt <- sanityCheckEBV(no_desc_trait_bv, desc_bv)
-      msg <- "does not exist in description file"
-      expect_true(grepl(msg, txt))
-    })
+# Check if the function can return the correct error message when
+# a column header is duplicated in the input file.
+test_that("sanityCheckEV() checks if a column header is duplicated",
+  {
+    txt <- sanityCheckEV(ev_dup_hdr, desc_ev_match)
+    msg <- "Duplicated headers"
+    expect_true(grepl(msg, txt))
+
+  })
+
+
+# 5]
+# Check if the function can return the correct error message when
+# the list of column headers in the input file does not match with
+# those in the description file.
+test_that(
+  "sanityCheckEV() checks for mismatch between the column
+          headers in the input and description files",
+  {
+    txt <- sanityCheckEV(ev, desc_ev)
+    msg <-
+      "file description column headers do not match data file"
+    expect_true(grepl(msg, txt))
+
+  }
+)
+
+
+# 6]
+# Check if the function can return the correct error message when
+# column headers in the input file do not exist within
+# the description file.
+test_that(
+  "sanityCheckEV() checks if there is a column header in the input file
+      that does not exist in the description file",
+  {
+    txt <- sanityCheckEV(ev_invalid_hdr, desc_ev_match)
+    msg <-
+      "does not exist in description file"
+    expect_true(grepl(msg, txt))
+
+  }
+)
+
