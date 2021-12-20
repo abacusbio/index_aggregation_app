@@ -186,89 +186,162 @@ source("../../R/function_preprocess.R")
 #     })
 
 
+# # -------------------------
+# # sanityCheckEV() tests
+# # -------------------------
+# 
+# # 1]
+# # Check if the function does its job when the input file just has
+# # the required  columns in the correct format.
+# test_that("sanityCheckEV() works for basic valid data", {
+#   txt <- sanityCheckEV(ev, desc_ev_match)
+#   expect_true(is.null(txt)) # a NULL text means everythin's ok !
+# })
+# 
+# 
+# # 2]
+# # Check if the function can return the correct error message when
+# # the first column in the input file is not 'Index'.
+# test_that(
+#   "sanityCheckEV() checks if first column is Index",
+#   {
+#     no_first_index_ev <- ev
+#     no_first_index_ev <-
+#       no_first_index_ev %>% relocate(Index, .after = TARSPOT)
+#     txt <- sanityCheckEV(no_first_index_ev, desc_ev_match)
+#     msg <- "First column name should be 'Index'"
+#     expect_true(grepl(msg, txt))
+# 
+# })
+# 
+# 
+# # 3]
+# # Check if the function can return the correct error message when
+# # the 'Indices' are not unique in the input file.
+# test_that(
+#   "sanityCheckEV() checks if 'Index' column is duplicated",
+#   {
+#     txt <- sanityCheckEV(ev_dup_index, desc_ev_match)
+#     msg <- "Duplicated indexes"
+#     expect_true(grepl(msg, txt))
+# 
+#   })
+# 
+# # 4]
+# # Check if the function can return the correct error message when
+# # a column header is duplicated in the input file.
+# test_that("sanityCheckEV() checks if a column header is duplicated",
+#   {
+#     txt <- sanityCheckEV(ev_dup_hdr, desc_ev_match)
+#     msg <- "Duplicated headers"
+#     expect_true(grepl(msg, txt))
+# 
+#   })
+# 
+# 
+# # 5]
+# # Check if the function can return the correct error message when
+# # the list of column headers in the input file does not match with
+# # those in the description file.
+# test_that(
+#   "sanityCheckEV() checks for mismatch between the column
+#           headers in the input and description files",
+#   {
+#     txt <- sanityCheckEV(ev, desc_ev)
+#     msg <-
+#       "file description column headers do not match data file"
+#     expect_true(grepl(msg, txt))
+# 
+#   }
+# )
+# 
+# 
+# # 6]
+# # Check if the function can return the correct error message when
+# # column headers in the input file do not exist within
+# # the description file.
+# test_that(
+#   "sanityCheckEV() checks if there is a column header in the input file
+#       that does not exist in the description file",
+#   {
+#     txt <- sanityCheckEV(ev_invalid_hdr, desc_ev_match)
+#     msg <-
+#       "does not exist in description file"
+#     expect_true(grepl(msg, txt))
+# 
+#   }
+# )
+
 # -------------------------
-# sanityCheckEV() tests
+# sanityCheckWt() tests
 # -------------------------
 
 # 1]
 # Check if the function does its job when the input file just has
 # the required  columns in the correct format.
-test_that("sanityCheckEV() works for basic valid data", {
-  txt <- sanityCheckEV(ev, desc_ev_match)
+test_that("sanityCheckWt() works for basic valid data", {
+  txt <- sanityCheckWt(ev_wt_index, ev)
   expect_true(is.null(txt)) # a NULL text means everythin's ok !
 })
 
 
+
 # 2]
 # Check if the function can return the correct error message when
-# the first column in the input file is not 'Index'.
-test_that(
-  "sanityCheckEV() checks if first column is Index",
+# the 'Indices' are not unique in the input file.
+test_that("sanityCheckWt() checks if 'Index' column is duplicated",
   {
-    no_first_index_ev <- ev
-    no_first_index_ev <-
-      no_first_index_ev %>% relocate(Index, .after = TARSPOT)
-    txt <- sanityCheckEV(no_first_index_ev, desc_ev_match)
-    msg <- "First column name should be 'Index'"
+    txt <- sanityCheckWt(ev_wt_dup_index, ev)
+    msg <- "Duplicated indexes"
     expect_true(grepl(msg, txt))
-
-})
+    
+  })
 
 
 # 3]
 # Check if the function can return the correct error message when
-# the 'Indices' are not unique in the input file.
-test_that(
-  "sanityCheckEV() checks if 'Index' column is duplicated",
+# the 'Indices'in the input file are not recorded in the economic value file.
+test_that("sanityCheckWt() checks if indices are not recorded in the economic
+  value file",
   {
-    txt <- sanityCheckEV(ev_dup_index, desc_ev_match)
-    msg <- "Duplicated indexes"
+    txt <- sanityCheckWt(ev_wt_mismatch_index, ev)
+    # Escape () to avoid being used to extract matched substrings in regexps.
+    msg <-
+      "Index name\\(s\\) does not exist in economic value files"
     expect_true(grepl(msg, txt))
-
+    
   })
+
 
 # 4]
 # Check if the function can return the correct error message when
-# a column header is duplicated in the input file.
-test_that("sanityCheckEV() checks if a column header is duplicated",
+# character strings are detected in the 'weight' column of the input file.
+test_that(
+  "sanityCheckWt() checks if character strings are detected in
+  the 'weight' column of the index weight file",
   {
-    txt <- sanityCheckEV(ev_dup_hdr, desc_ev_match)
-    msg <- "Duplicated headers"
+    ev_wt_char <- ev_wt_index
+    ev_wt_char[, 2] <- sapply(ev_wt_char[, 2], as.character)
+    txt <- sanityCheckWt(ev_wt_char, ev)
+    msg <- "Character strings detected"
     expect_true(grepl(msg, txt))
-
-  })
+    
+  }
+)
 
 
 # 5]
 # Check if the function can return the correct error message when
-# the list of column headers in the input file does not match with
-# those in the description file.
+# NA's are detected in the 'weight' column of the input file.
 test_that(
-  "sanityCheckEV() checks for mismatch between the column
-          headers in the input and description files",
+  "sanityCheckWt() checks if NA's are detected in
+  the 'weight' column of the index weight file",
   {
-    txt <- sanityCheckEV(ev, desc_ev)
-    msg <-
-      "file description column headers do not match data file"
+    ev_wt_char <- ev_wt_index
+    ev_wt_char[3, 2] <- NA
+    txt <- sanityCheckWt(ev_wt_char, ev)
+    msg <- "NA detected"
     expect_true(grepl(msg, txt))
-
+    
   }
 )
-
-
-# 6]
-# Check if the function can return the correct error message when
-# column headers in the input file do not exist within
-# the description file.
-test_that(
-  "sanityCheckEV() checks if there is a column header in the input file
-      that does not exist in the description file",
-  {
-    txt <- sanityCheckEV(ev_invalid_hdr, desc_ev_match)
-    msg <-
-      "does not exist in description file"
-    expect_true(grepl(msg, txt))
-
-  }
-)
-

@@ -201,3 +201,56 @@ suppressMessages({
     )
 })
 
+# ----------------------
+# Economic weights data
+# ----------------------
+suppressMessages({
+  # Normal'good'data.Has just the required columns and values.
+  ev_wt_index <- read.table(
+    "../data/index_weight.csv",
+    header = T,
+    colClasses = c("character", "double"),
+    sep = ",",
+    fileEncoding = "UTF-8-BOM",
+    stringsAsFactors = F,
+    quote = "\"",
+    fill = T,
+    comment.char = "",
+    dec = ".",
+    check.names = F,
+    strip.white = T,
+  )
+  
+  # Indices are not unique.
+  ev_wt_dup_index <- read.table(
+    "../data/index_weight_dup.csv",
+    header = T,
+    colClasses = c("character", "double"),
+    sep = ",",
+    fileEncoding = "UTF-8-BOM",
+    stringsAsFactors = F,
+    quote = "\"",
+    fill = T,
+    comment.char = "",
+    dec = ".",
+    check.names = F,
+    strip.white = T,
+  )
+  
+  # Index name(s) does not exist in economic value file.
+  ev_wt_mismatch_index <- read.table(
+    "../data/index_weight_mismatch.csv",
+    header = T,
+    colClasses = c("character", "double"),
+    sep = ",",
+    fileEncoding = "UTF-8-BOM",
+    stringsAsFactors = F,
+    quote = "\"",
+    fill = T,
+    comment.char = "",
+    dec = ".",
+    check.names = F,
+    strip.white = T,
+  )
+  
+})
