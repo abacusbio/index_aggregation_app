@@ -1,8 +1,10 @@
-# Purpose : Test cases for the sanity check functions in
-#           function_preprocess.R
-# Author  : Sameer Atre
-#           SAtre@abacusbio.co.nz
+#' test-function_preprocess.R
+#'
+#' Test cases for the sanity check functions in function_preprocess.R
+#' @author Sameer Atre <SAtre@abacusbio.co.nz>
 
+
+#' test_file("test-function_preprocess.R",reporter = c("Check","Location"))
 
 # Test target.
 # Only needed if your project is not a package.
@@ -127,7 +129,7 @@ test_that("sanityCheckEBVdesc() checks for Accuracy-Trait mismatch", {
 # Trait ordering should be unique as they assign the order of traits
 # to show in tables and plots.
 test_that("sanityCheckEBVdesc() checks for identical order numbers", {
-  txt <- sanityCheckEBVdesc(desc_bv_identical_odr)
+  txt <- sanityCheckEBVdesc(desc_bv_identical_order)
   msg <- "there are identical order numbers"
   expect_true(grepl(msg, txt))
 })
@@ -139,7 +141,7 @@ test_that("sanityCheckEBVdesc() checks for identical order numbers", {
 # trait label/EBV row should have an order value if the order
 # column is present.
 test_that("sanityCheckEBVdesc() checks for missing order numbers", {
-  txt <- sanityCheckEBVdesc(desc_bv_missing_odr)
+  txt <- sanityCheckEBVdesc(desc_bv_missing_order)
   msg <- "Missing order for trait(s)"
   expect_true(grepl(msg, txt))
 })
@@ -152,7 +154,7 @@ test_that("sanityCheckEBVdesc() checks for missing order numbers", {
 # trait label/EBV row should have a group value if the group
 # column is present in the input file.
 test_that("sanityCheckEBVdesc() checks for missing group numbers", {
-  txt <- sanityCheckEBVdesc(desc_bv_missing_grp)
+  txt <- sanityCheckEBVdesc(desc_bv_missing_group)
   msg <- "Missing group for trait(s)"
   expect_true(grepl(msg, txt))
 })
@@ -253,7 +255,7 @@ test_that(
   "sanityCheckEVdesc() checks if trait(s) in the EV description file
    matches with those in the EBV description file",
   {
-    txt <- sanityCheckEVdesc(desc_ev_tr_mismatch, desc_bv)
+    txt <- sanityCheckEVdesc(desc_ev_mismatch_trait, desc_bv)
     msg <-
       "Trait(s) in EV description doesn't exist in EBV description:"
     expect_true(grepl(msg, txt, fixed = TRUE))
@@ -379,7 +381,7 @@ test_that("sanityCheckEV() checks if 'Index' column is duplicated",
 # a column header is duplicated in the input file.
 test_that("sanityCheckEV() checks if a column header is duplicated",
           {
-            txt <- sanityCheckEV(ev_dup_hdr, desc_ev_match)
+            txt <- sanityCheckEV(ev_dup_header, desc_ev_match)
             msg <- "Duplicated headers"
             expect_true(grepl(msg, txt))
             
@@ -411,7 +413,7 @@ test_that(
   "sanityCheckEV() checks if there is a column header in the input file
       that does not exist in the description file",
   {
-    txt <- sanityCheckEV(ev_invalid_hdr, desc_ev_match)
+    txt <- sanityCheckEV(ev_invalid_header, desc_ev_match)
     msg <-
       "does not exist in description file"
     expect_true(grepl(msg, txt))
