@@ -16,7 +16,6 @@ jobs:
   tests:
     runs-on: windows-latest
     steps:
-      - name: Setup R
       - uses: r-lib/actions/setup-r@v2
         with:
           install-r: true
