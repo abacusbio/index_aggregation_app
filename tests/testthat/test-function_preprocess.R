@@ -429,7 +429,7 @@ test_that(
 # Check if the function does its job when the input file just has
 # the required  columns in the correct format.
 test_that("sanityCheckWt() works for basic valid data", {
-  txt <- sanityCheckWt(ev_wt_index, ev)
+  txt <- sanityCheckWt(ev_index_wt, ev)
   expect_true(is.null(txt)) # a NULL text means everythin's ok !
 })
 
@@ -440,7 +440,7 @@ test_that("sanityCheckWt() works for basic valid data", {
 # the 'Indices' are not unique in the input file.
 test_that("sanityCheckWt() checks if 'Index' column is duplicated",
           {
-            txt <- sanityCheckWt(ev_wt_dup_index, ev)
+            txt <- sanityCheckWt(ev_dup_index, ev)
             msg <- "Duplicated indexes"
             expect_true(grepl(msg, txt))
             
@@ -453,7 +453,7 @@ test_that("sanityCheckWt() checks if 'Index' column is duplicated",
 test_that("sanityCheckWt() checks if indices are not recorded in the economic
   value file",
           {
-            txt <- sanityCheckWt(ev_wt_mismatch_index, ev)
+            txt <- sanityCheckWt(ev_index_mismatch_wt, ev)
             # Escape () to avoid being used to extract matched substrings in regexps.
             msg <-
               "Index name\\(s\\) does not exist in economic value files"
@@ -469,9 +469,9 @@ test_that(
   "sanityCheckWt() checks if character strings are detected in
   the 'weight' column of the index weight file",
   {
-    ev_wt_char <- ev_wt_index
-    ev_wt_char[, 2] <- sapply(ev_wt_char[, 2], as.character)
-    txt <- sanityCheckWt(ev_wt_char, ev)
+    ev_char_wt <- ev_index_wt
+    ev_char_wt[, 2] <- sapply(ev_char_wt[, 2], as.character)
+    txt <- sanityCheckWt(ev_char_wt, ev)
     msg <- "Character strings detected"
     expect_true(grepl(msg, txt))
     
@@ -486,9 +486,9 @@ test_that(
   "sanityCheckWt() checks if NA's are detected in
   the 'weight' column of the index weight file",
   {
-    ev_wt_char <- ev_wt_index
-    ev_wt_char[3, 2] <- NA
-    txt <- sanityCheckWt(ev_wt_char, ev)
+    ev_char_wt <- ev_index_wt
+    ev_char_wt[3, 2] <- NA
+    txt <- sanityCheckWt(ev_char_wt, ev)
     msg <- "NA detected"
     expect_true(grepl(msg, txt))
     
