@@ -1,0 +1,9 @@
+column_labelling,classifier,group,order,unit
+ID,ID,,NA,
+ID2,ID,,NA,
+Sex,ClassVar,,NA,
+BirthYear,ClassVar,,NA,
+Trait1,EBV,1,4,day
+Trait2,EBV,1,,Litre
+Trait3,EBV,2,2,kg
+Trait4,EBV,3,1,mm
