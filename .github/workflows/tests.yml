@@ -13,20 +13,12 @@ on:
       - 'tests/testthat/*'
 
 jobs:
-  run-tests:
+  tests:
     runs-on: windows-latest
     steps:
-      -name: Setup R
-      -uses: r-lib/actions/setup-r@v2
-       with:
-         install-r: true
-         r-version: '4.0.2' # The R version to download and use.
-      -run: Rscript -e 'print(${{ installed-r-version }})'
-    # steps:
-    #   - uses: actions/checkout@v1
-    #   - uses: r-lib/actions/setup-r@v1
-    #   - uses: r-lib/actions/setup-pandoc@v1
-    #   - name: Install dependencies
-    #     run: Rscript -e "install.packages(c('testthat','readxl',tidyverse', 'here'))"
-    #   - name: Run tests
-    #     run: Rscript -e "source('tests/testthat.R')"
+      - name: Setup R
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          install-r: true
+          r-version: '4.0.2' 
+      - run: Rscript -e 'print("hello")'
