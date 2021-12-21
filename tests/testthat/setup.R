@@ -1,7 +1,11 @@
-# Purpose : Test data for the sanity check functions in
-#           function_preprocess.R
-# Author  : Sameer Atre
-#           SAtre@abacusbio.co.nz
+#' Setup.R
+#'
+#' Test data for the sanity check functions in function_preprocess.R
+#' @author Sameer Atre <SAtre@@abacusbio.co.nz>
+
+
+#' source("setup.R")
+
 
 # Everything here is executed before any test is run.
 # For data formats and required fields see the index testing app at
@@ -165,6 +169,7 @@ suppressMessages({
     strip.white = T,
   )
   
+  # Currently unused.
   ev_mismatch_header <- read.table(
     "../data/ev_mismatch_header.csv",
     header = T,
@@ -180,6 +185,7 @@ suppressMessages({
     strip.white = T,
   )
   
+  # Currently unused.
   ev_invalid_header <- read.table(
     "../data/ev_invalid_header.csv",
     header = T,

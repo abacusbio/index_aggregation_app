@@ -1,7 +1,7 @@
-#' test-function_preprocess.R
+#' Test-function_preprocess.R
 #'
 #' Test cases for the sanity check functions in function_preprocess.R
-#' @author Sameer Atre <SAtre@abacusbio.co.nz>
+#' @author Sameer Atre <SAtre@@abacusbio.co.nz>
 
 
 #' test_file("test-function_preprocess.R",reporter = c("Check","Location"))
@@ -15,25 +15,25 @@ source("../../R/function_preprocess.R")
 # --------------------------
 
 # 1]
-# Check if the function does its job when the input file
-# just has the required  column_labelling and classifier columns.
+#' Check if the function does its job when the input file
+#' just has the required  column_labelling and classifier columns.
 test_that("sanityCheckEBVdesc() works for basic valid data", {
   txt <- sanityCheckEBVdesc(desc_bv)
   expect_true(is.null(txt)) # a NULL text means everythin's ok !
 })
 
 # 2]
-# Check if the function can parse data with optional columns.
-# when the input file only has the required  column_labelling and
-# classifier columns. Optional columns are unit,order and group.
+#' Check if the function can parse data with optional columns.
+#' when the input file only has the required  column_labelling and
+#' classifier columns. Optional columns are unit,order and group.
 test_that("sanityCheckEBVdesc() works for optional valid data", {
   txt <- sanityCheckEBVdesc(desc_bv_opt)
   expect_true(is.null(txt))
 })
 
 # 3]
-# Check if the function can detect a column header other than
-# column_labelling,classifier,unit,order and group.
+#' Check if the function can detect a column header other than
+#' column_labelling,classifier,unit,order and group.
 test_that("sanityCheckEBVdesc() detects illegal header", {
   new_desc_ebv <- rename(desc_bv,
                          badClassifier = classifier)
@@ -42,9 +42,9 @@ test_that("sanityCheckEBVdesc() detects illegal header", {
 })
 
 # 4]
-# Check if the function can return the correct error message
-# if a column header other than column_labelling,classifier,
-# unit,order,group is detected in the input file.
+#' Check if the function can return the correct error message
+#' if a column header other than column_labelling,classifier,
+#' unit,order,group is detected in the input file.
 test_that("sanityCheckEBVdesc() reports illegal header", {
   new_desc_ebv <- rename(desc_bv,
                          badClassifier = classifier)
@@ -55,9 +55,9 @@ test_that("sanityCheckEBVdesc() reports illegal header", {
 })
 
 # 5]
-# Check if the function can return the correct error message
-# if one of the required column headers (column_labelling and classifier)
-# are missing in the input file.
+#' Check if the function can return the correct error message
+#' if one of the required column headers (column_labelling and classifier)
+#' are missing in the input file.
 test_that("sanityCheckEBVdesc() detects missing header", {
   new_desc_ebv <- desc_bv
   names(new_desc_ebv) <- NULL
@@ -68,8 +68,8 @@ test_that("sanityCheckEBVdesc() detects missing header", {
 })
 
 # 6]
-# Check if the function can return the correct error message
-# if duplicate headers are detected in the input file.
+#' Check if the function can return the correct error message
+#' if duplicate headers are detected in the input file.
 test_that("sanityCheckEBVdesc() detects duplicate headers", {
   txt <- sanityCheckEBVdesc(dup_desc_bv)
   msg <- " Duplicated headers "
@@ -77,9 +77,9 @@ test_that("sanityCheckEBVdesc() detects duplicate headers", {
 })
 
 # 7]
-# Check if the function can return the correct error message
-# if column_labelling  does not have a required unique ID field
-# in the input file.
+#' Check if the function can return the correct error message
+#' if column_labelling  does not have a required unique ID field
+#' in the input file.
 test_that("sanityCheckEBVdesc() checks 'ID' exists", {
   no_ID_desc_ebv <- subset(desc_bv, classifier != "ID")
   txt <- sanityCheckEBVdesc(no_ID_desc_ebv)
@@ -88,11 +88,11 @@ test_that("sanityCheckEBVdesc() checks 'ID' exists", {
 })
 
 # 8]
-# Check if the function can return the correct error message
-# when one of the required classifiers are missing
-# in the input file. Required classifers are ID (for ID),
-# ClassVar (for categorical variables), EBV (for trait EBV) and
-# ACC (for trait accuracies).
+#' Check if the function can return the correct error message
+#' when one of the required classifiers are missing
+#' in the input file. Required classifers are ID (for ID),
+#' ClassVar (for categorical variables), EBV (for trait EBV) and
+#' ACC (for trait accuracies).
 test_that("sanityCheckEBVdesc() checks classifiers exist", {
   no_cls_desc_ebv <- subset(desc_bv, !classifier %in% c("EBV"))
   txt <- sanityCheckEBVdesc(no_cls_desc_ebv)
@@ -101,10 +101,10 @@ test_that("sanityCheckEBVdesc() checks classifiers exist", {
 })
 
 # 9]
-# Check if the function can return the correct error message
-# when one the classifiers are not one of ID (for ID),
-# ClassVar (for categorical variables), EBV (for trait EBV) and
-# ACC (for trait accuracies).
+#' Check if the function can return the correct error message
+#' when one the classifiers are not one of ID (for ID),
+#' ClassVar (for categorical variables), EBV (for trait EBV) and
+#' ACC (for trait accuracies).
 test_that("sanityCheckEBVdesc() checks for unknown classifiers", {
   new_desc_ebv <- desc_bv
   new_desc_ebv$classifier[new_desc_ebv$column_labelling == 'MOIST'] = 'GBV'
@@ -114,9 +114,9 @@ test_that("sanityCheckEBVdesc() checks for unknown classifiers", {
 })
 
 # 10]
-# Check if the function can return the correct error message
-# when an ACC classifier does not have a corresponding 'TraitACC' entry
-# in the column_labelling colum of the input file.
+#' Check if the function can return the correct error message
+#' when an ACC classifier does not have a corresponding 'TraitACC' entry
+#' in the column_labelling colum of the input file.
 test_that("sanityCheckEBVdesc() checks for Accuracy-Trait mismatch", {
   txt <- sanityCheckEBVdesc(test_desc_bv)
   msg <- " Accuracy names do not match trait names"
@@ -124,10 +124,10 @@ test_that("sanityCheckEBVdesc() checks for Accuracy-Trait mismatch", {
 })
 
 # 11]
-# Check if the function can return the correct error message
-# when there are identical trait ordering values in the input file.
-# Trait ordering should be unique as they assign the order of traits
-# to show in tables and plots.
+#' Check if the function can return the correct error message
+#' when there are identical trait ordering values in the input file.
+#' Trait ordering should be unique as they assign the order of traits
+#' to show in tables and plots.
 test_that("sanityCheckEBVdesc() checks for identical order numbers", {
   txt <- sanityCheckEBVdesc(desc_bv_identical_order)
   msg <- "there are identical order numbers"
@@ -135,11 +135,11 @@ test_that("sanityCheckEBVdesc() checks for identical order numbers", {
 })
 
 # 12]
-# Check if the function can return the correct error message
-# when there are missing ordering values for trait label/EBV rows
-# in the input file. While the order column is optional, every
-# trait label/EBV row should have an order value if the order
-# column is present.
+#' Check if the function can return the correct error message
+#' when there are missing ordering values for trait label/EBV rows
+#' in the input file. While the order column is optional, every
+#' trait label/EBV row should have an order value if the order
+#' column is present.
 test_that("sanityCheckEBVdesc() checks for missing order numbers", {
   txt <- sanityCheckEBVdesc(desc_bv_missing_order)
   msg <- "Missing order for trait(s)"
@@ -148,11 +148,11 @@ test_that("sanityCheckEBVdesc() checks for missing order numbers", {
 
 
 # 13]
-# Check if the function can return the correct error message
-# when there are missing group assignment for traits in the input file.
-# While the group column is optional, every
-# trait label/EBV row should have a group value if the group
-# column is present in the input file.
+#' Check if the function can return the correct error message
+#' when there are missing group assignment for traits in the input file.
+#' While the group column is optional, every
+#' trait label/EBV row should have a group value if the group
+#' column is present in the input file.
 test_that("sanityCheckEBVdesc() checks for missing group numbers", {
   txt <- sanityCheckEBVdesc(desc_bv_missing_group)
   msg <- "Missing group for trait(s)"
@@ -165,16 +165,16 @@ test_that("sanityCheckEBVdesc() checks for missing group numbers", {
 # --------------------------
 
 # 1]
-# Check if the function does its job when the input file
-# just has the required  column_labelling and classifier columns.
+#' Check if the function does its job when the input file
+#' just has the required  column_labelling and classifier columns.
 test_that("sanityCheckEVdesc() works for basic valid data", {
   txt <- sanityCheckEVdesc(desc_ev, desc_bv)
   expect_true(is.null(txt)) # a NULL text means everythin's ok !
 })
 
 # 2]
-# Check if the function can detect a column header other than
-# column_labelling and classifier
+#' Check if the function can detect a column header other than
+#' column_labelling and classifier
 test_that("sanityCheckEVdesc() detects illegal header", {
   bad_desc_ev <- rename(desc_ev,
                         badClassifier = classifier)
@@ -184,9 +184,9 @@ test_that("sanityCheckEVdesc() detects illegal header", {
 
 
 # 3]
-# Check if the function can return the correct error message
-# if a column header other than column_labelling and classifier is
-# present in the input file.
+#' Check if the function can return the correct error message
+#' if a column header other than column_labelling and classifier is
+#' present in the input file.
 test_that("sanityCheckEVdesc() reports illegal header", {
   bad_desc_ev <- rename(desc_ev,
                         badClassifier = classifier)
@@ -198,8 +198,8 @@ test_that("sanityCheckEVdesc() reports illegal header", {
 
 
 # 4]
-# Check if the function can return the correct error message
-# if duplicate headers are detected in the input file.
+#'Check if the function can return the correct error message
+#'if duplicate headers are detected in the input file.
 test_that("sanityCheckEVdesc() reports duplicate headers", {
   dup_desc_ev <- desc_ev
   colnames(dup_desc_ev)[2] <- "column_labelling"
@@ -209,9 +209,9 @@ test_that("sanityCheckEVdesc() reports duplicate headers", {
 })
 
 # 5]
-# Check if the function can return the correct error message
-# if column_labelling  does not have a required unique
-# 'Index' ID header in the input file.
+#' Check if the function can return the correct error message
+#' if column_labelling  does not have a required unique
+#' 'Index' ID header in the input file.
 test_that("sanityCheckEVdesc() checks 'Index' exists", {
   no_index_desc_ev <- subset(desc_ev, column_labelling != "Index")
   txt <- sanityCheckEVdesc(no_index_desc_ev, desc_bv)
@@ -221,10 +221,10 @@ test_that("sanityCheckEVdesc() checks 'Index' exists", {
 
 
 # 6]
-# Check if the function can return the correct error message
-# when one of the required classifiers are missing
-# in the input file. Required classifers are ID (for ID),
-# and EV (for trait EV).
+#' Check if the function can return the correct error message
+#' when one of the required classifiers are missing
+#' in the input file. Required classifers are ID (for ID),
+#' and EV (for trait EV).
 test_that("sanityCheckEVdesc() checks if required classifiers exist", {
   no_cls_desc_ev <- subset(desc_ev,!classifier %in% c("EV"))
   txt <- sanityCheckEVdesc(no_cls_desc_ev, desc_bv)
@@ -234,10 +234,10 @@ test_that("sanityCheckEVdesc() checks if required classifiers exist", {
 
 
 # 7]
-# Check if the function can return the correct error message
-# when one the classifiers are not one of ID (for ID),
-# ClassVar (for categorical variables), EV (for trait EV) and
-# Group (group assignment for traits).
+#' Check if the function can return the correct error message
+#' when one the classifiers are not one of ID (for ID),
+#' ClassVar (for categorical variables), EV (for trait EV) and
+#' Group (group assignment for traits).
 test_that("sanityCheckEVdesc() checks for unknown classifiers", {
   bad_cls_ev <- desc_ev
   bad_cls_ev$classifier[bad_cls_ev$column_labelling == 'TARSPOT'] = 'GEV'
@@ -248,9 +248,9 @@ test_that("sanityCheckEVdesc() checks for unknown classifiers", {
 
 
 # 8]
-# Check if the function can return the correct error message
-# when the column_labelling contents in the input file are not
-# identical to those in the EBV description file.
+#' Check if the function can return the correct error message
+#' when the column_labelling contents in the input file are not
+#' identical to those in the EBV description file.
 test_that(
   "sanityCheckEVdesc() checks if trait(s) in the EV description file
    matches with those in the EBV description file",
@@ -267,8 +267,8 @@ test_that(
 # --------------------------
 
 # 1]
-# Check if the function does its job when the input file
-# just has the required columns in the correct format.
+#' Check if the function does its job when the input file
+#' just has the required columns in the correct format.
 test_that("sanityCheckEBV() works for basic valid data", {
   txt <- sanityCheckEBV(bv, desc_bv)
   expect_true(is.null(txt)) # a NULL text means everythin's ok !
@@ -276,8 +276,8 @@ test_that("sanityCheckEBV() works for basic valid data", {
 
 
 # 2]
-# Check if the function can return the correct error message
-# if duplicate headers are detected in the input file.
+#' Check if the function can return the correct error message
+#' if duplicate headers are detected in the input file.
 test_that("sanityCheckEBV() reports duplicate headers", {
   dup_bv <- bv
   colnames(dup_bv)[5] <- "ANTHRAC"
@@ -288,9 +288,9 @@ test_that("sanityCheckEBV() reports duplicate headers", {
 
 
 # 3]
-# # Check if the function can return the correct error message
-# # when the list of column headers in the input file is not
-# # identical to that in the EBV description file.
+#' Check if the function can return the correct error message
+#' when the list of column headers in the input file is not
+#' identical to that in the EBV description file.
 test_that(
   "sanityCheckEBV() checks if the list of trait(s) in the
     EBV data file matches with that in the EBV description file",
@@ -305,9 +305,9 @@ test_that(
 
 
 # 4]
-# Check if the function can return the correct error messag
-# when column headers in the input file are not present
-# in the EBV description file.
+#' Check if the function can return the correct error messag
+#' when column headers in the input file are not present
+#' in the EBV description file.
 test_that(
   "sanityCheckEBV() checks if traits in the EBV data file
     are present in the EBV description file",
@@ -322,8 +322,8 @@ test_that(
 
 
 # 5]
-# Check if the function can return the correct error message
-# when the input file contains character strings instead of numeric types.
+#' Check if the function can return the correct error message
+#' when the input file contains character strings instead of numeric types.
 test_that(
   "sanityCheckEBV() checks if traits values in the EBV data file
     are character strings instead of numbers",
@@ -342,8 +342,8 @@ test_that(
 # -------------------------
 
 # 1]
-# Check if the function does its job when the input file just has
-# the required  columns in the correct format.
+#' Check if the function does its job when the input file just has
+#' the required  columns in the correct format.
 test_that("sanityCheckEV() works for basic valid data", {
   txt <- sanityCheckEV(ev, desc_ev_match)
   expect_true(is.null(txt)) # a NULL text means everythin's ok !
@@ -351,8 +351,8 @@ test_that("sanityCheckEV() works for basic valid data", {
 
 
 # 2]
-# Check if the function can return the correct error message when
-# the first column in the input file is not 'Index'.
+#' Check if the function can return the correct error message when
+#' the first column in the input file is not 'Index'.
 test_that("sanityCheckEV() checks if first column is Index",
           {
             no_first_index_ev <- ev
@@ -366,8 +366,8 @@ test_that("sanityCheckEV() checks if first column is Index",
 
 
 # 3]
-# Check if the function can return the correct error message when
-# the 'Indices' are not unique in the input file.
+#' Check if the function can return the correct error message when
+#' the 'Indices' are not unique in the input file.
 test_that("sanityCheckEV() checks if 'Index' column is duplicated",
           {
             txt <- sanityCheckEV(ev_dup_index, desc_ev_match)
@@ -377,8 +377,8 @@ test_that("sanityCheckEV() checks if 'Index' column is duplicated",
           })
 
 # 4]
-# Check if the function can return the correct error message when
-# a column header is duplicated in the input file.
+#' Check if the function can return the correct error message when
+#' a column header is duplicated in the input file.
 test_that("sanityCheckEV() checks if a column header is duplicated",
           {
             txt <- sanityCheckEV(ev_dup_header, desc_ev_match)
@@ -389,9 +389,9 @@ test_that("sanityCheckEV() checks if a column header is duplicated",
 
 
 # 5]
-# Check if the function can return the correct error message when
-# the list of column headers in the input file does not match with
-# those in the description file.
+#' Check if the function can return the correct error message when
+#' the list of column headers in the input file does not match with
+#' those in the description file.
 test_that(
   "sanityCheckEV() checks for mismatch between the column
           headers in the input and description files",
@@ -406,9 +406,9 @@ test_that(
 
 
 # 6]
-# Check if the function can return the correct error message when
-# column headers in the input file do not exist within
-# the description file.
+#' Check if the function can return the correct error message when
+#' column headers in the input file do not exist within
+#' the description file.
 test_that(
   "sanityCheckEV() checks if there is a column header in the input file
       that does not exist in the description file",
@@ -426,8 +426,8 @@ test_that(
 # -------------------------
 
 # 1]
-# Check if the function does its job when the input file just has
-# the required  columns in the correct format.
+#' Check if the function does its job when the input file just has
+#' the required  columns in the correct format.
 test_that("sanityCheckWt() works for basic valid data", {
   txt <- sanityCheckWt(ev_index_wt, ev)
   expect_true(is.null(txt)) # a NULL text means everythin's ok !
@@ -436,8 +436,8 @@ test_that("sanityCheckWt() works for basic valid data", {
 
 
 # 2]
-# Check if the function can return the correct error message when
-# the 'Indices' are not unique in the input file.
+#' Check if the function can return the correct error message when
+#' the 'Indices' are not unique in the input file.
 test_that("sanityCheckWt() checks if 'Index' column is duplicated",
           {
             txt <- sanityCheckWt(ev_dup_index, ev)
@@ -448,8 +448,8 @@ test_that("sanityCheckWt() checks if 'Index' column is duplicated",
 
 
 # 3]
-# Check if the function can return the correct error message when
-# the 'Indices'in the input file are not recorded in the economic value file.
+#' Check if the function can return the correct error message when
+#' the 'Indices'in the input file are not recorded in the economic value file.
 test_that("sanityCheckWt() checks if indices are not recorded in the economic
   value file",
           {
@@ -463,8 +463,8 @@ test_that("sanityCheckWt() checks if indices are not recorded in the economic
 
 
 # 4]
-# Check if the function can return the correct error message when
-# character strings are detected in the 'weight' column of the input file.
+#' Check if the function can return the correct error message when
+#' character strings are detected in the 'weight' column of the input file.
 test_that(
   "sanityCheckWt() checks if character strings are detected in
   the 'weight' column of the index weight file",
@@ -480,8 +480,8 @@ test_that(
 
 
 # 5]
-# Check if the function can return the correct error message when
-# NA's are detected in the 'weight' column of the input file.
+#' Check if the function can return the correct error message when
+#' NA's are detected in the 'weight' column of the input file.
 test_that(
   "sanityCheckWt() checks if NA's are detected in
   the 'weight' column of the index weight file",
