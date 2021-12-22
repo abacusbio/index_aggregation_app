@@ -22,6 +22,4 @@ jobs:
           r-version: '4.0.2' 
       - run: Rscript -e 'print(R.version$version.string)'
       - name: Install packages
-        run: |
-          cat("\noptions(repos = c(CRAN = 'https://cloud.r-project.org/'))\n", file = "~/.Rprofile", append = TRUE)
-      - run: Rscript {0}
+        run: Rscript -e "install.packages(c('testthat', 'tidyverse', 'here'))"
