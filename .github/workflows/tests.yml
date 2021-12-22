@@ -23,5 +23,5 @@ jobs:
       - run: Rscript -e "print(R.version$version.string)"
       - name: Install packages
         run: |
-          cat("\noptions(repos = c(CRAN = "https://cloud.r-project.org/"))\n", file = "~/.Rprofile", append = TRUE)
+          cat("\noptions(repos = c(CRAN = 'https://cloud.r-project.org/'))\n", file = "~/.Rprofile", append = TRUE)
       - run: Rscript {0}
