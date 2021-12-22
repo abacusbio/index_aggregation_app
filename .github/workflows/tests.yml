@@ -23,3 +23,5 @@ jobs:
       - run: Rscript -e 'print(R.version$version.string)'
       - name: Install packages
         run: Rscript -e "install.packages(c('testthat', 'tidyverse', 'here'))"
+      - name: Run tests
+        run: Rscript -e "source('tests/testthat.R')"
