@@ -20,4 +20,4 @@ jobs:
         with:
           install-r: true
           r-version: '4.0.2' 
-      - run: echo ${{installed-r-version}}
+      - run: Rscript -e "print(R.version$version.string)"
