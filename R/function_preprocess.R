@@ -349,8 +349,9 @@ sanityCheckWt <- function(df_wt, df_econval = NULL) {
   ## Names do not match
   index_ev <- df_econval$Index
   index_wt <- df_wt$Index
-  
   m <- match(index_wt, index_ev)
+  ## Weights are not numerical
+  w <- grep("[^Index]", colnames(df_wt))
   if(any(is.na(m)) > 0) {
     out <- paste0("Aggregation weight: data error:\n",
                   " Index name(s) does not exist in economic value files:\n",
@@ -358,9 +359,6 @@ sanityCheckWt <- function(df_wt, df_econval = NULL) {
                   "\n Please reload and try again.")
     return(out)
   }
-  
-  ## Weights are not numerical
-  w <- grep("[^Index]", colnames(df_wt))
   
   classes <- sapply(df_wt[,w,drop = F], class)
   
