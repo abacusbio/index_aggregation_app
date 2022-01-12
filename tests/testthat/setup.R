@@ -17,6 +17,7 @@ suppressWarnings({
     library(testthat)
     library(readxl)
     library(tidyverse)
+    library(shiny)
   })
 })
 
@@ -261,3 +262,60 @@ suppressMessages({
   )
   
 })
+
+# ------------------
+# Demo data files
+# ------------------
+demo_desc_ebv <-
+  readxl::read_xlsx("../../R/data/description_bv.xlsx", col_names = T)
+
+demo_desc_ev <- read.csv2(
+  "../../R/data/description_ev.csv",
+  sep = ",",
+  col.names = c("column_labelling", "classifier")
+)
+
+demo_dat_ebv <- read.table(
+  "../../R/data/bv.csv",
+  colClasses = c(rep("character", 2), rep("double", 14)),
+  header = T,
+  sep = ",",
+  fileEncoding = "UTF-8-BOM",
+  stringsAsFactors = F,
+  quote = "\"",
+  fill = T,
+  comment.char = "",
+  dec = ".",
+  check.names = F,
+  strip.white = T
+)
+
+demo_dat_ev <- read.table(
+  "../../R/data/ev.csv",
+  colClasses = c("character", rep("double", 11), rep("character", 2)),
+  header = T,
+  sep = ",",
+  fileEncoding = "UTF-8-BOM",
+  stringsAsFactors = F,
+  quote = "\"",
+  fill = T,
+  comment.char = "",
+  dec = ".",
+  check.names = F,
+  strip.white = T
+)
+
+demo_dat_w <- read.table(
+  "../../R/data/index_weight.csv",
+  colClasses = c("character", "double"),
+  header = T,
+  sep = ",",
+  fileEncoding = "UTF-8-BOM",
+  stringsAsFactors = F,
+  quote = "\"",
+  fill = T,
+  comment.char = "",
+  dec = ".",
+  check.names = F,
+  strip.white = T
+)
