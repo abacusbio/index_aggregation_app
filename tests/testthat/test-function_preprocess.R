@@ -1,6 +1,6 @@
 #' Test-function_preprocess.R
 #'
-#' Test cases for the sanity check functions in function_preprocess.R
+#' Unit test cases for the sanity check functions in function_preprocess.R
 #' @author Sameer Atre <SAtre@@abacusbio.co.nz>
 
 
