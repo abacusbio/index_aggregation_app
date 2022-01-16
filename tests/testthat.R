@@ -1,6 +1,7 @@
 library(testthat)
 test_dir(
-  "tests/testthat",
+  "./testthat",
+  env = shiny::loadSupport(),
   reporter = c("location", "check")
 )
 
