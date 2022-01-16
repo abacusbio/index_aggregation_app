@@ -59,21 +59,24 @@ demo_dat_ev <- read.table(
 
 
 # 1]
-test_that("testServer works with nested module servers", {
-  testServer(uploadTableModuleServer, args = list(id = "desc_ebv"), {
-    session$setInputs(file = list(name = "description_bv.xlsx",
-                                  datapath = usr_desc_ebv))
-    session$flushReact()
-    expect_equal(userFile()$datapath, usr_desc_ebv)
-    expect_equal(session$returned(), desc_ebv)
-  })
-  
-  testServer(uploadTableModuleServer, args = list(id = "desc_ev"), {
-    session$setInputs(file = list(name = "description_ev.xlsx",
-                                  datapath = usr_desc_ev))
-    session$flushReact()
-    expect_equal(userFile()$datapath, usr_desc_ev)
-    expect_equal(session$returned(), desc_ev)
-  })
-
-})
+# (Step 1 file uploads) : Checks that the uploadTable module responds correctly 
+# when the user uploads a data file.
+test_that("uploadTable module responds correctly when a data file is uploaded",
+          {
+            testServer(uploadTableModuleServer, args = list(id = "desc_ebv"), {
+              session$setInputs(file = list(name = "description_bv.xlsx",
+                                            datapath = usr_desc_ebv))
+              session$flushReact()
+              expect_equal(userFile()$datapath, usr_desc_ebv)
+              expect_equal(session$returned(), desc_ebv)
+            })
+            
+            testServer(uploadTableModuleServer, args = list(id = "desc_ev"), {
+              session$setInputs(file = list(name = "description_ev.xlsx",
+                                            datapath = usr_desc_ev))
+              session$flushReact()
+              expect_equal(userFile()$datapath, usr_desc_ev)
+              expect_equal(session$returned(), desc_ev)
+            })
+            
+          })
