@@ -22,6 +22,10 @@ jobs:
           install-r: true
           r-version: '4.0.2' 
       - run: Rscript -e 'print(R.version$version.string)'
+      - name: Configure Git user
+        run: |
+          git config user.email "SAtre@abacusbio.co.nz"
+          git config user.name "Sameer Atre"
       - name: Install packages
         run: Rscript -e "install.packages(c('testthat', 'tidyverse', 'here', 'shiny'))"
       - name: Run tests
