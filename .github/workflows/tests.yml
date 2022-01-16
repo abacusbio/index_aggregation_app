@@ -1,7 +1,7 @@
 # unit test workflow configuration on github actions.
 # Author : Sameer Atre <SAtre@abacusbio.co.nz>
 
-name: unit-tests
+name: run-tests
 
 on:
   push:
