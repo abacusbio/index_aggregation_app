@@ -154,7 +154,7 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
           
           for(i in 1:length(filter_cols())) {
             # print(filter_cols()[ i ]) # print(filter_levels()[[ i ]])
-            dat_new <- filter_at(dat_new, vars(filter_cols()[ i ]),
+            dat_new <- dplyr::filter_at(dat_new, vars(filter_cols()[ i ]),
                                  any_vars(. %in% filter_levels()[[ i ]]))
           }
           # print("dim data_new") # print(dim(dat_new))
@@ -193,7 +193,7 @@ dataViewerModuleServer <- function(id, datt = reactive(NULL), val,
 # cat("dataViewerModuleServer\n");print(str(dat));cat(" columns:");print(columns)
             for(i in columns) dat[[i]] <- getFunction(paste0("as.", class(dat[[i]])))(dat[[i]])
 # cat(" dat after:\n");print(str(dat))            
-            dat <- select_at(dat, vars(input$view_vars)) # filter col var to show
+            dat <- dplyr::select_at(dat, vars(input$view_vars)) # filter col var to show
             
             #         # below will make DT::renderDT run for each column, too
             #         search <- input$dataviewer_state$search$search # r_state$dataviewer_state$search$search

@@ -41,7 +41,7 @@ sanityCheckEBVdesc <- function(df_description) {
   }
   
   ## unknown classifier
-  m <- !grepl("EBV|Group|ID|ClassVar", df_description$classifier)
+  m <- !grepl("EBV|Group|ID|ClassVar", df_description$classifier) # do we need ACC?
   if(any(m)) {
     out <- paste0("Economic values: file description error:\n",
                   " Unknown classifier:\n",
