@@ -13,28 +13,30 @@ options(repos = c(#"added" = "https://mran.microsoft.com/snapshot/2019-04-15",
 # options(shiny.reactlog = T) # ctrl+F3
 # reactlogReset()
 
-# library(parallel)
-library(shiny)
-library(DT)
-library(shinyWidgets)
-# library(shinyjs) # lazy loading
-# library(htmltools) # lazy loading
-library(reactable)
-#library(reactlog)
-
-library(dplyr)
-library(purrr)
-
-#library(RColorBrewer) # lazy loading
-library(ggplot2)
-library(pheatmap)
-# library(gplots) # heatmap.2
-library(ggrepel) # geom_text_repel
-library(ggdendro)
-
-library(cluster)
-library(PMA) # spc
-library(factoextra) # silouette, wss
+suppressPackageStartupMessages({
+  # library(parallel)
+  library(shiny)
+  library(DT)
+  library(shinyWidgets)
+  # library(shinyjs) # lazy loading
+  # library(htmltools) # lazy loading
+  library(reactable)
+  #library(reactlog)
+  
+  library(dplyr)
+  library(purrr)
+  
+  #library(RColorBrewer) # lazy loading
+  library(ggplot2)
+  library(pheatmap)
+  # library(gplots) # heatmap.2
+  library(ggrepel) # geom_text_repel
+  library(ggdendro)
+  
+  library(cluster)
+  library(PMA) # spc
+  library(factoextra) # silouette, wss
+})
 
 source("modules.R", echo = F)
 source("module_preprocess.R", echo = F)
