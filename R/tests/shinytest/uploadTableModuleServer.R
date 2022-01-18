@@ -1,4 +1,4 @@
-app <- ShinyDriver$new("../../")
+app <- ShinyDriver$new("../../", loadTimeout = 1e+04)
 app$snapshotInit("uploadTableModuleServer")
 
 app$uploadFile(`step1-desc_ebv-file` = "../../data/description_bv.xlsx") # <-- This should be the path to the file, relative to the app's tests/shinytest directory
