@@ -71,63 +71,11 @@
     "plant_app": "tab.upload",
     "run_agg": "tab.agg.1",
     "run_cluster": "tab.cl.1",
-    "step1-dat_ebv-file": {
-      "name": [
-        "bv.csv"
-      ],
-      "size": [
-        180653
-      ],
-      "type": [
-        "text/csv"
-      ],
-      "datapath": [
-        "0.csv"
-      ]
-    },
-    "step1-dat_ev-file": {
-      "name": [
-        "ev.csv"
-      ],
-      "size": [
-        141559
-      ],
-      "type": [
-        "text/csv"
-      ],
-      "datapath": [
-        "0.csv"
-      ]
-    },
+    "step1-dat_ebv-file": null,
+    "step1-dat_ev-file": null,
     "step1-dat_wt-file": null,
-    "step1-desc_ebv-file": {
-      "name": [
-        "description_bv.xlsx"
-      ],
-      "size": [
-        8779
-      ],
-      "type": [
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      ],
-      "datapath": [
-        "0.xlsx"
-      ]
-    },
-    "step1-desc_ev-file": {
-      "name": [
-        "description_ev.csv"
-      ],
-      "size": [
-        214
-      ],
-      "type": [
-        "text/csv"
-      ],
-      "datapath": [
-        "0.csv"
-      ]
-    },
+    "step1-desc_ebv-file": null,
+    "step1-desc_ev-file": null,
     "step1-help_btn": 0,
     "stfn_ebv-apply": 0,
     "stfn_ebv-clear": 0,
@@ -159,15 +107,60 @@
     ],
     "sumstat_ev-help_btn": 0,
     "sumstat_ev-view_dec": 2,
-    "upload": "tab.step1",
+    "upload": "tab.ebv.sumstat",
     "view_index": "tab.index1"
   },
   "output": {
-    "step1-demo_message": "You are using uploaded data now",
-    "step1-error_m_1": "",
-    "step1-error_m_2": "",
-    "step1-error_m_3": "",
-    "step1-error_m_4": "",
+    "ebv_filter-dataviewer": [
+      "",
+      "NULL",
+      "c(\"shiny.silent.error\", \"validation\")"
+    ],
+    "ev_filter-dataviewer": [
+      "",
+      "NULL",
+      "c(\"shiny.silent.error\", \"validation\")"
+    ],
+    "step1-demo_message": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_1": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_2": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_3": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_4": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
     "step1-error_m_5": {
       "message": "",
       "call": "NULL",
@@ -176,7 +169,7 @@
         "validation"
       ]
     },
-    "step1-sanity_message": "All good. Now you can move to Results, or Filter if you want to subset your inputs.",
+    "step1-sanity_message": "Choose demo or upload your own files",
     "stfn_ebv-data_filters": {
       "html": "",
       "deps": [
@@ -260,6 +253,22 @@
       ]
     },
     "sumstat_ebv-ui_vars": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "sumstat_ebv-warning1": {
+      "message": "The data does not exist, please upload one or click 'Rename and save' on filter tab",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "sumstat_ebv-warning2": {
       "message": "",
       "call": "NULL",
       "type": [
