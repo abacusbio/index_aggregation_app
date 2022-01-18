@@ -13,30 +13,36 @@ options(repos = c(#"added" = "https://mran.microsoft.com/snapshot/2019-04-15",
 # options(shiny.reactlog = T) # ctrl+F3
 # reactlogReset()
 
-suppressPackageStartupMessages({
-  # library(parallel)
-  library(shiny)
-  library(DT)
-  library(shinyWidgets)
-  # library(shinyjs) # lazy loading
-  # library(htmltools) # lazy loading
-  library(reactable)
-  #library(reactlog)
-  
-  library(dplyr)
-  library(purrr)
-  
-  #library(RColorBrewer) # lazy loading
-  library(ggplot2)
-  library(pheatmap)
-  # library(gplots) # heatmap.2
-  library(ggrepel) # geom_text_repel
-  library(ggdendro)
-  
-  library(cluster)
-  library(PMA) # spc
-  library(factoextra) # silouette, wss
-})
+packages <- c(
+  "shiny",
+  "DT",
+  "shinyWidgets",
+  "reactable",
+  "dplyr",
+  "purrr",
+  "ggplot2",
+  "pheatmap",
+  "ggrepel",
+  "ggdendro",
+  "cluster",
+  "PMA",
+  "factoextra"
+)
+
+# Suppress package load messages for shiny tests.
+if (isTRUE(getOption("shiny.testmode"))) {
+  suppressPackageStartupMessages({
+    invisible(lapply(
+      packages,
+      library,
+      character.only = TRUE,
+      quietly = TRUE
+    ))
+  })
+}else {
+  lapply(packages, library, character.only = TRUE)
+}
+
 
 source("modules.R", echo = F)
 source("module_preprocess.R", echo = F)
