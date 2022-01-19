@@ -24,6 +24,8 @@ jobs:
       - run: Rscript -e 'print(R.version$version.string)'
       - name: Install packages
         run: Rscript -e "install.packages(c('tidyverse', 'here', 'shiny', 'shinytest'))"
+      - name: Install PhantomJS
+        run: Rscript -e "shinytest::installDependencies()"
       - name: Run tests
         run: Rscript -e "shinytest::testApp(appDir = './R',
                                     quiet=TRUE, 
