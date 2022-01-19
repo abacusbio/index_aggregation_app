@@ -3,13 +3,13 @@
 
 name: run-shiny-tests
 
-on: [push, pull_request]
-
-branches: testing
+on:
+  push:
+    branches:
+      - testing
     paths:
       - 'R/*'
       - 'R/tests/shinytest/*'
-
 jobs:
   run-shiny-tests:
     runs-on: windows-latest
