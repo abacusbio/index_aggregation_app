@@ -28,5 +28,4 @@ jobs:
         run: Rscript -e "shinytest::testApp(appDir = './R',
                                     quiet=TRUE, 
                                     compareImages = FALSE, 
-                                    interactive = FALSE)
-"
+                                    interactive = FALSE)"
