@@ -10,6 +10,7 @@ on:
     paths:
       - 'R/*'
       - 'R/tests/shinytest/*'
+      
 jobs:
   run-shiny-tests:
     runs-on: windows-latest
@@ -21,6 +22,6 @@ jobs:
           r-version: '4.0.2' 
       - run: Rscript -e 'print(R.version$version.string)'
       - name: Install packages
-        run: Rscript -e "install.packages(c(tidyverse', 'here', 'shiny'))"
+        run: Rscript -e "install.packages(c('tidyverse', 'here', 'shiny'))"
       - name: Run tests
         run: Rscript -e "source('R/tests/shinytest.R')"
