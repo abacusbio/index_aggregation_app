@@ -1,0 +1,27 @@
+# Shiny testing workflow configuration for GHA.
+# Author : Sameer Atre <SAtre@abacusbio.co.nz>
+
+name: run-shiny-tests
+
+on: [push, pull_request]
+
+branches: testing
+    
+paths:
+  - 'R/*'
+  - 'R/tests/shinytest/*'
+
+jobs:
+  run-shiny-tests:
+    runs-on: windows-latest
+    steps:
+      - uses: r-lib/actions/setup-r@v2
+      - uses: actions/checkout@v2
+        with:
+          install-r: true
+          r-version: '4.0.2' 
+      - run: Rscript -e 'print(R.version$version.string)'
+      - name: Install packages
+        run: Rscript -e "install.packages(c(tidyverse', 'here', 'shiny'))"
+      - name: Run tests
+        run: Rscript -e "source('R/tests/shinytest.R')"
