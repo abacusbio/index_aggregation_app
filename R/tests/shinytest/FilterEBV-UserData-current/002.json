@@ -1,0 +1,295 @@
+{
+  "input": {
+    "agg_dx-fixed_y_scale": true,
+    "agg_dx-font_size": 12,
+    "agg_dx-quantile": 100,
+    "agg_dx-quantile_default": 100,
+    "agg_dx-run_analysis": 0,
+    "agg_dx-sel_agg": null,
+    "agg_dx-sel_benchmark": "",
+    "agg_dx-sel_cluster": "",
+    "agg_dx-sel_index": "",
+    "agg_dx-upload_benchmark-file": null,
+    "agg_dx2-font_size": 12,
+    "agg_dx2-percent": false,
+    "agg_dx2-run_top": 0,
+    "agg_dx2-sel_top_n": 10,
+    "agg_dx3-agg_by": "",
+    "agg_dx3-class_var": "",
+    "agg_dx3-font_size": 12,
+    "agg_dx3-use_count": false,
+    "agg_dx4-agg_by": "",
+    "agg_dx4-digits": 0,
+    "agg_dx4-font_size": 12,
+    "agg_dx4-use_count": false,
+    "agg_dx4-weight_var": "",
+    "cl_sumstat-digit": 3,
+    "cl_sumstat-font_size": 12,
+    "cl_sumstat-upload_clusters-file": null,
+    "cl_sumstat-upload_index-file": null,
+    "cl_weight-choose_w": "equal weight",
+    "cl_weight-digits": 3,
+    "cl_weight-font_size": 12,
+    "cl_weight-upload_clusters-file": null,
+    "cl_weight-upload_ebv-file": null,
+    "cl_weight-upload_ebv_desc-file": null,
+    "cl_weight-upload_ev-file": null,
+    "cl_weight-upload_ev_desc-file": null,
+    "cl_weight-upload_index-file": null,
+    "cl_weight-upload_w-file": null,
+    "demo": 0,
+    "Dx-run_heatmap": 0,
+    "Dx-show_corr": true,
+    "ebv_filter-view_dec": 2,
+    "ebv_filter-view_name": "filtered_ebv",
+    "ebv_filter-view_store": 0,
+    "ebv_filter-view_vars": "",
+    "ebv_na_0": false,
+    "ev_filter-view_dec": 2,
+    "ev_filter-view_name": "filtered_ev",
+    "ev_filter-view_store": 0,
+    "ev_filter-view_vars": "",
+    "ev_na_0": false,
+    "find_cl-absolute": false,
+    "find_cl-agg_method": "ward",
+    "find_cl-center": true,
+    "find_cl-circle": false,
+    "find_cl-find_k_agg": false,
+    "find_cl-help_btn": 0,
+    "find_cl-k_slider": 2,
+    "find_cl-run_cluster": 0,
+    "find_cl-scale": true,
+    "find_cl-scale_obs": true,
+    "find_cl-sil": false,
+    "find_cl-which_data": "Index by individual",
+    "find_cl-wss": false,
+    "help_btn_ebv_filter": 0,
+    "help_btn_ev_filter": 0,
+    "index_view-font_size": 12,
+    "index_view-help_btn": 0,
+    "index_view-view_dec": 2,
+    "plant_app": "tab.upload",
+    "run_agg": "tab.agg.1",
+    "run_cluster": "tab.cl.1",
+    "step1-dat_ebv-file": {
+      "name": [
+        "bv.csv"
+      ],
+      "size": [
+        180653
+      ],
+      "type": [
+        "text/csv"
+      ],
+      "datapath": [
+        "0.csv"
+      ]
+    },
+    "step1-dat_ev-file": {
+      "name": [
+        "ev.csv"
+      ],
+      "size": [
+        141559
+      ],
+      "type": [
+        "text/csv"
+      ],
+      "datapath": [
+        "0.csv"
+      ]
+    },
+    "step1-dat_wt-file": null,
+    "step1-desc_ebv-file": {
+      "name": [
+        "description_bv.xlsx"
+      ],
+      "size": [
+        8779
+      ],
+      "type": [
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      ],
+      "datapath": [
+        "0.xlsx"
+      ]
+    },
+    "step1-desc_ev-file": {
+      "name": [
+        "description_ev.csv"
+      ],
+      "size": [
+        214
+      ],
+      "type": [
+        "text/csv"
+      ],
+      "datapath": [
+        "0.csv"
+      ]
+    },
+    "step1-help_btn": 0,
+    "stfn_ebv-apply": 0,
+    "stfn_ebv-clear": 0,
+    "stfn_ebv-filter_col": null,
+    "stfn_ev-apply": 0,
+    "stfn_ev-clear": 0,
+    "stfn_ev-filter_col": null,
+    "sumstat_ebv-create_table": 0,
+    "sumstat_ebv-font_size": 12,
+    "sumstat_ebv-functions": [
+      "mean",
+      "sd",
+      "min",
+      "max",
+      "n_missing",
+      "n_obs"
+    ],
+    "sumstat_ebv-help_btn": 0,
+    "sumstat_ebv-view_dec": 2,
+    "sumstat_ev-create_table": 0,
+    "sumstat_ev-font_size": 12,
+    "sumstat_ev-functions": [
+      "mean",
+      "sd",
+      "min",
+      "max",
+      "n_missing",
+      "n_obs"
+    ],
+    "sumstat_ev-help_btn": 0,
+    "sumstat_ev-view_dec": 2,
+    "upload": "tab.step2",
+    "view_index": "tab.index1"
+  },
+  "output": {
+    "ebv_filter-dataviewer": [
+      "",
+      "NULL",
+      "c(\"shiny.silent.error\", \"validation\")"
+    ],
+    "step1-demo_message": "You are using uploaded data now",
+    "step1-error_m_1": "",
+    "step1-error_m_2": "",
+    "step1-error_m_3": "",
+    "step1-error_m_4": "",
+    "step1-error_m_5": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-sanity_message": "All good. Now you can move to Results, or Filter if you want to subset your inputs.",
+    "stfn_ebv-data_filters": {
+      "html": "",
+      "deps": [
+
+      ]
+    },
+    "stfn_ebv-filter_col_UI": {
+      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" for=\"stfn_ebv-filter_col\">Select columns to apply filter on<\/label>\n  <select id=\"stfn_ebv-filter_col\" class=\"selectpicker form-control\" multiple=\"multiple\"><option value=\"ID\">ID<\/option>\n<option value=\"sex\">sex<\/option><\/select>\n<\/div>",
+      "deps": [
+        {
+          "name": "shinyWidgets",
+          "version": "0.5.7",
+          "src": {
+            "href": "shinyWidgets"
+          },
+          "meta": null,
+          "script": "shinyWidgets-bindings.min.js",
+          "stylesheet": "shinyWidgets.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "bootstrap-select",
+          "version": "1.13.18",
+          "src": {
+            "href": "shinyWidgets/bootstrap-select"
+          },
+          "meta": null,
+          "script": "js/bootstrap-select.min.js",
+          "stylesheet": "css/bootstrap-select.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        }
+      ]
+    },
+    "stfn_ev-data_filters": {
+      "html": "",
+      "deps": [
+
+      ]
+    },
+    "stfn_ev-filter_col_UI": {
+      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" for=\"stfn_ev-filter_col\">Select columns to apply filter on<\/label>\n  <select id=\"stfn_ev-filter_col\" class=\"selectpicker form-control\" multiple=\"multiple\"><\/select>\n<\/div>",
+      "deps": [
+        {
+          "name": "shinyWidgets",
+          "version": "0.5.7",
+          "src": {
+            "href": "shinyWidgets"
+          },
+          "meta": null,
+          "script": "shinyWidgets-bindings.min.js",
+          "stylesheet": "shinyWidgets.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "bootstrap-select",
+          "version": "1.13.18",
+          "src": {
+            "href": "shinyWidgets/bootstrap-select"
+          },
+          "meta": null,
+          "script": "js/bootstrap-select.min.js",
+          "stylesheet": "css/bootstrap-select.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        }
+      ]
+    },
+    "sumstat_ebv-ui_group": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "sumstat_ebv-ui_vars": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "sumstat_ev-ui_group": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "sumstat_ev-ui_vars": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    }
+  },
+  "export": {
+
+  }
+}
