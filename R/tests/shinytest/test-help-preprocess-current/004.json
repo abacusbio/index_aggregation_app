@@ -27,7 +27,7 @@
     "cl_sumstat-font_size": 12,
     "cl_sumstat-upload_clusters-file": null,
     "cl_sumstat-upload_index-file": null,
-    "cl_weight-choose_w": "equal weight",
+    "cl_weight-choose_w": "weight",
     "cl_weight-digits": 3,
     "cl_weight-font_size": 12,
     "cl_weight-upload_clusters-file": null,
@@ -37,7 +37,7 @@
     "cl_weight-upload_ev_desc-file": null,
     "cl_weight-upload_index-file": null,
     "cl_weight-upload_w-file": null,
-    "demo": 0,
+    "demo": 1,
     "Dx-run_heatmap": 0,
     "Dx-show_corr": true,
     "ebv_filter-dataviewer_cell_clicked": {
@@ -1067,10 +1067,22 @@
       "",
       "",
       "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
       ""
     ],
     "ebv_filter-dataviewer_state": {
-      "time": 1642577008485,
+      "time": 1642566884671,
       "start": 0,
       "length": 10,
       "order": [
@@ -1118,17 +1130,137 @@
             "regex": false,
             "caseInsensitive": true
           }
+        },
+        {
+          "visible": true,
+          "search": {
+            "search": "",
+            "smart": true,
+            "regex": false,
+            "caseInsensitive": true
+          }
+        },
+        {
+          "visible": true,
+          "search": {
+            "search": "",
+            "smart": true,
+            "regex": false,
+            "caseInsensitive": true
+          }
+        },
+        {
+          "visible": true,
+          "search": {
+            "search": "",
+            "smart": true,
+            "regex": false,
+            "caseInsensitive": true
+          }
+        },
+        {
+          "visible": true,
+          "search": {
+            "search": "",
+            "smart": true,
+            "regex": false,
+            "caseInsensitive": true
+          }
+        },
+        {
+          "visible": true,
+          "search": {
+            "search": "",
+            "smart": true,
+            "regex": false,
+            "caseInsensitive": true
+          }
+        },
+        {
+          "visible": true,
+          "search": {
+            "search": "",
+            "smart": true,
+            "regex": false,
+            "caseInsensitive": true
+          }
+        },
+        {
+          "visible": true,
+          "search": {
+            "search": "",
+            "smart": true,
+            "regex": false,
+            "caseInsensitive": true
+          }
+        },
+        {
+          "visible": true,
+          "search": {
+            "search": "",
+            "smart": true,
+            "regex": false,
+            "caseInsensitive": true
+          }
+        },
+        {
+          "visible": true,
+          "search": {
+            "search": "",
+            "smart": true,
+            "regex": false,
+            "caseInsensitive": true
+          }
+        },
+        {
+          "visible": true,
+          "search": {
+            "search": "",
+            "smart": true,
+            "regex": false,
+            "caseInsensitive": true
+          }
+        },
+        {
+          "visible": true,
+          "search": {
+            "search": "",
+            "smart": true,
+            "regex": false,
+            "caseInsensitive": true
+          }
+        },
+        {
+          "visible": true,
+          "search": {
+            "search": "",
+            "smart": true,
+            "regex": false,
+            "caseInsensitive": true
+          }
         }
       ]
     },
     "ebv_filter-view_dec": 2,
     "ebv_filter-view_name": "filtered_ebv",
-    "ebv_filter-view_store": 1,
+    "ebv_filter-view_store": 0,
     "ebv_filter-view_vars": [
       "ID",
       "sex",
       "GLEAFSPOT",
-      "ANTHRAC"
+      "ANTHRAC",
+      "GOSSWILT",
+      "FUSARIUM",
+      "GIBBERELLA",
+      "NLEAFBLIGHT",
+      "BROWNRUST",
+      "TARSPOT",
+      "YIELD",
+      "GREENSNAP",
+      "ROOTLODGE",
+      "STALKLODGE",
+      "TESTWT",
+      "MOIST"
     ],
     "ebv_na_0": false,
     "ev_filter-view_dec": 2,
@@ -1164,7 +1296,7 @@
     "find_cl-sil": false,
     "find_cl-which_data": "Index by individual",
     "find_cl-wss": false,
-    "help_btn_ebv_filter": 0,
+    "help_btn_ebv_filter": 1,
     "help_btn_ev_filter": 0,
     "index_view-font_size": 12,
     "index_view-help_btn": 0,
@@ -1172,64 +1304,12 @@
     "plant_app": "tab.upload",
     "run_agg": "tab.agg.1",
     "run_cluster": "tab.cl.1",
-    "step1-dat_ebv-file": {
-      "name": [
-        "bv.csv"
-      ],
-      "size": [
-        180653
-      ],
-      "type": [
-        "text/csv"
-      ],
-      "datapath": [
-        "0.csv"
-      ]
-    },
-    "step1-dat_ev-file": {
-      "name": [
-        "ev.csv"
-      ],
-      "size": [
-        141559
-      ],
-      "type": [
-        "text/csv"
-      ],
-      "datapath": [
-        "0.csv"
-      ]
-    },
+    "step1-dat_ebv-file": null,
+    "step1-dat_ev-file": null,
     "step1-dat_wt-file": null,
-    "step1-desc_ebv-file": {
-      "name": [
-        "description_bv.xlsx"
-      ],
-      "size": [
-        8779
-      ],
-      "type": [
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      ],
-      "datapath": [
-        "0.xlsx"
-      ]
-    },
-    "step1-desc_ev-file": {
-      "name": [
-        "description_ev.csv"
-      ],
-      "size": [
-        214
-      ],
-      "type": [
-        "text/csv"
-      ],
-      "datapath": [
-        "0.csv"
-      ]
-    },
-    "step1-help_btn": 0,
+    "step1-desc_ebv-file": null,
+    "step1-desc_ev-file": null,
+    "step1-help_btn": 2,
     "stfn_ebv-apply": 0,
     "stfn_ebv-clear": 0,
     "stfn_ebv-filter_col": null,
@@ -1246,9 +1326,7 @@
       "n_missing",
       "n_obs"
     ],
-    "sumstat_ebv-group_vars": "",
     "sumstat_ebv-help_btn": 0,
-    "sumstat_ebv-vars": null,
     "sumstat_ebv-view_dec": 2,
     "sumstat_ev-create_table": 0,
     "sumstat_ev-font_size": 12,
@@ -1262,7 +1340,7 @@
     ],
     "sumstat_ev-help_btn": 0,
     "sumstat_ev-view_dec": 2,
-    "upload": "tab.ebv.sumstat",
+    "upload": "tab.step2",
     "view_index": "tab.index1"
   },
   "output": {
@@ -1270,7 +1348,7 @@
       "x": {
         "style": "bootstrap",
         "filter": "top",
-        "filterHTML": "<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-1.459362839\" data-max=\"1.292549307\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-3.629830407\" data-max=\"1.801579508\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>",
+        "filterHTML": "<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-1.459362839\" data-max=\"1.292549307\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-3.629830407\" data-max=\"1.801579508\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-2.68696275\" data-max=\"2.983603671\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-3.495894079\" data-max=\"3.757891897\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-2.385278034\" data-max=\"3.403589549\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-2.061348248\" data-max=\"2.017686499\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-3.785940348\" data-max=\"2.837323135\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-0.347789233\" data-max=\"0.33482483\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-20.21736503\" data-max=\"32.24402844\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-18.31127622\" data-max=\"19.40447622\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-7.481850222\" data-max=\"8.286979401\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-4.476816005\" data-max=\"3.943515755\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-2.881182317\" data-max=\"3.630721067\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-6.242451669\" data-max=\"6.450918076\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>",
         "extensions": [
           "KeyTable"
         ],
@@ -1281,7 +1359,7 @@
           }
         },
         "fillContainer": false,
-        "container": "<table class=\"table table-striped table-hover row-border order-column display\">\n  <thead>\n    <tr>\n      <th>ID<\/th>\n      <th>sex<\/th>\n      <th>GLEAFSPOT<\/th>\n      <th>ANTHRAC<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>",
+        "container": "<table class=\"table table-striped table-hover row-border order-column display\">\n  <thead>\n    <tr>\n      <th>ID<\/th>\n      <th>sex<\/th>\n      <th>GLEAFSPOT<\/th>\n      <th>ANTHRAC<\/th>\n      <th>GOSSWILT<\/th>\n      <th>FUSARIUM<\/th>\n      <th>GIBBERELLA<\/th>\n      <th>NLEAFBLIGHT<\/th>\n      <th>BROWNRUST<\/th>\n      <th>TARSPOT<\/th>\n      <th>YIELD<\/th>\n      <th>GREENSNAP<\/th>\n      <th>ROOTLODGE<\/th>\n      <th>STALKLODGE<\/th>\n      <th>TESTWT<\/th>\n      <th>MOIST<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>",
         "options": {
           "stateSave": true,
           "search": {
@@ -1295,6 +1373,54 @@
             },
             {
               "targets": 3,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 4,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 5,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 6,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 7,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 8,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 9,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 10,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 11,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 12,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 13,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 14,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 15,
               "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
             },
             {
@@ -1350,6 +1476,18 @@
       "evals": [
         "options.columnDefs.0.render",
         "options.columnDefs.1.render",
+        "options.columnDefs.2.render",
+        "options.columnDefs.3.render",
+        "options.columnDefs.4.render",
+        "options.columnDefs.5.render",
+        "options.columnDefs.6.render",
+        "options.columnDefs.7.render",
+        "options.columnDefs.8.render",
+        "options.columnDefs.9.render",
+        "options.columnDefs.10.render",
+        "options.columnDefs.11.render",
+        "options.columnDefs.12.render",
+        "options.columnDefs.13.render",
         "options.ajax.data",
         "callback"
       ],
@@ -1450,11 +1588,39 @@
         }
       ]
     },
-    "step1-demo_message": "You are using uploaded data now",
-    "step1-error_m_1": "",
-    "step1-error_m_2": "",
-    "step1-error_m_3": "",
-    "step1-error_m_4": "",
+    "step1-demo_message": "You are using demo data now",
+    "step1-error_m_1": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_2": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_3": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_4": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
     "step1-error_m_5": {
       "message": "",
       "call": "NULL",
@@ -1539,35 +1705,14 @@
       ]
     },
     "sumstat_ebv-ui_group": {
-      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"sumstat_ebv-group_vars-label\" for=\"sumstat_ebv-group_vars\">Group by:<\/label>\n  <div>\n    <select id=\"sumstat_ebv-group_vars\"><option value=\"\" selected><\/option>\n<option value=\"sex{character}\">sex{character}<\/option><\/select>\n    <script type=\"application/json\" data-for=\"sumstat_ebv-group_vars\">{\"plugins\":[\"selectize-plugin-a11y\"]}<\/script>\n  <\/div>\n<\/div>",
-      "deps": [
-        {
-          "name": "selectize",
-          "version": "0.12.4",
-          "src": {
-            "href": "shared/selectize"
-          },
-          "meta": null,
-          "script": [
-            "js/selectize.min.js",
-            "accessibility/js/selectize-plugin-a11y.min.js"
-          ],
-          "stylesheet": "css/selectize.bootstrap3.css",
-          "head": null,
-          "attachment": null,
-          "package": null,
-          "all_files": true
-        }
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
       ]
     },
     "sumstat_ebv-ui_vars": {
-      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"sumstat_ebv-vars-label\" for=\"sumstat_ebv-vars\">Variable(s):<\/label>\n  <div>\n    <select id=\"sumstat_ebv-vars\" class=\"form-control\" size=\"8\" multiple=\"multiple\"><option value=\"sex{character}\">sex{character}<\/option>\n<option value=\"GLEAFSPOT{double}\">GLEAFSPOT{double}<\/option>\n<option value=\"ANTHRAC{double}\">ANTHRAC{double}<\/option><\/select>\n  <\/div>\n<\/div>",
-      "deps": [
-
-      ]
-    },
-    "sumstat_ebv-warning1": "",
-    "sumstat_ebv-warning2": {
       "message": "",
       "call": "NULL",
       "type": [

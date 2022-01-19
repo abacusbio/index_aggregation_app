@@ -27,7 +27,7 @@
     "cl_sumstat-font_size": 12,
     "cl_sumstat-upload_clusters-file": null,
     "cl_sumstat-upload_index-file": null,
-    "cl_weight-choose_w": "weight",
+    "cl_weight-choose_w": "equal weight",
     "cl_weight-digits": 3,
     "cl_weight-font_size": 12,
     "cl_weight-upload_clusters-file": null,
@@ -37,7 +37,7 @@
     "cl_weight-upload_ev_desc-file": null,
     "cl_weight-upload_index-file": null,
     "cl_weight-upload_w-file": null,
-    "demo": 1,
+    "demo": 0,
     "Dx-run_heatmap": 0,
     "Dx-show_corr": true,
     "ebv_filter-view_dec": 2,
@@ -63,7 +63,7 @@
     "find_cl-sil": false,
     "find_cl-which_data": "Index by individual",
     "find_cl-wss": false,
-    "help_btn_ebv_filter": 1,
+    "help_btn_ebv_filter": 0,
     "help_btn_ev_filter": 0,
     "index_view-font_size": 12,
     "index_view-help_btn": 0,
@@ -107,16 +107,18 @@
     ],
     "sumstat_ev-help_btn": 0,
     "sumstat_ev-view_dec": 2,
-    "upload": "tab.step2",
+    "upload": "tab.step1",
     "view_index": "tab.index1"
   },
   "output": {
-    "ebv_filter-dataviewer": [
-      "",
-      "NULL",
-      "c(\"shiny.silent.error\", \"validation\")"
-    ],
-    "step1-demo_message": "You are using demo data now",
+    "step1-demo_message": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
     "step1-error_m_1": {
       "message": "",
       "call": "NULL",
@@ -157,7 +159,7 @@
         "validation"
       ]
     },
-    "step1-sanity_message": "All good. Now you can move to Results, or Filter if you want to subset your inputs.",
+    "step1-sanity_message": "Choose demo or upload your own files",
     "stfn_ebv-data_filters": {
       "html": "",
       "deps": [
@@ -165,7 +167,7 @@
       ]
     },
     "stfn_ebv-filter_col_UI": {
-      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" for=\"stfn_ebv-filter_col\">Select columns to apply filter on<\/label>\n  <select id=\"stfn_ebv-filter_col\" class=\"selectpicker form-control\" multiple=\"multiple\"><option value=\"ID\">ID<\/option>\n<option value=\"sex\">sex<\/option><\/select>\n<\/div>",
+      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" for=\"stfn_ebv-filter_col\">Select columns to apply filter on<\/label>\n  <select id=\"stfn_ebv-filter_col\" class=\"selectpicker form-control\" multiple=\"multiple\"><\/select>\n<\/div>",
       "deps": [
         {
           "name": "shinyWidgets",

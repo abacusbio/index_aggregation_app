@@ -63,7 +63,7 @@
     "find_cl-sil": false,
     "find_cl-which_data": "Index by individual",
     "find_cl-wss": false,
-    "help_btn_ebv_filter": 1,
+    "help_btn_ebv_filter": 0,
     "help_btn_ev_filter": 0,
     "index_view-font_size": 12,
     "index_view-help_btn": 0,

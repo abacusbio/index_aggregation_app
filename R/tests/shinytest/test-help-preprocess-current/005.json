@@ -27,7 +27,7 @@
     "cl_sumstat-font_size": 12,
     "cl_sumstat-upload_clusters-file": null,
     "cl_sumstat-upload_index-file": null,
-    "cl_weight-choose_w": "equal weight",
+    "cl_weight-choose_w": "weight",
     "cl_weight-digits": 3,
     "cl_weight-font_size": 12,
     "cl_weight-upload_clusters-file": null,
@@ -37,7 +37,7 @@
     "cl_weight-upload_ev_desc-file": null,
     "cl_weight-upload_index-file": null,
     "cl_weight-upload_w-file": null,
-    "demo": 0,
+    "demo": 1,
     "Dx-run_heatmap": 0,
     "Dx-show_corr": true,
     "ebv_filter-dataviewer_cell_clicked": {
@@ -1066,11 +1066,10 @@
     "ebv_filter-dataviewer_search_columns": [
       "",
       "",
-      "",
       ""
     ],
     "ebv_filter-dataviewer_state": {
-      "time": 1642577008485,
+      "time": 1642566893643,
       "start": 0,
       "length": 10,
       "order": [
@@ -1109,15 +1108,6 @@
             "regex": false,
             "caseInsensitive": true
           }
-        },
-        {
-          "visible": true,
-          "search": {
-            "search": "",
-            "smart": true,
-            "regex": false,
-            "caseInsensitive": true
-          }
         }
       ]
     },
@@ -1126,9 +1116,8 @@
     "ebv_filter-view_store": 1,
     "ebv_filter-view_vars": [
       "ID",
-      "sex",
-      "GLEAFSPOT",
-      "ANTHRAC"
+      "FUSARIUM",
+      "GIBBERELLA"
     ],
     "ebv_na_0": false,
     "ev_filter-view_dec": 2,
@@ -1164,7 +1153,7 @@
     "find_cl-sil": false,
     "find_cl-which_data": "Index by individual",
     "find_cl-wss": false,
-    "help_btn_ebv_filter": 0,
+    "help_btn_ebv_filter": 2,
     "help_btn_ev_filter": 0,
     "index_view-font_size": 12,
     "index_view-help_btn": 0,
@@ -1172,64 +1161,12 @@
     "plant_app": "tab.upload",
     "run_agg": "tab.agg.1",
     "run_cluster": "tab.cl.1",
-    "step1-dat_ebv-file": {
-      "name": [
-        "bv.csv"
-      ],
-      "size": [
-        180653
-      ],
-      "type": [
-        "text/csv"
-      ],
-      "datapath": [
-        "0.csv"
-      ]
-    },
-    "step1-dat_ev-file": {
-      "name": [
-        "ev.csv"
-      ],
-      "size": [
-        141559
-      ],
-      "type": [
-        "text/csv"
-      ],
-      "datapath": [
-        "0.csv"
-      ]
-    },
+    "step1-dat_ebv-file": null,
+    "step1-dat_ev-file": null,
     "step1-dat_wt-file": null,
-    "step1-desc_ebv-file": {
-      "name": [
-        "description_bv.xlsx"
-      ],
-      "size": [
-        8779
-      ],
-      "type": [
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      ],
-      "datapath": [
-        "0.xlsx"
-      ]
-    },
-    "step1-desc_ev-file": {
-      "name": [
-        "description_ev.csv"
-      ],
-      "size": [
-        214
-      ],
-      "type": [
-        "text/csv"
-      ],
-      "datapath": [
-        "0.csv"
-      ]
-    },
-    "step1-help_btn": 0,
+    "step1-desc_ebv-file": null,
+    "step1-desc_ev-file": null,
+    "step1-help_btn": 2,
     "stfn_ebv-apply": 0,
     "stfn_ebv-clear": 0,
     "stfn_ebv-filter_col": null,
@@ -1247,8 +1184,8 @@
       "n_obs"
     ],
     "sumstat_ebv-group_vars": "",
-    "sumstat_ebv-help_btn": 0,
-    "sumstat_ebv-vars": null,
+    "sumstat_ebv-help_btn": 1,
+    "sumstat_ebv-vars": "GIBBERELLA{double}",
     "sumstat_ebv-view_dec": 2,
     "sumstat_ev-create_table": 0,
     "sumstat_ev-font_size": 12,
@@ -1270,7 +1207,7 @@
       "x": {
         "style": "bootstrap",
         "filter": "top",
-        "filterHTML": "<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-1.459362839\" data-max=\"1.292549307\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-3.629830407\" data-max=\"1.801579508\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>",
+        "filterHTML": "<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-3.495894079\" data-max=\"3.757891897\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-2.385278034\" data-max=\"3.403589549\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>",
         "extensions": [
           "KeyTable"
         ],
@@ -1281,7 +1218,7 @@
           }
         },
         "fillContainer": false,
-        "container": "<table class=\"table table-striped table-hover row-border order-column display\">\n  <thead>\n    <tr>\n      <th>ID<\/th>\n      <th>sex<\/th>\n      <th>GLEAFSPOT<\/th>\n      <th>ANTHRAC<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>",
+        "container": "<table class=\"table table-striped table-hover row-border order-column display\">\n  <thead>\n    <tr>\n      <th>ID<\/th>\n      <th>FUSARIUM<\/th>\n      <th>GIBBERELLA<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>",
         "options": {
           "stateSave": true,
           "search": {
@@ -1290,11 +1227,11 @@
           },
           "columnDefs": [
             {
-              "targets": 2,
+              "targets": 1,
               "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
             },
             {
-              "targets": 3,
+              "targets": 2,
               "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
             },
             {
@@ -1450,11 +1387,39 @@
         }
       ]
     },
-    "step1-demo_message": "You are using uploaded data now",
-    "step1-error_m_1": "",
-    "step1-error_m_2": "",
-    "step1-error_m_3": "",
-    "step1-error_m_4": "",
+    "step1-demo_message": "You are using demo data now",
+    "step1-error_m_1": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_2": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_3": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_4": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
     "step1-error_m_5": {
       "message": "",
       "call": "NULL",
@@ -1539,7 +1504,7 @@
       ]
     },
     "sumstat_ebv-ui_group": {
-      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"sumstat_ebv-group_vars-label\" for=\"sumstat_ebv-group_vars\">Group by:<\/label>\n  <div>\n    <select id=\"sumstat_ebv-group_vars\"><option value=\"\" selected><\/option>\n<option value=\"sex{character}\">sex{character}<\/option><\/select>\n    <script type=\"application/json\" data-for=\"sumstat_ebv-group_vars\">{\"plugins\":[\"selectize-plugin-a11y\"]}<\/script>\n  <\/div>\n<\/div>",
+      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"sumstat_ebv-group_vars-label\" for=\"sumstat_ebv-group_vars\">Group by:<\/label>\n  <div>\n    <select id=\"sumstat_ebv-group_vars\"><option value=\"\" selected><\/option><\/select>\n    <script type=\"application/json\" data-for=\"sumstat_ebv-group_vars\">{\"plugins\":[\"selectize-plugin-a11y\"]}<\/script>\n  <\/div>\n<\/div>",
       "deps": [
         {
           "name": "selectize",
@@ -1561,7 +1526,7 @@
       ]
     },
     "sumstat_ebv-ui_vars": {
-      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"sumstat_ebv-vars-label\" for=\"sumstat_ebv-vars\">Variable(s):<\/label>\n  <div>\n    <select id=\"sumstat_ebv-vars\" class=\"form-control\" size=\"8\" multiple=\"multiple\"><option value=\"sex{character}\">sex{character}<\/option>\n<option value=\"GLEAFSPOT{double}\">GLEAFSPOT{double}<\/option>\n<option value=\"ANTHRAC{double}\">ANTHRAC{double}<\/option><\/select>\n  <\/div>\n<\/div>",
+      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"sumstat_ebv-vars-label\" for=\"sumstat_ebv-vars\">Variable(s):<\/label>\n  <div>\n    <select id=\"sumstat_ebv-vars\" class=\"form-control\" size=\"8\" multiple=\"multiple\"><option value=\"FUSARIUM{double}\">FUSARIUM{double}<\/option>\n<option value=\"GIBBERELLA{double}\">GIBBERELLA{double}<\/option><\/select>\n  <\/div>\n<\/div>",
       "deps": [
 
       ]
