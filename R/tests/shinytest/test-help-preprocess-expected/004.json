@@ -1,0 +1,572 @@
+{
+  "input": {
+    "agg_dx-fixed_y_scale": true,
+    "agg_dx-font_size": 12,
+    "agg_dx-quantile": 100,
+    "agg_dx-quantile_default": 100,
+    "agg_dx-run_analysis": 0,
+    "agg_dx-sel_agg": null,
+    "agg_dx-sel_benchmark": "",
+    "agg_dx-sel_cluster": "",
+    "agg_dx-sel_index": "",
+    "agg_dx-upload_benchmark-file": null,
+    "agg_dx2-font_size": 12,
+    "agg_dx2-percent": false,
+    "agg_dx2-run_top": 0,
+    "agg_dx2-sel_top_n": 10,
+    "agg_dx3-agg_by": "",
+    "agg_dx3-class_var": "",
+    "agg_dx3-font_size": 12,
+    "agg_dx3-use_count": false,
+    "agg_dx4-agg_by": "",
+    "agg_dx4-digits": 0,
+    "agg_dx4-font_size": 12,
+    "agg_dx4-use_count": false,
+    "agg_dx4-weight_var": "",
+    "cl_sumstat-digit": 3,
+    "cl_sumstat-font_size": 12,
+    "cl_sumstat-upload_clusters-file": null,
+    "cl_sumstat-upload_index-file": null,
+    "cl_weight-choose_w": "weight",
+    "cl_weight-digits": 3,
+    "cl_weight-font_size": 12,
+    "cl_weight-upload_clusters-file": null,
+    "cl_weight-upload_ebv-file": null,
+    "cl_weight-upload_ebv_desc-file": null,
+    "cl_weight-upload_ev-file": null,
+    "cl_weight-upload_ev_desc-file": null,
+    "cl_weight-upload_index-file": null,
+    "cl_weight-upload_w-file": null,
+    "demo": 1,
+    "Dx-run_heatmap": 0,
+    "Dx-show_corr": true,
+    "ebv_filter-dataviewer_cell_clicked": {
+
+    },
+    "ebv_filter-dataviewer_cells_selected": [
+
+    ],
+    "ebv_filter-dataviewer_columns_selected": null,
+    "ebv_filter-dataviewer_rows_all": null,
+    "ebv_filter-dataviewer_rows_current": null,
+    "ebv_filter-dataviewer_rows_selected": null,
+    "ebv_filter-dataviewer_search": "",
+    "ebv_filter-dataviewer_search_columns": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "ebv_filter-dataviewer_state": null,
+    "ebv_filter-view_dec": 2,
+    "ebv_filter-view_name": "filtered_ebv",
+    "ebv_filter-view_store": 0,
+    "ebv_filter-view_vars": [
+      "ID",
+      "sex",
+      "GLEAFSPOT",
+      "ANTHRAC",
+      "GOSSWILT",
+      "FUSARIUM",
+      "GIBBERELLA",
+      "NLEAFBLIGHT",
+      "BROWNRUST",
+      "TARSPOT",
+      "YIELD",
+      "GREENSNAP",
+      "ROOTLODGE",
+      "STALKLODGE",
+      "TESTWT",
+      "MOIST"
+    ],
+    "ebv_na_0": false,
+    "ev_filter-view_dec": 2,
+    "ev_filter-view_name": "filtered_ev",
+    "ev_filter-view_store": 0,
+    "ev_filter-view_vars": [
+      "Index",
+      "YIELD",
+      "GREENSNAP",
+      "EMERG",
+      "GLEAFSPOT",
+      "ANTHRAC",
+      "GOSSWILT",
+      "FUSARIUM",
+      "GIBBERELLA",
+      "NLEAFBLIGHT",
+      "BROWNRUST",
+      "TARSPOT",
+      "sector",
+      "zone"
+    ],
+    "ev_na_0": false,
+    "find_cl-absolute": false,
+    "find_cl-agg_method": "ward",
+    "find_cl-center": true,
+    "find_cl-circle": false,
+    "find_cl-find_k_agg": false,
+    "find_cl-help_btn": 0,
+    "find_cl-k_slider": 2,
+    "find_cl-run_cluster": 0,
+    "find_cl-scale": true,
+    "find_cl-scale_obs": true,
+    "find_cl-sil": false,
+    "find_cl-which_data": "Index by individual",
+    "find_cl-wss": false,
+    "help_btn_ebv_filter": 1,
+    "help_btn_ev_filter": 0,
+    "index_view-font_size": 12,
+    "index_view-help_btn": 0,
+    "index_view-view_dec": 2,
+    "plant_app": "tab.upload",
+    "run_agg": "tab.agg.1",
+    "run_cluster": "tab.cl.1",
+    "step1-dat_ebv-file": null,
+    "step1-dat_ev-file": null,
+    "step1-dat_wt-file": null,
+    "step1-desc_ebv-file": null,
+    "step1-desc_ev-file": null,
+    "step1-help_btn": 2,
+    "stfn_ebv-apply": 0,
+    "stfn_ebv-clear": 0,
+    "stfn_ebv-filter_col": null,
+    "stfn_ev-apply": 0,
+    "stfn_ev-clear": 0,
+    "stfn_ev-filter_col": null,
+    "sumstat_ebv-create_table": 0,
+    "sumstat_ebv-font_size": 12,
+    "sumstat_ebv-functions": [
+      "mean",
+      "sd",
+      "min",
+      "max",
+      "n_missing",
+      "n_obs"
+    ],
+    "sumstat_ebv-help_btn": 0,
+    "sumstat_ebv-view_dec": 2,
+    "sumstat_ev-create_table": 0,
+    "sumstat_ev-font_size": 12,
+    "sumstat_ev-functions": [
+      "mean",
+      "sd",
+      "min",
+      "max",
+      "n_missing",
+      "n_obs"
+    ],
+    "sumstat_ev-help_btn": 0,
+    "sumstat_ev-view_dec": 2,
+    "upload": "tab.step2",
+    "view_index": "tab.index1"
+  },
+  "output": {
+    "ebv_filter-dataviewer": {
+      "x": {
+        "style": "bootstrap",
+        "filter": "top",
+        "filterHTML": "<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-1.459362839\" data-max=\"1.292549307\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-3.629830407\" data-max=\"1.801579508\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-2.68696275\" data-max=\"2.983603671\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-3.495894079\" data-max=\"3.757891897\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-2.385278034\" data-max=\"3.403589549\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-2.061348248\" data-max=\"2.017686499\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-3.785940348\" data-max=\"2.837323135\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-0.347789233\" data-max=\"0.33482483\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-20.21736503\" data-max=\"32.24402844\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-18.31127622\" data-max=\"19.40447622\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-7.481850222\" data-max=\"8.286979401\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-4.476816005\" data-max=\"3.943515755\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-2.881182317\" data-max=\"3.630721067\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-6.242451669\" data-max=\"6.450918076\" data-scale=\"9\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>",
+        "extensions": [
+          "KeyTable"
+        ],
+        "editable": {
+          "target": "cell",
+          "disable": {
+            "columns": null
+          }
+        },
+        "fillContainer": false,
+        "container": "<table class=\"table table-striped table-hover row-border order-column display\">\n  <thead>\n    <tr>\n      <th>ID<\/th>\n      <th>sex<\/th>\n      <th>GLEAFSPOT<\/th>\n      <th>ANTHRAC<\/th>\n      <th>GOSSWILT<\/th>\n      <th>FUSARIUM<\/th>\n      <th>GIBBERELLA<\/th>\n      <th>NLEAFBLIGHT<\/th>\n      <th>BROWNRUST<\/th>\n      <th>TARSPOT<\/th>\n      <th>YIELD<\/th>\n      <th>GREENSNAP<\/th>\n      <th>ROOTLODGE<\/th>\n      <th>STALKLODGE<\/th>\n      <th>TESTWT<\/th>\n      <th>MOIST<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>",
+        "options": {
+          "stateSave": true,
+          "search": {
+            "regex": true,
+            "smart": true
+          },
+          "columnDefs": [
+            {
+              "targets": 2,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 3,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 4,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 5,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 6,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 7,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 8,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 9,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 10,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 11,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 12,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 13,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 14,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "targets": 15,
+              "render": "function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\");\n  }"
+            },
+            {
+              "orderSequence": [
+                "desc",
+                "asc"
+              ],
+              "targets": "_all"
+            },
+            {
+              "className": "dt-center",
+              "targets": "_all"
+            }
+          ],
+          "autoWidth": true,
+          "processing": false,
+          "pageLength": 10,
+          "lengthMenu": [
+            [
+              5,
+              10,
+              25,
+              50,
+              -1
+            ],
+            [
+              "5",
+              "10",
+              "25",
+              "50",
+              "All"
+            ]
+          ],
+          "order": [
+
+          ],
+          "orderClasses": false,
+          "orderCellsTop": true,
+          "ajax": {
+            "type": "POST",
+            "data": "function(d) {\nd.search.caseInsensitive = true;\nd.search.smart = true;\nd.escape = false;\nvar encodeAmp = function(x) { x.value = x.value.replace(/&/g, \"%26\"); }\nencodeAmp(d.search);\n$.each(d.columns, function(i, v) {encodeAmp(v.search);});\n}"
+          },
+          "serverSide": true
+        },
+        "callback": "function(table) {\n$(window).on(\"unload\", function() { table.state.clear(); })\n}",
+        "selection": {
+          "mode": "none",
+          "selected": null,
+          "target": "row",
+          "selectable": null
+        }
+      },
+      "evals": [
+        "options.columnDefs.0.render",
+        "options.columnDefs.1.render",
+        "options.columnDefs.2.render",
+        "options.columnDefs.3.render",
+        "options.columnDefs.4.render",
+        "options.columnDefs.5.render",
+        "options.columnDefs.6.render",
+        "options.columnDefs.7.render",
+        "options.columnDefs.8.render",
+        "options.columnDefs.9.render",
+        "options.columnDefs.10.render",
+        "options.columnDefs.11.render",
+        "options.columnDefs.12.render",
+        "options.columnDefs.13.render",
+        "options.ajax.data",
+        "callback"
+      ],
+      "jsHooks": [
+
+      ],
+      "deps": [
+        {
+          "name": "dt-core-bootstrap",
+          "version": "1.10.20",
+          "src": {
+            "href": "dt-core-bootstrap-1.10.20"
+          },
+          "meta": null,
+          "script": [
+            "js/jquery.dataTables.min.js",
+            "js/dataTables.bootstrap.min.js"
+          ],
+          "stylesheet": [
+            "css/dataTables.bootstrap.min.css",
+            "css/dataTables.bootstrap.extra.css"
+          ],
+          "head": null,
+          "attachment": null,
+          "package": null,
+          "all_files": false
+        },
+        {
+          "name": "dt-ext-keytable-bootstrap",
+          "version": "1.10.20",
+          "src": {
+            "href": "dt-ext-keytable-bootstrap-1.10.20"
+          },
+          "meta": null,
+          "script": [
+            "js/dataTables.keyTable.min.js",
+            "js/keyTable.bootstrap.min.js"
+          ],
+          "stylesheet": "css/keyTable.bootstrap.min.css",
+          "head": null,
+          "attachment": null,
+          "package": null,
+          "all_files": false
+        },
+        {
+          "name": "nouislider",
+          "version": "7.0.10",
+          "src": {
+            "href": "nouislider-7.0.10"
+          },
+          "meta": null,
+          "script": "jquery.nouislider.min.js",
+          "stylesheet": "jquery.nouislider.min.css",
+          "head": null,
+          "attachment": null,
+          "package": null,
+          "all_files": true
+        },
+        {
+          "name": "selectize",
+          "version": "0.12.0",
+          "src": {
+            "href": "selectize-0.12.0"
+          },
+          "meta": null,
+          "script": "selectize.min.js",
+          "stylesheet": "selectize.bootstrap3.css",
+          "head": null,
+          "attachment": null,
+          "package": null,
+          "all_files": true
+        },
+        {
+          "name": "jquery",
+          "version": "3.5.1",
+          "src": {
+            "href": "jquery-3.5.1"
+          },
+          "meta": null,
+          "script": "jquery.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "crosstalk",
+          "version": "1.1.1",
+          "src": {
+            "href": "crosstalk-1.1.1"
+          },
+          "meta": null,
+          "script": "js/crosstalk.min.js",
+          "stylesheet": "css/crosstalk.css",
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        }
+      ]
+    },
+    "step1-demo_message": "You are using demo data now",
+    "step1-error_m_1": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_2": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_3": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_4": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-error_m_5": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "step1-sanity_message": "All good. Now you can move to Results, or Filter if you want to subset your inputs.",
+    "stfn_ebv-data_filters": {
+      "html": "",
+      "deps": [
+
+      ]
+    },
+    "stfn_ebv-filter_col_UI": {
+      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" for=\"stfn_ebv-filter_col\">Select columns to apply filter on<\/label>\n  <select id=\"stfn_ebv-filter_col\" class=\"selectpicker form-control\" multiple=\"multiple\"><option value=\"ID\">ID<\/option>\n<option value=\"sex\">sex<\/option><\/select>\n<\/div>",
+      "deps": [
+        {
+          "name": "shinyWidgets",
+          "version": "0.5.7",
+          "src": {
+            "href": "shinyWidgets"
+          },
+          "meta": null,
+          "script": "shinyWidgets-bindings.min.js",
+          "stylesheet": "shinyWidgets.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "bootstrap-select",
+          "version": "1.13.18",
+          "src": {
+            "href": "shinyWidgets/bootstrap-select"
+          },
+          "meta": null,
+          "script": "js/bootstrap-select.min.js",
+          "stylesheet": "css/bootstrap-select.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        }
+      ]
+    },
+    "stfn_ev-data_filters": {
+      "html": "",
+      "deps": [
+
+      ]
+    },
+    "stfn_ev-filter_col_UI": {
+      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" for=\"stfn_ev-filter_col\">Select columns to apply filter on<\/label>\n  <select id=\"stfn_ev-filter_col\" class=\"selectpicker form-control\" multiple=\"multiple\"><\/select>\n<\/div>",
+      "deps": [
+        {
+          "name": "shinyWidgets",
+          "version": "0.5.7",
+          "src": {
+            "href": "shinyWidgets"
+          },
+          "meta": null,
+          "script": "shinyWidgets-bindings.min.js",
+          "stylesheet": "shinyWidgets.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "bootstrap-select",
+          "version": "1.13.18",
+          "src": {
+            "href": "shinyWidgets/bootstrap-select"
+          },
+          "meta": null,
+          "script": "js/bootstrap-select.min.js",
+          "stylesheet": "css/bootstrap-select.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        }
+      ]
+    },
+    "sumstat_ebv-ui_group": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "sumstat_ebv-ui_vars": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "sumstat_ev-ui_group": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "sumstat_ev-ui_vars": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    }
+  },
+  "export": {
+
+  }
+}
