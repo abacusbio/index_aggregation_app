@@ -79,8 +79,10 @@
     "step1-help_btn": 1,
     "stfn_ebv-apply": 0,
     "stfn_ebv-clear": 0,
+    "stfn_ebv-filter_col": null,
     "stfn_ev-apply": 0,
     "stfn_ev-clear": 0,
+    "stfn_ev-filter_col": null,
     "sumstat_ebv-create_table": 0,
     "sumstat_ebv-font_size": 12,
     "sumstat_ebv-functions": [
