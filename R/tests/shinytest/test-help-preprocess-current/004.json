@@ -40,6 +40,36 @@
     "demo": 1,
     "Dx-run_heatmap": 0,
     "Dx-show_corr": true,
+    "ebv_filter-dataviewer_cell_clicked": {
+
+    },
+    "ebv_filter-dataviewer_cells_selected": [
+
+    ],
+    "ebv_filter-dataviewer_columns_selected": null,
+    "ebv_filter-dataviewer_rows_all": null,
+    "ebv_filter-dataviewer_rows_current": null,
+    "ebv_filter-dataviewer_rows_selected": null,
+    "ebv_filter-dataviewer_search": "",
+    "ebv_filter-dataviewer_search_columns": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "ebv_filter-dataviewer_state": null,
     "ebv_filter-view_dec": 2,
     "ebv_filter-view_name": "filtered_ebv",
     "ebv_filter-view_store": 0,
