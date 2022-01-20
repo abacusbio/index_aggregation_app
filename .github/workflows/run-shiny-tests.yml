@@ -18,12 +18,13 @@ jobs:
     steps:
       - uses: r-lib/actions/setup-r@v2
       - uses: actions/checkout@v2
+      - uses: r-lib/actions/setup-renv@v2
         with:
           install-r: true
           r-version: '4.0.2' 
       - run: Rscript -e 'print(R.version$version.string)'
       - name: Install packages
-        run: Rscript -e "install.packages(c('tidyverse', 'here', 'shiny', 'shinytest', 'DT'))"
+        run: Rscript -e "install.packages(c('tidyverse', 'here', 'shinytest'))"
       - name: Install PhantomJS
         run: Rscript -e "shinytest::installDependencies()"
       - name: Run tests
