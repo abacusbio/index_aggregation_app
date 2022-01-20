@@ -11,7 +11,7 @@ on:
       - '.github/workflows/tests.yml'
       - 'R/*'
       - 'tests/testthat/*'
-      - '.github/workflows/*'
+      - '.github/workflows/run-tests.yml'
 
 jobs:
   run-tests:
