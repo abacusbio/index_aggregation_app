@@ -28,7 +28,8 @@ jobs:
       - name: Install PhantomJS
         run: Rscript -e "shinytest::installDependencies()"
       - name: Run tests
-        run: Rscript -e "shinytest::testApp(appDir = './R',
-                                    quiet=TRUE, 
-                                    compareImages = FALSE, 
-                                    interactive = FALSE)"
+        # run: Rscript -e "shinytest::testApp(appDir = './R',
+        #                             quiet=TRUE, 
+        #                             compareImages = FALSE, 
+        #                             interactive = FALSE)"
+        run: Rscript -e "shiny::runTests(appDir = './R')"
