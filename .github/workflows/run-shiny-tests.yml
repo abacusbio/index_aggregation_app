@@ -10,7 +10,7 @@ on:
     paths:
       - 'R/*'
       - 'R/tests/shinytest/*'
-      - '.github/workflows/*'
+      - '.github/workflows/run-shiny-tests.yml'
       
 jobs:
   run-shiny-tests:
