@@ -22,7 +22,19 @@ jobs:
           install-r: true
           r-version: '4.0.2' 
       - run: Rscript -e 'print(R.version$version.string)'
+      
       - name: Install packages
         run: Rscript -e "install.packages(c('testthat', 'tidyverse', 'here', 'shiny'))"
+        
       - name: Run tests
         run: Rscript -e "source('tests/testthat.R')"
+        
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ runner.os }}-unit-server-tests
+          path: |
+            - 'R/*'
+            - 'tests/testthat/*'
+            - '.github/workflows/run-tests.yml'
