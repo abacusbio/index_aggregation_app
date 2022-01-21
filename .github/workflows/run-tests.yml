@@ -34,7 +34,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ runner.os }}-unit-server-tests
-          path: |
-            - 'R/*'
-            - 'tests/testthat/*'
-            - '.github/workflows/run-tests.yml'
+          path: tests
