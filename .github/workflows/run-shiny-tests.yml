@@ -25,7 +25,7 @@ jobs:
       - run: Rscript -e 'print(R.version$version.string)'
       - name: Install packages
         # run: Rscript -e "install.packages(c('tidyverse', 'here', 'shinytest'))"
-        run: Rscript -e "install.packages(c('shinyjs',tidyverse','here','shinytest','shiny','DT','shinyWidgets','reactable','dplyr','purrr','ggplot2','pheatmap','ggrepel','ggdendro','cluster','PMA','factoextra'))"
+        run: Rscript -e "install.packages(c('shinyjs','tidyverse','here','shinytest','shiny','DT','shinyWidgets','reactable','dplyr','purrr','ggplot2','pheatmap','ggrepel','ggdendro','cluster','PMA','factoextra'))"
       - name: Install PhantomJS
         run: Rscript -e "shinytest::installDependencies()"
       - name: Run tests
