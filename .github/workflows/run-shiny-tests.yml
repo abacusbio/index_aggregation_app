@@ -24,7 +24,8 @@ jobs:
       - run: Rscript -e 'print(R.version$version.string)'
       - name: Install packages
         shell: Rscript {0}
-        run: install.packages(c("markdown","shinyjs","tidyverse",
+        run: >- 
+        install.packages(c("markdown","shinyjs","tidyverse",
         "here","shinytest","shiny","DT","shinyWidgets","reactable","dplyr",
         "purrr","ggplot2","pheatmap","ggrepel","ggdendro","cluster","PMA",
         "factoextra"))
