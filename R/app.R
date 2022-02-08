@@ -7,6 +7,7 @@
 
 # rsconnect::appDependencies()
 options(repos = c(#"added" = "https://mran.microsoft.com/snapshot/2019-04-15",
+#  "added2" = "https://cloud.r-project.org",
                   "CRAN" = "https://cran.rstudio.com",
                   "added1" = "https://cran.r-project.org"))
 # options("repos")
