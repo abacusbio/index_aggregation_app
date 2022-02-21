@@ -2,13 +2,15 @@
 # rsconnect::writeManifest("R")
 
 # devtools::load_all()
+# old.packages()
 # install.packages("https://cran.r-project.org/src/....tar.gz", type = "source", repos = NULL)
-options(repos = c("added" = "https://mran.microsoft.com/snapshot/2019-04-15",
+
+# rsconnect::appDependencies()
+options(repos = c(#"added" = "https://mran.microsoft.com/snapshot/2019-04-15",
                   "CRAN" = "https://cran.rstudio.com",
                   "added1" = "https://cran.r-project.org"))
 # options("repos")
-# old.packages() 
-# rsconnect::appDependencies()
+
 
 # options(shiny.reactlog = T) # ctrl+F3
 # reactlogReset()
@@ -42,7 +44,6 @@ if (isTRUE(getOption("shiny.testmode"))) {
 }else {
   lapply(packages, library, character.only = TRUE)
 }
-
 
 source("modules.R", echo = F)
 source("module_preprocess.R", echo = F)
@@ -333,8 +334,8 @@ server <- function(input, output, session) {
     
   ## OPTIONS ###
   # allow file sizes up to 300MB
-  options(shiny.maxRequestSize = 300 * 1024 ^ 2, shiny.trace = F
-          , shiny.error = NULL, # browser 
+  options(shiny.maxRequestSize = 300 * 1024 ^ 2, shiny.trace = F,
+         # shiny.error = NULL, # browser 
           rsconnect.max.bundle.size = 8192 * 1024^2 # largest memory size available
           
   )
