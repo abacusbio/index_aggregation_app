@@ -31,11 +31,11 @@ clusteringModSidebarUI <- function(id) {
        div(id = ns("absolute_cor"), 
            checkboxInput(ns("absolute"), "Absolute correlation", F)) 
      ),
-     tags$table(
-       tags$td(checkboxInput(ns("center"), "Center individuals", T)),
-       tags$td(checkboxInput(ns("scale"), "Scale individuals", T)),
-       tags$td(checkboxInput(ns("scale_obs"), "Scale observations", T))
-     ),
+     # tags$table( # Simplify 16june2022
+     #   tags$td(checkboxInput(ns("center"), "Center individuals", T)),
+     #   tags$td(checkboxInput(ns("scale"), "Scale individuals", T)),
+     #   tags$td(checkboxInput(ns("scale_obs"), "Scale observations", T))
+     # ),
      sliderInput(ns("k_slider"), "Choose # of clusters:", 2, 10, 2, step = 1),
      selectInput(ns("agg_method"), "Choose an agglomeration method:",
                  c(# "average",
@@ -102,6 +102,7 @@ clusteringModUI <- function(id) {
 clusteringMod <- function(id, val, dat, #= reactive(NULL),
                          # col_sel = reactive(NULL), 
                          transpose = F,
+                         val_report, report_prefix = NA,
                           ...) {
   moduleServer(
     id,
@@ -170,9 +171,10 @@ cat("clusteringMod\n")
         if(input$find_k_agg) { # Maybe change to warning message
           
           # Find optimal agglomeriative method
-          cl <- runCluster(dt, cor_mat, input$absolute, input$scale, input$center, 
+          cl <- runCluster(dt, cor_mat, input$absolute, 
+                           T, T, # input$scale, input$center, # simplify 16june2022
                            n_core = max(4, parallel::detectCores()-4),
-                           scale_obs = input$scale_obs) 
+                           T) # scale_obs = input$scale_obs) 
           # !!! takes very long time with 2999 indexes
 
           # cl$cluster_obj
@@ -192,6 +194,8 @@ t <- Sys.time()
                            wss = isolate(input$wss), silhouette = isolate(input$sil))
           })
 cat(" Done findoptimalcut ");print(Sys.time()-t)
+          val_report[[paste0(report_prefix, "op_cut")]] <- op_cut
+          
           output$message_h <- renderPrint({
             paste0("The best k is ", op_cut()$k_h, " at the largest height change of ", op_cut()$h)
           })
@@ -215,8 +219,11 @@ cat(" Done findoptimalcut ");print(Sys.time()-t)
           shinyjs::show("wait")
           # list(cluster_obj, clusters)
           cl <- runFinalCluster(dt, cor_mat = F, cluster_object = NULL,
-                                scale = input$scale, center = input$center, k = input$k_slider,
-                                best_method = input$agg_method, scale_obs = input$scale_obs)
+                                scale = T, # input$scale, 
+                                center = T, # input$center, 
+                                scale_obs = T, # input$scale_obs,
+                                k = input$k_slider,
+                                best_method = input$agg_method)
           val$cl <- cl # 20april2021
 # cat(" else runFinalCluster\n  val$cl:");print(names(val$cl))
           # create files to download
@@ -231,9 +238,12 @@ cat(" Done findoptimalcut ");print(Sys.time()-t)
                          detail = 'This may take a while...', value = 0, {
             tempVar$width  <- session$clientData[[paste0("output_", session$ns("plot_dendro"), 
                                                          "_width")]]
-            tempVar$plot <- drawDendro(as.hclust(cl$cluster_obj), cl$clusters, circle = input$circle)
+            tempVar$plot <- drawDendro(as.hclust(cl$cluster_obj), cl$clusters, 
+                                       circle = input$circle)
+            val_report[[paste0(report_prefix, "dendro")]] <- tempVar$plot
             return(tempVar$plot)
-          }) })
+          }) }) %>% 
+            bindCache(transpose, input$circle, input$k_slider, input$agg_method) # error
           
           # download clustering objects
           downloadPlotModuleServer("dnld_dendro", 

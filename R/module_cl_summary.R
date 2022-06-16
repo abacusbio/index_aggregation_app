@@ -15,7 +15,7 @@ clusterSumStatModSidebarUI <- function(id) {
     ),
     h4("Table and plot control"),
     wellPanel(
-      numericInput(ns("digit"), "Decimals", 3, 0, 10, 1), 
+      numericInput(ns("view_dec"), "Decimals", 3, 0, 10, 1), 
      # numericInput(ns("show_n_indexes"), "# indexs to show", 10, 1, 10, 1),
       numericInput(ns("font_size"), "Font size", 12, 1, 20, 1)
      )
@@ -54,6 +54,7 @@ clusterSumStatModUI <- function(id) {
 #'        , cl$cluster_obj, cl$clusters,
 clusterSumStatMod <- function(id, val = NULL, cl,
                               transpose = T,  center = reactive(T), scale = reactive(T),
+                              val_report, report_prefix = NA,
                          ...) {
   moduleServer(
     id,
@@ -151,7 +152,7 @@ cat("clusterSumStatMod\n")
       #  clusters_user()
         }, {
         # reactive({
-# cat("clusterSumStatMod\n reactive sth\n")
+cat("clusterSumStatMod\n reactive sth\n")
           # cl()
         req(length(input$error_m)==0, 
             !is.null(val$dt_index), !is.null(val$cl$clusters)) #, !is.null(val$cl$cluster_obj)
@@ -186,20 +187,24 @@ cat("clusterSumStatMod\n")
         sum_cor <- dplyr::left_join(sum_cor, missing, by = "cluster") %>% 
           dplyr::right_join(dplyr::select(df_cor, cluster, n_index) %>% distinct())
         
+        val_report[[paste0(report_prefix, "cor_table")]] <- sum_cor
+        
         return(sum_cor)
         })
       
       observeEvent({sth()
-        input$digit},
+        input$view_dec}, {
+# cat(" renderTable\n")        
         renderTableModuleServer("sum_cor", sth, extensions = "FixedHeader",
-                                downloadName = "index_cor_summary", digits = reactive(input$digit))
-      )
+                                downloadName = "index_cor_summary", 
+                                digits = reactive(input$view_dec))
+      })
       
       output$hist_cor <- renderPlot({
         withProgress(message = 'Plotting ...',
                      detail = 'This may take a while...', value = 0, {
         req(tempVar$df_cor)
-# cat(" renderPlot\n  df_cor:\n");print(head(tempVar$df_cor))
+cat(" renderPlot\n  df_cor:\n");print(head(tempVar$df_cor))
         width  <- session$clientData[[paste0("output_", session$ns("hist_cor"), 
                                              "_width")]]
         
@@ -209,6 +214,9 @@ cat("clusterSumStatMod\n")
         
         downloadPlotModuleServer("dnld_hist_cor", "histogram_index_by_cluster",
                                  plot_hist, reactive(width))
+        
+        val_report[[paste0(report_prefix, "cor_p")]] <- plot_hist
+        
         return(plot_hist)
       }) })
     })}

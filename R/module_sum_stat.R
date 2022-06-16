@@ -52,7 +52,8 @@ sumstatModUI <- function(id) {
 }
 
 # val$data_filtered, val$onekmind_cleaned, val$rank, val$merged_filtered
-sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NULL),
+sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,
+                       val_report = reactive(NULL), report_prefix = NA,
                        ...) {
   moduleServer(
     id,
@@ -282,13 +283,15 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
             {
               reactive(stat_num)()
               input$view_dec
-            },
+            }, {
+            
+            val_report[[paste0(report_prefix, "stat_num_table")]] <- stat_num
             renderTableModuleServer("stat_num", reactive(stat_num), T,
                                     c("FixedHeader", "FixedColumns"),
                                     digits = input$view_dec, downloadName = "sum_stat_num",
                                     editable = F, colfilter = "none", 
                                     option_list = list(sDom  = '<"top">lrt<"bottom">ip')) # disable search bar
-          )
+          })
           
           
           # make df for histogram
@@ -321,7 +324,9 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
                           group2 = group2, nbins = 30,
                           font_size = reactive(input$font_size),
                           scales = "free_both", xlab = xlab)
-
+            
+            val_report[[paste0(report_prefix, "sumstat_num_p")]] <- p
+            
             downloadPlotModuleServer(
               "dnld_hist_num", paste0("histogram_", "_numeric_", session$ns("name")),
               if(class(p)[1]=="list") {
@@ -377,6 +382,7 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
 
           # group_var variable level n prop n_missing
           stat_chr <- stat_chr %>% purrr::reduce(full_join) %>% distinct()
+          val_report[[paste0(report_prefix, "sumstat_str_table")]] <- stat_chr
 # cat("  3 stat_chr\n"); print(head(stat_chr))
           observeEvent(
             {
@@ -411,6 +417,8 @@ sumstatMod <- function(id, dat = reactive(NULL), xlab = NULL,#val = reactive(NUL
                              group1 = ifelse(!is.null(group_vars), group_vars, "variable"),
                              group2 = group2,
                              font_size = reactive(input$font_size))
+            
+            val_report[[paste0(report_prefix, "sumstat_str_p")]] <- p
             
             downloadPlotModuleServer("dnld_dot_chr",
               paste0("lolipop_chart_", "_character_", session$ns("name")),

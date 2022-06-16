@@ -37,7 +37,7 @@ indexSumstatModUI <- function(id) {
 #' @param val a reactive function. Should have 1) \code{val$dt_ev_filtered}, a data.frame of index x
 #'        EV and other variables, 2) \code{val$dt_desc_ev_clean}, a data.frame of columns as
 #'        column_labelling and classVar
-indexSumstatMod <- function(id, index = reactive(NULL), val,
+indexSumstatMod <- function(id, index = reactive(NULL), val, val_report, report_prefix = NA,
                             ...) {
   moduleServer(
     id,
@@ -185,6 +185,7 @@ cat("indexSumstatMod\n")
           
           stat_num <- stat_num %>% purrr::reduce(full_join) %>% distinct()
           if("n" %in% names(stat_num)) stat_num$prop = stat_num$n/sum(stat_num$n)
+          val_report[[paste0(report_prefix, "stat_num")]] <- stat_num
           
           # output table
           renderRctTableModuleServer("stat_num", reactive(stat_num), T,
@@ -217,6 +218,7 @@ cat("indexSumstatMod\n")
               p <- plotBox(input, output, session,
                           df, "index", "value", order = tmp$variable, # order doesn't work !!!
                           font_size = reactive(input$font_size))
+              val_report[[paste0(report_prefix, "p")]] <- p
               
               downloadPlotModuleServer("dnld_boxplot", paste0("boxplot_", session$ns("name")),
                                        p, reactive(width))
@@ -254,6 +256,7 @@ cat("indexSumstatMod\n")
               p <- plotBox(input, output, session,
                            df, "level", "value", group = "level", xlab = group_vars,
                            font_size = reactive(input$font_size))
+              val_report[[paste0(report_prefix, "p")]] <- p
               
               downloadPlotModuleServer("dnld_boxplot", paste0("boxplot_", session$ns("name")),
                                        p, reactive(width))

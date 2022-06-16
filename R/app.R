@@ -1,9 +1,10 @@
-
+# renv::settings$external.libraries("C:/Program Files/Microsoft/R Open/R-4.0.2/library")
+# don't source()!!! do runApp("R")
 # rsconnect::writeManifest("R")
 
 # devtools::load_all()
 # install.packages("https://cran.r-project.org/src/....tar.gz", type = "source", repos = NULL)
-options(repos = c("added" = "https://mran.microsoft.com/snapshot/2019-04-15",
+options(repos = c("MRO" = "https://mran.microsoft.com/snapshot/2020-07-16", # "added" = "https://mran.microsoft.com/snapshot/2019-04-15", # too old
                   "CRAN" = "https://cran.rstudio.com",
                   "added1" = "https://cran.r-project.org"))
 # options("repos")
@@ -55,6 +56,7 @@ source("module_cl_dx.R")
 source("module_cl_summary.R")
 source("module_cl_weight.R")
 source("module_aggregation_dx.R")
+# source("module_report.R")
 source("function_preprocess.R")
 source("function_copied_selindexrevamp.R")
 source("function_clean.R")
@@ -65,6 +67,30 @@ source("function_clustering.R")
 source("function_cl_dx.R")
 source("function_cl_weight.R")
 source("function_aggregation_dx.R")
+
+# preload files
+desc_ebv <- readxl::read_xlsx("data/description_bv.xlsx", col_names = T) 
+# column_labelling, classifer; ID, ClassVar, EV, (Group, )
+desc_ev <- read.csv2("data/description_ev.csv", sep = ",", 
+                     col.names = c("column_labelling", "classifier"))
+# ID, (sex, RM, ...), trait1, trait2, ... (trait1_ACC, trait2_ACC...)
+dat_ebv <- read.table("data/bv.csv", 
+                      colClasses = c(rep("character", 2), rep("double", 14)),
+                      header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
+                      quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
+                      strip.white = T)
+# ID, (line, group1), ... trait1, trait2, ...
+dat_ev <- read.table("data/ev.csv", 
+                     colClasses = c("character", rep("double", 11), rep("character", 2)),
+                     header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
+                     quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
+                     strip.white = T)
+# Index weight (weight2) ...
+dat_w <- read.table("data/index_weight.csv",
+                    colClasses = c("character", "double"),
+                    header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
+                    quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
+                    strip.white = T)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -323,8 +349,26 @@ ui <- fluidPage(
         ) # tabsetPanel run_cluster
       ), # mainPanel
       fluid = T) # sidebarLayout fluid = F doesn't work here
-  ) # tabPanel Aggregation
+  ), # tabPanel Aggregation
   
+  tabPanel( # on the dropdown list of navbarmenu
+    "Report", value = 'tab.report',
+    # Sidebar on the left
+    sidebarLayout(
+      sidebarPanel(
+        conditionalPanel(
+          condition = "input.plant_app == 'tab.agg'",
+          p("...")
+        ), width = 4),
+      
+      mainPanel(
+        div(p("Some graphs or tables can take a long time to generate. Please be patient."),
+            class = "text-info"),
+        # reportModUI("report")
+        downloadButton("report", "Generate report", class = "btn btn-outline-primary")
+      ),
+      fluid = T) # sidebarLayout fluid = F doesn't work here
+    ) # tabPanel Report
   ) # nevbarPage
 ) # ui
 
@@ -345,31 +389,19 @@ server <- function(input, output, session) {
   shinyjs::hide("initial_warn", T, "fade", 10)
   
   val <- reactiveValues()
+  val_report <- reactiveValues()
   
   observeEvent(input$demo, {
     # column_labelling, classifier; ID, ClassVar, EBV, (Group, Order, Unit)
-    val$desc_ebv <- readxl::read_xlsx("data/description_bv.xlsx", col_names = T) 
+    val$desc_ebv <- desc_ebv
     # column_labelling, classifer; ID, ClassVar, EV, (Group, )
-    val$desc_ev <- read.csv2("data/description_ev.csv", sep = ",", 
-                             col.names = c("column_labelling", "classifier"))
+    val$desc_ev <- desc_ev
     # ID, (sex, RM, ...), trait1, trait2, ... (trait1_ACC, trait2_ACC...)
-    val$dat_ebv <- read.table("data/bv.csv", 
-                              colClasses = c(rep("character", 2), rep("double", 14)),
-                              header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
-                              quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
-                              strip.white = T)
+    val$dat_ebv <- dat_ebv
     # ID, (line, group1), ... trait1, trait2, ...
-    val$dat_ev <- read.table("data/ev.csv", 
-                             colClasses = c("character", rep("double", 11), rep("character", 2)),
-                             header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
-                             quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
-                             strip.white = T)
+    val$dat_ev <- dat_ev
     # Index weight (weight2) ...
-    val$dat_w <- read.table("data/index_weight.csv",
-                            colClasses = c("character", "double"),
-                            header = T, sep = ",", fileEncoding = "UTF-8-BOM", stringsAsFactors = F,
-                            quote = "\"", fill = T, comment.char = "", dec=".", check.names = F,
-                            strip.white = T)
+    val$dat_w <- dat_w
 # cat("observe input$demo val"); print(sapply(reactiveValuesToList(isolate(val)), head)    )
   })
   
@@ -459,7 +491,8 @@ server <- function(input, output, session) {
   })
   
   ## SUMMARY STATISTICS EBV ##
-  sumstatMod("sumstat_ebv", reactive(val$dt_ebv_filtered))
+  sumstatMod("sumstat_ebv", reactive(val$dt_ebv_filtered), NULL, val_report,
+             report_prefix = "sumstat_ebv-")
   
   ## FILTER EV ##
   # NA filter is on the UI (ebv_na, acc_na)
@@ -499,7 +532,8 @@ server <- function(input, output, session) {
   )
   
   ## SUMMARY STATISTICS EBV ##
-  sumstatMod("sumstat_ev", reactive(val$dt_ev_filtered), xlab = "Economic Value ($)")
+  sumstatMod("sumstat_ev", reactive(val$dt_ev_filtered), xlab = "Economic Value ($)", 
+             val_report, report_prefix = "sumstat_ev-")
   
   ## CALCULATE INDEX ##
   
@@ -510,7 +544,7 @@ server <- function(input, output, session) {
 # cat(" plant_app:", input$plant_app, "\n")
     req(input$plant_app == 'tab.index' && input$view_index == "tab.index1")
     req(length(reactiveValuesToList(val)) <= 12 && 
-          length(reactiveValuesToList(val)) >=10) # avoid re-calculate when downstream analysis is aready triggered
+          length(reactiveValuesToList(val)) >=10) # avoid re-calculate when downstream analysis is already triggered
     req(val$dt_ev_filtered, val$dt_ebv_filtered, val$dt_description_clean, val$dt_desc_ev_clean)
 # cat(" reqs satisfied\n")
 # cat(" dt_ev_filtered:");print(val$dt_ev_filtered$Index)
@@ -548,7 +582,7 @@ server <- function(input, output, session) {
            "Individuals with missing EBVs are removed.")
       })
   })
-  indexSumstatMod("index_view", reactive(val$dt_index), val)
+  indexSumstatMod("index_view", reactive(val$dt_index), val, val_report, "index_view-")
   
   ## Find CLUSTER ##
   
@@ -569,13 +603,15 @@ server <- function(input, output, session) {
   # with the simulation it takes 6 min to find an agglomerative method, 6.5 min to run wss for k,
   # and 6 min to run silhouette for k
   cl <- clusteringMod("find_cl", val,
-                dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
-                transpose = F)
+                      dat = reactive(val$dt_index), # col_sel = reactive(val$dt_ev_filtered$Index),
+                      transpose = F,
+                      val_report, "find_cl-")
   
   ## CLUSTER SUMMARY STATISTICS ##
   
   # need val$dt_index, val$cl
-  clusterSumStatMod("cl_sumstat", val, cl, transpose = F)
+  clusterSumStatMod("cl_sumstat", val, cl, transpose = F, 
+                    val_report = val_report, report_prefix = "cl_sumstat-")
   
   ## CLUSTER DIAGNOSIS ##
   
@@ -617,6 +653,73 @@ server <- function(input, output, session) {
   # val$dt_ev_avg, same structure as above
   aggDxMod4("agg_dx4", val, 
             reactive(val$dt_ev_agg), reactive(val$dt_w_clean), reactive(val$cl$clusters))
+  
+  # REPORT #
+  # modulising this makes all parameters NULL reportMod("report")
+  output$report <- downloadHandler(
+    # For PDF output, change this to "report.pdf"
+    filename = "report_index_aggregation.html", # "report_index_aggregation.doc", 
+    content = function(file) {
+      # Copy the report file to a temporary directory before processing it, in
+      # case we don't have write permissions to the current working dir (which
+      # can happen when deployed).
+      tempReport <- file.path(tempdir(), "report.Rmd")
+      file.copy("report.Rmd", tempReport, overwrite = TRUE)
+      
+      # Set up parameters to pass to Rmd document
+      params <- list(
+        demo = input$demo,
+        file_name_ebv = input$`step1-dat_ebv-file`$name,
+        file_name_ev = input$`step1-dat_ev-file`$name,
+        file_name_wt = input$`step1-dat_wt-file`$name,
+        
+        filter_col_ebv = input$`stfn_ebv-filter_col`,
+        filter_level_ebv = filter_levels,
+        filter_col_ev = input$`stfn_ev-filter_col`,
+        filter_level_ev = filter_levels_ev,
+        filter_ebv_na_0 = input$ebv_na_0,
+        
+        sumstat_ebv_table = val_report$`sumstat_ebv-stat_num_table`,
+        sumstat_ebv_digit = input$`sumstat_ebv-view_dec`,
+        sumstat_ebv_p = val_report$`sumstat_ebv-sumstat_num_p`,
+        sumstat_ebv_table_str= val_report$`sumstat_ebv-sumstat_str_table` ,
+        sumstat_ebv_p_str = val_report$`sumstat_ebv-sumstat_str_p`,
+        
+        sumstat_ev_table = val_report$`sumstat_ev-stat_num_table`,
+        sumstat_ev_digit = input$`sumstat_ev-view_dec`,
+        sumstat_ev_p = val_report$`sumstat_ev-sumstat_num_p`,
+        sumstat_ev_table_str= val_report$`sumstat_ev-sumstat_str_table` ,
+        sumstat_ev_p_str = val_report$`sumstat_ev-sumstat_str_p`,
+        
+        n_indi = nrow(val$dt_index),
+        n_index = ncol(val$dt_index),
+        sumstat_index = val_report$`index_view-stat_num`,
+        sumstat_index_digit = input$`index_view-view_dec`,
+        sumstat_index_p = val_report$`index_view-p`, # 100 samples
+        
+        cl_input = input$`find_cl-which_data`,
+        cl_k = input$`find_cl-k_slider`,
+        cl_agg = input$`find_cl-agg_method`,
+        cl_best_method = val$cl$best_method,
+        cl_agg_coefs = val$cl$agg_coefs,
+        cl_op_cut = val_report$`find_cl-op_cut`, # rctv? $p_tss, p$sil
+        
+        cl_cor = val_report$`cl_sumstat-cor_table`,
+        cl_cor_digit = input$`cl_sumstat-view_dec`,
+        # slow to generate a histogram of large inputs in the app already
+        # when generating a report, repeat this process even more slowly
+        cl_cor_p = val_report$`cl_sumstat-cor_p` 
+      ) 
+      
+      # Knit the document, passing in the `params` list, and eval it in a
+      # child of the global environment (this isolates the code in the document
+      # from the code in this app).
+      rmarkdown::render(tempReport, output_file = file,
+                        params = params,
+                        envir = new.env(parent = globalenv()) # use with params
+      )
+    }
+  ) # downloadHandler
 } # server
 
 # options(shiny.reactlog = T) # lzhang April172020

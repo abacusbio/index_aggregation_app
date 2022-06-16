@@ -1,0 +1,314 @@
+---
+title: "Report of index aggregation"
+author: "Luna Zhang, AbacusBio"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+  # word_document:
+  #   toc: yes https://community.rstudio.com/t/rmarkdown-into-word-change-a-title-in-toc/48137/4
+# toc-title: Article Outline
+params:
+  demo: 0
+  file_name_ebv: NA
+  file_name_ev: NA
+  file_name_wt: NA
+  filter_col_ebv: NA
+  filter_level_ebv: NA # reactive
+  filter_col_ev: NA
+  filter_level_ev: NA # rctv
+  filter_ebv_na_0: FALSE
+  sumstat_ebv_table: NA
+  sumstat_ebv_digit: 2
+  sumstat_ebv_p: NA
+  sumstat_ebv_table_str: NA
+  sumstat_ebv_p_str: NA
+  sumstat_ev_table: NA
+  sumstat_ev_digit: 2
+  sumstat_ev_p: NA
+  sumstat_ev_table_str: NA
+  sumstat_ev_p_str: NA
+  n_indi: NA
+  n_index: NA
+  sumstat_index: NA
+  sumstat_index_digit: 2
+  sumstat_index_p: NA
+  cl_input: NA
+  cl_k: 2,
+  cl_best_method: NA
+  cl_agg_coefs: NA
+  cl_agg: NA,
+  cl_op_cut: NA # rctv? $p_tss, p$sil
+  cl_dendro: NA
+  cl_cor: NA
+  cl_cor_digit: NA
+  cl_cor_p: NA
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+library(dplyr)
+library(ggplot2)
+# library(kable)
+library(kableExtra)
+```
+
+# Disclaimer
+
+This report is generated from the **Plant Index Aggregation App**  
+  
+# Input 
+
+## Files
+
+```{r input}
+
+files <- c(params$file_name_ebv, params$file_name_ev, params$file_name_wt)
+
+if (params$demo > 0) {
+  files <- rep("demo", 3)
+}
+
+data.frame(Table = c("Breeding value
+                     ", "Economic value", "Economic value weight"),
+           File = files) %>% 
+  kbl() %>% 
+  kable_minimal(full_width = F, position = "left")
+```
+
+# Filters
+
+Missing EBV set to 0:, `r params$filter_ebv_na_0`
+
+```{r filter}
+
+if(!is.null(params$filter_col_ebv)) {
+  filter_col_ebv <- params$filter_col_ebv
+  filter_level_ebv <- params$filter_level_ebv()
+} else {
+  filter_col_ebv <- ""
+  filter_level_ebv <- "" # error if use params$filter_level_() directly when it's not shown on UI
+}
+
+if(!is.null(params$filter_col_ev)) {
+  filter_col_ev <- params$filter_col_ev
+  filter_level_ev <- params$filter_level_ev()
+} else {
+  filter_col_ev <- ""
+  filter_level_ev <- ""
+}
+
+tibble::tibble(Table = c(rep("Breeding value",
+                             max(1, length(params$filter_col_ebv))),
+                         rep("Economic value",
+                             max(1, length(params$filter_col_ev)))),
+               column = c(filter_col_ebv, filter_col_ev),
+               level = unlist(list(filter_level_ebv, filter_level_ev), recursive = F)
+) %>%
+   kbl(caption = "Table filters") %>% 
+  kable_minimal(full_width = F, position = "left")
+```
+
+# Summary statistics
+
+## Breeding value
+
+```{r sumstat_ebv}
+params$sumstat_ebv_table %>% 
+  kbl(caption = "Breeding value summary statistics", digits = params$sumstat_ebv_digit) %>% 
+  kable_minimal()
+
+# height <- ifelse(length(params$sumstat_ebv_p) > 4, 12, 6)
+```
+
+```{r sumstat_ebv_p, warning=TRUE}
+
+if(class(params$sumstat_ebv_p)[1]=="list") {
+  gridExtra::grid.arrange(grobs = params$sumstat_ebv_p,
+                          ncol = min(4, length(params$sumstat_ebv_p))) %>%
+    invisible()
+} else {
+    params$sumstat_ebv_p
+  }
+```
+
+
+### Classification variable {.tabset}
+
+#### Distribution
+
+```{r sumstat_ebv_p_str}
+
+if(class(params$sumstat_ebv_p_str)[1]=="list") {
+  gridExtra::grid.arrange(grobs = params$sumstat_ebv_p_str,
+                          ncol = min(4, length(params$sumstat_ebv_p_str))) %>% 
+    invisible()
+} else {
+    params$sumstat_ebv_p_str 
+  }
+```
+
+#### Full table
+
+```{r sumstat_ebv_str}
+params$sumstat_ebv_table_str %>% 
+  kbl(caption = "classification variables summary statistics", 
+      digits = params$sumstat_ebv_digit) %>%
+  kable_minimal()
+```
+
+
+## Economic value
+
+```{r sumstat_ev}
+params$sumstat_ev_table %>% 
+  kbl(caption = "Economic value summary statistics", digits = params$sumstat_ebv_digit) %>% 
+  kable_minimal()
+
+# height <- ifelse(length(params$sumstat_ebv_p) > 4, 12, 6)
+```
+
+```{r sumstat_ev_p, warning=TRUE}
+
+if(class(params$sumstat_ev_p)[1]=="list") {
+  gridExtra::grid.arrange(grobs = params$sumstat_ev_p,
+                          ncol = min(4, length(params$sumstat_ev_p))) %>%
+    invisible()
+} else {
+    params$sumstat_ev_p
+  }
+```
+
+
+### Classification variable {.tabset}
+
+#### Distribution
+
+```{r sumstat_ev_p_str}
+
+if(class(params$sumstat_ev_p_str)[1]=="list") {
+  gridExtra::grid.arrange(grobs = params$sumstat_ev_p_str,
+                          ncol = min(4, length(params$sumstat_ev_p_str))) %>% 
+    invisible()
+} else {
+    params$sumstat_ev_p_str 
+  }
+```
+
+#### Full table
+
+```{r sumstat_ev_str}
+params$sumstat_ev_table_str %>% 
+  kbl(caption = "classification variables summary statistics", 
+      digits = params$sumstat_ev_digit) %>%
+  kable_minimal()
+```
+
+
+## Original indexes {.tabset}
+
+You have `r params$n_ind` individuals and `r params$n_index` original indexes.  
+Individuals with missing breeding value are removed.
+           
+### Distribution of 100 random samples
+
+```{r sumstat_index_p, fig.dim=c(12,6)}
+params$sumstat_index_p
+```
+
+### Full table
+
+```{r sumstat_index}
+params$sumstat_index %>% 
+  kbl(caption = "Original index summary statistics", 
+      digits = params$sumstat_index_digit) %>%
+  kable_minimal()
+```
+
+# Clustering analysis
+
+## Clusters {.tabset}
+
+The *`r params$cl_input`* matrix is used as the input. Hierarchical clustering with `r params$agg`  agglomeration algorithm is used to compute the clustering. $k = `r params$cl_k`$ clusters was chosen in the end.
+
+### Result
+
+```{r cl, fig.dim=c(12,6)}
+params$cl_dendro
+```
+
+The full table is downloaded separately.
+
+### Parameter Tuning
+
+The best agglomeration method is `r params$cl_best_method` with the largest agglomerative 
+coefficient of among other methods:
+
+```{r cl_par}
+print(params$cl_agg_coefs)
+```
+
+There are three ways to determine the best k:
+
+#### by merging steps:
+
+```{r cl_par0}
+# if par tuning isn't run, params$cl_op_cut() is NULL instead of a reactive function
+if(is.null(params$cl_op_cut)) {
+  kh = h = p_tss = p_sil <- NULL
+} else {
+  kh <- params$cl_op_cut()$k_h
+  h <- params$cl_op_cut()$h
+  p_tss <- params$cl_op_cut()$p_tss
+  p_sil <- params$cl_op_cut()$p_sil
+}
+```
+
+The best k is `r kh` at the largest height change of `r h`.
+
+#### by largest total within-cluster sum of squares drop:
+
+```{r cl_par1}
+p_tss
+```
+
+#### by largest mean within-cluster silhouette value
+
+```{r cl_par2}
+p_sil
+```
+
+
+## Summary statistics
+
+### Within Cluster correlation distribution
+
+```{r cl_sumstat}
+params$cl_cor %>% 
+  kbl(caption = "Within Cluster correlation", 
+      digits = params$cl_cor_digit) %>%
+  kable_minimal()
+  
+```
+
+```{r cl_sumstat_p}
+params$cl_cor_p
+```
+
+## Diagnosis
+
+
+```{r cars}
+# params$vector_test # input$`sumstat_ebv-vars` # params$vector_test)
+# params$table_test # input$`sumstat_ebv-stat_num` # params$table_test)
+```
+
+## Including Plots
+
+```{r, fig.show='asis'}
+# params$plot_test # input$`sumstat_ebv-hist_num` # params$plot_test)
+```
+

@@ -213,7 +213,7 @@ cat("preprocessMod\n");
             is.null(input$sanity_message))
         
         output$sanity_message <- renderText({
-        "All good. Now you can move to Results, or Filter if you want to subset your inputs."
+        "All good. Now you can move to Filter."
         })
       })
 
