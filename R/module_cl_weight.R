@@ -22,7 +22,7 @@ calWeiModSidebarUI <- function(id) {
     ),
     h4("Table display control"),
     wellPanel(
-      numericInput(ns("digits"), "Number of decimal places", 3, 0, 20, 1)
+      numericInput(ns("view_dec"), "Number of decimal places", 3, 0, 20, 1)
     ),
     htmltools::HTML(strrep(br(), 20)),
     h4("Plot display control"),
@@ -86,7 +86,8 @@ calWeiModUI <- function(id) {
 #' 
 #' @return val$dt_weight, a data.frame of 3 columns: Index, cluster and weight; and val$dt_ev_agg,
 #'         a data.frame of columns as Index, cluster and traits, where Index are new indexes
-calWeiMod <- function(id, val, transpose = T, ...) {
+calWeiMod <- function(id, val, transpose = T, 
+                      val_report, report_prefix = NA, ...) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -399,7 +400,7 @@ cat("calWeiMod\n")
       })
       
       renderRctTableModuleServer("index_w", index_w, # extensions = "FixedHeader",
-                                downloadName = "index_weight", digits = reactive(input$digits))
+                                downloadName = "index_weight", digits = reactive(input$view_dec))
       
       # make aggregated EV
       # Index, cluster, trait1, trait2, ...
@@ -430,16 +431,17 @@ cat("calWeiMod\n")
         ev_mean <- apply(val$dt_ev_filtered[,idx_trait], 2, mean, na.rm = T)
         ews_avg <- data.frame(Index = "avg_index", cluster = NA, t(ev_mean))
         val$dt_ev_avg <- ews_avg
-
+        
+        val_report[[paste0(report_prefix, "ew_new")]] <- rbind(ews_new, ews_avg)
         return(rbind(ews_new, ews_avg))
       })
       
       observeEvent({ew_new()
-        input$digits},
+        input$view_dec},
       renderTableModuleServer("ew_new", ew_new, extensions = "FixedHeader",
                                 downloadName = "EW_cluster_", colfilter = "none", 
                                 option_list = list(sDom  = '<"top">lrt<"bottom">ip'), # disable search bar 
-                                digits = reactive(input$digits))
+                                digits = reactive(input$view_dec))
       )
       
       downloadModuleServer("ew_new_t", "EW_cluster_transpose", 
@@ -457,6 +459,8 @@ cat("calWeiMod\n")
         p <- plotGroupedBar(input, output, session, 
                             df, "trait", "economic_value", "Index", "Economic value($)",
                             reactive(input$font_size), baseline = T)
+        
+        val_report[[paste0(report_prefix, "p_ew")]] <- p
         downloadPlotModuleServer("dnld_plot_newev", "barchart_aggregated_ev", p, reactive(width))
         return(p)
       }) })
@@ -483,6 +487,10 @@ cat("calWeiMod\n")
           p <- plotGroupedBar(input, output, session,
                               df, "trait", "relative_economic_value", "Index", 
                               "Relative economic value($)", reactive(input$font_size), baseline = T)
+          
+          val_report[[paste0(report_prefix, "p_relew")]] <- p
+          val_report[[paste0(report_prefix, "relew")]] <- rew
+          
           downloadPlotModuleServer("dnld_plot_newevsd", "barchart_aggregated_relative_ev", p, 
                                    reactive(width))
           downloadModuleServer("dnld_newevsd", "aggregated_relative_ev", rew)

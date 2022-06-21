@@ -2,14 +2,15 @@
 title: "Report of index aggregation"
 author: "Luna Zhang, AbacusBio"
 date: "`r Sys.Date()`"
+always_allow_html: true
 output: 
-  html_document:
-    toc: true
-    toc_depth: 3
-    toc_float: true
+  # html_document:
+  #   toc: true
+  #   toc_depth: 3
+  #   toc_float: true
   # word_document:
   #   toc: yes https://community.rstudio.com/t/rmarkdown-into-word-change-a-title-in-toc/48137/4
-# toc-title: Article Outline
+toc-title: Article Outline
 params:
   demo: 0
   file_name_ebv: NA
@@ -36,15 +37,43 @@ params:
   sumstat_index_digit: 2
   sumstat_index_p: NA
   cl_input: NA
-  cl_k: 2,
+  cl_k: 2
   cl_best_method: NA
   cl_agg_coefs: NA
-  cl_agg: NA,
+  cl_agg: NA
   cl_op_cut: NA # rctv? $p_tss, p$sil
   cl_dendro: NA
   cl_cor: NA
   cl_cor_digit: NA
   cl_cor_p: NA
+  cl_show_cor: TRUE
+  cl_heat: NA
+  # cl_heat_data: NA
+  cl_choose_wt: NA
+  new_index_wt: NA
+  new_ew_digit: NA
+  new_ew: NA
+  new_ew_p: NA
+  new_relew: NA
+  new_relew_p: NA
+  dx_bench: NA
+  dx_cor: NA
+  dx_cor_p: NA
+  dx_sel_agg: NA
+  dx_cor_title: NA
+  dx_cor_selected: NA
+  dx_cor_p_selected: NA
+  dx2_top_n_title: NA
+  dx2_top_n_table: NA
+  dx2_top_n_p: NA
+  dx3_classvar: NA
+  dx3_agg_by: NA
+  dx3_summary: NA
+  dx3_summary_p: NA
+  dx4_wtvar: NA
+  dx4_agg_by: NA
+  dx4_summary: NA
+  dx4_summary_p: NA
 ---
 
 ```{r setup, include=FALSE}
@@ -58,7 +87,15 @@ library(kableExtra)
 
 # Disclaimer
 
-This report is generated from the **Plant Index Aggregation App**  
+This report is generated from the **Plant Index Aggregation App**. You may notice some `NULL` or 
+`NA` in the report. It means the corresponding analysis was skipped when the app was used. 
+
+# Background
+
+The objective of this analysis is to create aggregated indexes that can represent clusters of 
+numeric original indexes. The report contains the information of the original and aggregated 
+indexes, the process of cluster forming, and the evaluation of the performance of the aggregated 
+indexes.
   
 # Input 
 
@@ -210,7 +247,7 @@ params$sumstat_ev_table_str %>%
 
 ## Original indexes {.tabset}
 
-You have `r params$n_ind` individuals and `r params$n_index` original indexes.  
+You have `r params$n_indi` individuals and `r params$n_index` original indexes.  
 Individuals with missing breeding value are removed.
            
 ### Distribution of 100 random samples
@@ -287,8 +324,8 @@ p_sil
 ### Within Cluster correlation distribution
 
 ```{r cl_sumstat}
-params$cl_cor %>% 
-  kbl(caption = "Within Cluster correlation", 
+params$cl_cor %>%
+  kbl(caption = "Within Cluster correlation",
       digits = params$cl_cor_digit) %>%
   kable_minimal()
   
@@ -300,15 +337,203 @@ params$cl_cor_p
 
 ## Diagnosis
 
+```{r cl_diagnosis}
+txt <- NA
 
-```{r cars}
-# params$vector_test # input$`sumstat_ebv-vars` # params$vector_test)
-# params$table_test # input$`sumstat_ebv-stat_num` # params$table_test)
+if(!is.null(params$cl_show_cor)) {
+  if(params$cl_show_cor) {
+    txt <- "index correlation"
+    } else {
+      txt <- "individual by index"
+    }
+  }
 ```
 
-## Including Plots
+Below is the *`r txt`* matrix heatmap.
 
-```{r, fig.show='asis'}
-# params$plot_test # input$`sumstat_ebv-hist_num` # params$plot_test)
+```{r cl_diagnosis1}
+params$cl_heat
 ```
 
+The full correlation matrix can be downloaded separately.
+
+# Aggregated index
+
+## Index weight {.tabset}
+
+The *`r params$cl_choose_wt`* was used to weigh original indexes within their cluster.
+
+### Sneak peek 
+
+```{r new_wt}
+if(!is.null(params$new_index_wt)) {
+ params$new_index_wt %>%
+  head() %>%
+  kbl() %>%
+  kable_minimal(full_width = F, position = "left")
+}
+```
+
+### full table
+
+```{r new_wt1}
+params$new_index_wt %>%
+  kbl() %>%
+  kable_minimal(full_width = F, position = "left")
+```
+
+
+## Aggregated index economic values
+
+```{r new_ev}
+params$new_ew %>%
+  kbl(digits = params$new_ew_digit, caption = "New economic values") %>%
+  kable_minimal(full_width = F, position = "left")
+```
+
+```{r new_ev_p, fig.dim=c(12,8)}
+params$new_ew_p
+```
+
+## Aggregated index relative economic weight (RW)
+
+$RW = EV \times SD(EBV)$
+
+```{r new_rel_ew}
+params$new_relew %>%
+  kbl(digits = params$new_ew_digit, caption = "New relative economic weight") %>%
+  kable_minimal(full_width = F, position = "left")
+```
+
+```{r new_rel_ew_p, fig.dim=c(12,8)}
+params$new_relew_p
+```
+
+# Aggregated index diagnosis
+
+This is to investigate the relationships between original and aggregated indexes, and across 
+aggregated indexes, with or without comparison with a benchmark index, to evaluate how well 
+aggregated indexes represent their own cluster.
+
+## Correlation
+
+The ideal outcome is that the majority of the correlations of original indexes with their
+corresonding aggregated indexes are higher than the correlations of original indexes with a 
+benchmark index.
+
+### Distribution of correlations between within-cluster indexes and their aggregated index
+
+#### All aggregated index and the benchmark index {.tabset}
+
+Below is the sorted correlations between within-cluster original indexes and their aggregated 
+indexes (coloured dots) vs. those between original indexes and the benchmark index: 
+*`r params$dx_bench`*.
+
+##### plot
+
+```{r dx_corr}
+params$dx_cor_p
+```
+
+##### full table
+
+```{r dx_corr_table}
+params$dx_cor %>%
+  kbl(digits = 3, 
+      caption = "Correlation between original and aggregated indexes") %>%
+  kable_minimal(full_width = F, position = "left")
+```
+
+
+#### Selected indexes {.tabset}
+
+Below is the sorted `r params$dx_cor_title`
+
+##### plot
+
+```{r dx_corr1}
+params$dx_cor_p_selected
+```
+
+##### full table
+
+```{r dx_corr1_table}
+params$dx_cor_selected %>%
+  kbl(digits = 3, 
+      caption = "Correlation between selected original and aggregated indexes") %>%
+  kable_minimal(full_width = F, position = "left")
+```
+
+
+## Top individual rank
+
+The overlap of the top individuals in different indexes is an indication of how similar they are.
+Ideally, the overlap should be as small as possible across different aggregated indexes. Too much 
+overlap between two indexes implies they can be merged.
+
+### `r params$dx2_top_n_title` {.tabset}
+
+#### plot
+
+The top individual % overlap between original and aggregated indexes.
+
+```{r top_indi}
+params$dx2_top_n_p
+```
+
+#### full table
+
+```{r top_indi1}
+params$dx2_top_n_table %>%
+  kbl(digits = 3, 
+      caption = "The top n individual overlap between original and aggregaed indexes") %>%
+  kable_minimal(full_width = F, position = "left")
+```
+
+## Variable pattern {.tabset}
+
+The frequency of levels of a known variable in aggregated indexes. This can potentially provide 
+insights into the possible reason behind the aggregation, if the frequency distribution of the 
+known variable is uneven across aggregated indexes.
+
+Below is the frequency/percent distribution of *`r params$dx3_classvar`* (variable) across 
+*`r params$dx3_agg_by`* (aggregated or pre-defined grouping index).
+
+### plot
+
+```{r classvar_pattern, fig.height=8}
+params$dx3_summary_p
+```
+
+### full table
+
+```{r classvar_pattern1}
+params$dx3_summary %>%
+  kbl(digits = 3, 
+      caption = paste0("Distribution of ", params$dx3_classvar, " across ", params$dx3_agg_by)) %>%
+  kable_minimal(full_width = F, position = "left")
+```
+
+## Index weight pattern {.tabset}
+
+The weight of each aggregated index as the sum of the weights of its corresponding original indexes
+of the same cluster. This can show which aggregated index was assigned the most or the least 
+weight, which is often related to the importance of the aggregated index.
+
+Below is the distribution of *`r params$dx4_wtvar`* (index weight) across *`r params$dx4_agg_by`*
+ (aggregated or pre-defined grouping index).
+ 
+### plot
+
+```{r weight_pattern}
+params$dx4_summary_p
+```
+
+### full table
+
+```{r weight_pattern1}
+params$dx4_summary %>%
+  kbl(digits = 3, 
+      caption = paste0("Distribution of ", params$dx4_wtvar, " across ", params$dx4_agg_by)) %>%
+  kable_minimal(full_width = F, position = "left")
+```

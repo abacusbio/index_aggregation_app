@@ -85,13 +85,13 @@ plotTopNdot <- function(input, output, session,
 # cat(" l[[]]:\n");print(head(l[[1]])  )
   by_ref_index <- lapply(ref_indexes, function(ref_index) {
     plant_names <- l[[ref_index]]$plant # reference plants
-# cat(" plant_names:");print(head(plant_names))    
+# cat(" plant_names:");print(head(plant_names))
     df <- do.call(rbind, lapply(l, function(df) {
       return(data.frame(Index = df$Index[1], aggregated_index = ref_index,
                         n =  sum(df$plant %in% plant_names, na.rm = T),
                         percent = sum(df$plant %in% plant_names, na.rm = T)/length(plant_names)*100))
     })) %>% arrange(desc(n)) %>% 
-      dplyr::mutate(id = dplyr::row_number())
+      dplyr::mutate(id = dplyr::row_number() %>% as.factor())
     
     # remove ref_index rows
     idx <- which(df$Index %in% ref_indexes)
@@ -112,9 +112,10 @@ plotTopNdot <- function(input, output, session,
                            # palette = tail(
                              # ggpubr::get_palette("npg", length(unique(df[,"aggregated_index"]))+1),
                              # -1), # skip red, the 1st color
-                           sort.val = "desc",          # Sort the value in dscending order
-                           # sort.by.groups = T,     # Don't sort inside each group
-                           xlab = "sorted original index", 
+                           sort.val = "desc",  # ggscatter Sort the value in descending order
+                           # sort.by.groups = T, # ggscatter Don't sort inside each group
+                           position = position_dodge(0.9),
+                           xlab = "sorted original index",
                            font.x = c(font_size(), "plain", "black"), # xlab
                            font.y = c(font_size(), "plain", "black"), # y lab
                            font.legend = c(font_size(), "plain", "black"),

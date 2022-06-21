@@ -71,6 +71,7 @@ clusterDxModUI <- function(id) {
 #reactive(input$`find_cl-agg_method`), reactive(input$`find_cl-k_slider`)
 clusterDxMod <- function(id, val = NULL, transpose = T, 
                          center = reactive(T), scale = reactive(T),
+                         val_report, report_prefix = NA,
                          ...) {
   moduleServer(
     id,
@@ -247,7 +248,8 @@ cat(" observe run_heatmap\n  dat:");#print(dim(val$dt_index));cat("  clusters:")
           out <- drawHeatMap(x_sorted, "", val$cl$clusters, font_size = 3)
 # cat(" tempVar$heatmap:\n");print(class(tempVar$heatmap));print(tempVar$heatmap[-c(1:2)]); # plot(tempVar$heatmap)
 # cat("  starts heatmap.2\n"); t <- Sys.time()
-          tempVar$heatmap <- out; tempVar$data <- x_sorted
+          val_report[[paste0(report_prefix, "heatmap")]] <- out
+          val_report[[paste0(report_prefix, "data")]] <- x_sorted
           return(tempVar$heatmap)
           #  return(eval(tempVar$heatmap$call))
           # return(gplots::heatmap.2(x = tempVar$heatmap$x, Rowv = tempVar$heatmap$Rowv, 
@@ -258,11 +260,15 @@ cat(" observe run_heatmap\n  dat:");#print(dim(val$dt_index));cat("  clusters:")
         shinyjs::hide("wait")
         shinyjs::enable("bttn")
 # cat("  heatmap.2 finished"); print(Sys.time()-t)
-        downloadPlotModuleServer("download_heat", name = "index_heatmap", plots = tempVar$heatmap,
+        downloadPlotModuleServer("download_heat", name = "index_heatmap", 
+                                 plots = var_report[[paste0(report_prefix, "heatmap")]],
                                  width = reactive(tempVar$width))
-        downloadModuleServer("download_carpet", "index_heatmap", tempVar$data,
+        downloadModuleServer("download_carpet", "index_heatmap", 
+                             val_report[[paste0(report_prefix, "data")]],
                              row.names = T, type = "csv")
-        downloadModuleServer("download_obj", "index_pheatmap", tempVar$heatmap, type = "rdata")
+        downloadModuleServer("download_obj", "index_pheatmap", 
+                             var_rerpot[[paste0(report_prefix, "heatmap")]], 
+                             type = "rdata")
       }) # observeEvent 
       
       

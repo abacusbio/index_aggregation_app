@@ -357,8 +357,9 @@ ui <- fluidPage(
     sidebarLayout(
       sidebarPanel(
         conditionalPanel(
-          condition = "input.plant_app == 'tab.agg'",
-          p("...")
+          condition = "input.plant_app == 'tab.report'",
+          radioButtons("report_format", "Document format", c("Word", "HTML", "PDF"),
+                       inline = TRUE)
         ), width = 4),
       
       mainPanel(
@@ -617,7 +618,8 @@ server <- function(input, output, session) {
   
   # need val$dt_index, val$cl. if upload new files, fill val$cl with list(cluster_obj, clusters)
   clusterDxMod("Dx", val, 
-               transpose = T, reactive(input$`find_cl-center`), reactive(input$`find_cl-scale`))
+               transpose = T, reactive(input$`find_cl-center`), reactive(input$`find_cl-scale`),
+               val_report = val_report, report_prefix = "Dx-")
   
   ## AGGREGATION ##
   
@@ -626,7 +628,8 @@ server <- function(input, output, session) {
   # create val$dt_weight (data.frame), a data.frame of 3 columns: Index, cluster and weight;
   # val$dt_ev_agg, a data.frame of columns as Index, cluster and traits (EVs); and
   # val$dt_ev_avg, same structure as above
-  calWeiMod("cl_weight", val, transpose = F) # 15june2021 this occurred twice. 2nd time new_index_1 are NAs
+  calWeiMod("cl_weight", val, transpose = F, # 15june2021 this occurred twice. 2nd time new_index_1 are NAs
+            val_report = val_report, report_prefix = "cl_weight-")
   
   # AGGREGATED INDEX DIAGNOSIS #
   
@@ -634,31 +637,38 @@ server <- function(input, output, session) {
   # need val$dt_ev_agg, val$dt_ebv_filtered, val$dt_description_clean
   # create val$dt_index_new. The same as dt_index but with new_index in it.
   dt_index_sub <- aggDxMod("agg_dx", val, transpose = F, reactive(val$cl$clusters), 
-                           reactive(val$dt_ev_agg), reactive(val$dt_index))
+                           reactive(val$dt_ev_agg), reactive(val$dt_index),
+                           val_report, "agg_dx-")
   
   # top individual overlap/agreement
   aggDxMod2("agg_dx2", transpose = F, 
            dt_index_sub, reactive(val$dt_index),
            reactive(input$`agg_dx-sel_index`), reactive(input$`agg_dx-sel_agg`),
-           reactive(input$`agg_dx-sel_cluster`) 
+           reactive(input$`agg_dx-sel_cluster`),
+           val_report, "agg_dx2-"
           )
   
   # look at classVar pattern among aggregated indexes and user-defined groups
   # need val$dt_index_new and others in val.
-  aggDxMod3("agg_dx3", val, transpose = F, reactive(val$cl$clusters))
+  aggDxMod3("agg_dx3", val, transpose = F, reactive(val$cl$clusters),
+            val_report, "agg_dx3-")
   
   # look at EV weighting pattern among aggregated indexes and user-defined groups
   # need val$dt_w_clean
   # need val$dt_ev_agg, a data.frame of columns as Index, cluster and traits (EVs); and
   # val$dt_ev_avg, same structure as above
   aggDxMod4("agg_dx4", val, 
-            reactive(val$dt_ev_agg), reactive(val$dt_w_clean), reactive(val$cl$clusters))
+            reactive(val$dt_ev_agg), reactive(val$dt_w_clean), reactive(val$cl$clusters),
+            val_report, "agg_dx4-")
   
   # REPORT #
   # modulising this makes all parameters NULL reportMod("report")
   output$report <- downloadHandler(
     # For PDF output, change this to "report.pdf"
-    filename = "report_index_aggregation.html", # "report_index_aggregation.doc", 
+    filename = paste0("report_index_aggregation_", # "report_index_aggregation.doc", 
+                      Sys.Date(), ".",
+                      switch(input$report_format,
+                            Word = "docx", HTML = "html", PDF = "pdf")),
     content = function(file) {
       # Copy the report file to a temporary directory before processing it, in
       # case we don't have write permissions to the current working dir (which
@@ -708,13 +718,54 @@ server <- function(input, output, session) {
         cl_cor_digit = input$`cl_sumstat-view_dec`,
         # slow to generate a histogram of large inputs in the app already
         # when generating a report, repeat this process even more slowly
-        cl_cor_p = val_report$`cl_sumstat-cor_p` 
+        cl_cor_p = val_report$`cl_sumstat-cor_p`,
+        cl_show_cor = input$`Dx-show_corr`,
+        cl_heat = val_report$`Dx-heatmap`,
+        # cl_heat_data = val_report$`Dx-data`,
+
+        cl_choose_wt = input$`cl_weight-choose_w`,
+        new_index_wt = val$dt_weight,
+        new_ew_digit = input$`cl_weight-view_dec`,
+        new_ew = val_report$`cl_weight-ew_new`,
+        new_ew_p = val_report$`cl_weight-p_ew`,
+        new_relew = val_report$`cl_weight-relew`,
+        new_relew_p = val_report$`cl_weight-p_relew`,
+        
+        dx_bench = input$`agg_dx-sel_benchmark`,
+        dx_cor = val_report$`agg_dx-cor`,
+        dx_cor_p = val_report$`agg_dx-cor_p`,
+        dx_sel_agg = input$`agg_dx-sel_agg`,
+        dx_cor_title = val_report$`agg_dx-corr_title`,
+        dx_cor_selected = val_report$`agg_dx-cor_selected`,
+        dx_cor_p_selected = val_report$`agg_dx-cor_p_selected`,
+        
+        dx2_top_n_title = val_report$`agg_dx2-top_n_title`,
+        # dx2_percent = input$`agg_dx2-percent`,
+        dx2_top_n_table = val_report$`agg_dx2-top_n_table`,
+        dx2_top_n_p = val_report$`agg_dx2-top_n_p`,
+        
+        dx3_classvar = input$`agg_dx3-class_var`,
+        dx3_agg_by = input$`agg_dx3-agg_by`,
+        dx3_summary = val_report$`agg_dx3-summary`,
+        dx3_summary_p = val_report$`agg_dx3-summary_p`,
+        
+        dx4_wtvar = input$`agg_dx4-weight_var`,
+        dx4_agg_by = input$`agg_dx4-agg_by`,
+        dx4_summary = val_report$`agg_dx4-summary`,
+        dx4_summary_p = val_report$`agg_dx4-summary_p`
       ) 
       
       # Knit the document, passing in the `params` list, and eval it in a
       # child of the global environment (this isolates the code in the document
       # from the code in this app).
-      rmarkdown::render(tempReport, output_file = file,
+      rmarkdown::render(tempReport, 
+                        switch(input$report_format, 
+                               Word = rmarkdown::word_document(toc = TRUE), 
+                               HTML = rmarkdown::html_document(toc = T, toc_depth = 3, 
+                                                               toc_float = T), 
+                               PDF = rmarkdown::pdf_document()
+                               ),
+                        file,
                         params = params,
                         envir = new.env(parent = globalenv()) # use with params
       )

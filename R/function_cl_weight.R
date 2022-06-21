@@ -3,7 +3,7 @@ plotGroupedBar <- function(input, output, session,
                            df, x, y, group, ylab = NULL, font_size = reactive(12),
                            baseline = F, ...) {
 # cat("plotGroupedBar\n df:\n");print(df);print(unique(df[,group]));print(length(unique(df[,group])));print(class(unique(df[,group])))
-  x.text.angle <- ifelse(length(unique(df[[x]]))<=10, 0, 90)
+  x.text.angle <- ifelse(length(unique(df[[x]]))<10, 0, 90)
   
   if(baseline) {
     palettes <- c("#808080", # avg_index

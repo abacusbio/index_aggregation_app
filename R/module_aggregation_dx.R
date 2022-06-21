@@ -34,6 +34,9 @@ aggDxModUI <- function(id) {
   tagList(
     br(),
     h1("Index correlations"),
+    helpText("The ideal outcome is that the majority of the correlations of original indexes with 
+    their corresonding aggregated indexes are higher than the correlations of original indexes with 
+    a benchmark index."),
     h2("Distribution of correlations between within-cluster indexes and their aggregated index"),
     h3("Scatter plot"),
     span(textOutput(ns("error_m")), class = "text-warning"), # input file missing
@@ -84,6 +87,7 @@ aggDxModUI <- function(id) {
 #' @return df_for_dx2, a reactive function of a data.frame to be used for aggDxMod2
 aggDxMod <- function(id, val, transpose = F, clusters = reactive(NULL), dt_ev_agg = reactive(NULL),
                      dt_index = reactive(NULL),
+                     val_report, report_prefix = NA,
                      ...) {
   moduleServer(
     id,
@@ -326,6 +330,7 @@ cat("aggDxMod\n")
 # cat("  upload computed\n   by_cluster:");print(head(by_cluster))     
         } # if "upload" in input$sel_benchmark
         
+        val_report[[paste0(report_prefix, "cor")]] <- by_cluster
         return(by_cluster)
       }) # cor_default eventReactive
       
@@ -369,6 +374,8 @@ cat("aggDxMod\n")
         downloadModuleServer("dnld_cor_default", "correlation_new_and_original_indexes",
                              heat_map$df, T)
         
+        val_report[[paste0(report_prefix, "cor_p")]] <- heat_map$p
+        
         return( heat_map$p
                 # if(class(heat_map)[1]=="list") {
                 # gridExtra::grid.arrange(grobs = heat_map, ncol = 1)} else {heat_map}
@@ -386,7 +393,7 @@ cat("aggDxMod\n")
           
           n <- as.integer(round(max(cor_default()$id)*input$quantile_default/100, 0))
           out <- dplyr::filter(cor_default(), id == n) #%>% 
-            #dplyr::select(-Index)
+            # dplyr::select(-Index)
           names(out)[which(names(out)=="id")] <- "n_indexes"
           
           poor_cor_indexes <- dplyr::filter(cor_default(), id >=n)
@@ -460,19 +467,23 @@ cat("aggDxMod\n")
         # correlation
         if(ncol(df_index_sub) >= 2) { # only calculate corrlations when >=2 vars are selected
           
-          tempVar$corr <- cor(df_index_sub, use = "pairwise.complete.obs")
+          val_report[[paste0(report_prefix, "cor_selected")]] <- 
+            cor(df_index_sub, use = "pairwise.complete.obs")
+          
         } # if ncol df_index_sub >=2
         
         output$corr_title <- renderText({
           req(input$sel_index!="" || input$sel_cluster!="")
           
           if(input$sel_cluster!="") {
-            return(paste0("Distribution of correlations with aggregated indexes: cluster ",
-                          input$sel_cluster, " indexes"))
+            val_report[[paste0(report_prefix, "corr_title")]] <- 
+              paste0("Distribution of correlations among aggregated indexes and cluster ",
+                     input$sel_cluster, " indexes")
           } else {
-            return(paste0("Distribution of correlations with aggregated indexes: ",
-                          input$sel_index, " indexes"))
+            val_report[[paste0(report_prefix, "corr_title")]] <- 
+              paste0("Distribution of correlations among aggregated indexes and ", input$sel_index)
           }
+          return(val_report[[paste0(report_prefix, "corr_title")]])
         })
       }) # observe run_analysis
       
@@ -480,14 +491,15 @@ cat("aggDxMod\n")
       output$plot_cor <- renderPlot({
         withProgress(message = 'Plotting ...',
                      detail = 'This may take a while...', value = 0, {
-        req(length(tempVar$corr) > 1, input$font_size)
-                       input$fixed_y_scale # force function to react
+        req(length(val_report[[paste0(report_prefix, "cor_selected")]]) > 1, input$font_size,
+                       input$fixed_y_scale) # force function to react
 # cat(" renderPlot plot_cor\n")
         # initial parameters
         width  <- session$clientData[[paste0("output_", session$ns("plot_cor"), 
                                                      "_width")]]
         m <- makeLongCor(input, output, session,
-                         tempVar$corr, reactive(input$sel_agg))
+                         val_report[[paste0(report_prefix, "cor_selected")]], 
+                         reactive(input$sel_agg))
         heat_map <- plotcorrDot(input, output, session,
                                 m, "aggregated_index", reactive(input$font_size), 
                                 reactive(input$fixed_y_scale))
@@ -505,7 +517,9 @@ cat("aggDxMod\n")
                              paste0("correlation_", paste0(input$sel_agg, collapse = "_"), "_",
                                     tempVar$sel_index, "_",
                                     input$sel_cluster),
-                             tempVar$corr, T)
+                             val_report[[paste0(report_prefix, "cor_selected")]], T)
+        
+        val_report[[paste0(report_prefix, "cor_p_selected")]] <- heat_map$p
         
         return( heat_map$p)
       }) }) #, height = 800) # can't use reactive values for height
@@ -579,11 +593,16 @@ aggDxModUI2 <- function(id) {
     br(),
     span(textOutput(ns("error_m")), class = "text-warning"),
     h1("Top individual(s)"),
+    helpText("The overlap of the top individuals in different indexes is an indication of how 
+    similar they are. 
+    Ideally, the overlap should be as small as possible across different aggregated indexes. 
+    Too much overlap between two indexes implies they can be merged."),
     h2(textOutput(ns("top_n_title"))),
     h3("Table"),
     renderRctTableModuleUI(ns("top_n_index")),
     br(),br(),
     h3("Scatter plot"),
+    helpText("The top individual % overlap between original and aggregated indexes"),
     plotOutput(ns("plot_top_n")),# height = "800px"),
     downloadPlotModuleUI(ns("dnld_plot_top"))
   )
@@ -599,6 +618,7 @@ aggDxModUI2 <- function(id) {
 aggDxMod2 <- function(id, transpose = F, 
                       dt_index_sub = reactive(NULL), dt_index = reactive(NULL),
                       sel_index = reactive(""), sel_agg = reactive(""), sel_cluster = reactive(""),
+                      val_report, report_prefix = NA,
                       ...) {
   moduleServer(
     id,
@@ -672,8 +692,11 @@ cat("aggDxMod2\n")
         output$top_n_title <- renderText({
           req(n)
           
-          return(paste0("Top ", input$sel_top_n, ifelse(input$percent, "%", ""),
-                        " individual agreement among indexes"))
+          val_report[[paste0(report_prefix, "top_n_title")]] <- 
+            paste0("Top ", input$sel_top_n, ifelse(input$percent, "%", ""),
+                   " individual agreement among indexes")
+          
+          return(val_report[[paste0(report_prefix, "top_n_title")]])
         })
         
         # ranking agreement
@@ -696,6 +719,8 @@ cat("aggDxMod2\n")
         }))
         table_top_n <- cbind(order = as.integer(1:n), table_top_n)
         # cat("  table_top_n2:");print(dim(df_index_sub));print(head(table_top_n[,]))
+        val_report[[paste0(report_prefix, "top_n_table")]] <- table_top_n
+        
         renderRctTableModuleServer("top_n_index", reactive(table_top_n),
                                   downloadName = paste0("top_", n, ifelse(input$percent, "%", ""),
                                                         "_by_index"), searchable = F)
@@ -716,7 +741,8 @@ cat("aggDxMod2\n")
                          tempVar$df_top_n, reactive(sel_agg()),
                          reactive(input$font_size))
         
-        tempVar$top_n_df <- l$df # Index   aggregated_index    n   percent id
+        # Index   aggregated_index    n   percent id
+        # val_report[[paste0(report_prefix, "top_n_df")]] <- l$df 
         
         downloadPlotModuleServer(
           "dnld_plot_top", 
@@ -725,6 +751,8 @@ cat("aggDxMod2\n")
           plots = l$p, # if(class(plot_top_n)[1]=="list") {
           # gridExtra::grid.arrange(grobs = plot_top_n, ncol = 1)} else {plot_top_n},
           width = reactive(width_top))
+        
+        val_report[[paste0(report_prefix, "top_n_p")]] <- l$p
         
         # if("ggplot2" %in% class(plot_top_n)) {
         return(l$p)
@@ -760,6 +788,9 @@ aggDxModUI3 <- function(id) {
   tagList(
     br(),
     h1("Aggregated index diagnosis - more"),
+    helpText("The frequency of levels of a known variable in aggregated indexes. 
+    This can potentially provide insights into the possible reason behind the aggregation, if the 
+    frequency distribution of the known variable is uneven across aggregated indexes."),
     span(textOutput(ns("error_m")), class = "text-warning"),
     h2("Classification variable distribution"),
     renderTableModuleUI(ns("classvar_summary")),
@@ -785,6 +816,7 @@ aggDxModUI3 <- function(id) {
 #' 
 #' @return a table and a plot
 aggDxMod3 <- function(id, val, transpose = F, clusters = reactive(NULL), 
+                      val_report, report_prefix = NA,
                      ...) {
   moduleServer(
     id,
@@ -864,11 +896,13 @@ cat("aggDxMod3\n")
                            names_from = input$class_var, values_from = c(n, percent)))
       })
       
-      observeEvent(classvar_sum_show(),
-      renderTableModuleServer("classvar_summary", classvar_sum_show, 
-                                extensions = c("FixedHeader", "FixedColumns"),
-                                downloadName = "class_var_summary_in_agg_index")
-      )
+      observeEvent(classvar_sum_show(), {
+        renderTableModuleServer("classvar_summary", classvar_sum_show, 
+                                 extensions = c("FixedHeader", "FixedColumns"),
+                                 downloadName = "class_var_summary_in_agg_index")
+      
+        val_report[[paste0(report_prefix, "summary")]] <- classvar_sum_show()
+      })
       # # select input aggregated_by
       # observeEvent(length(df_summary_table()) > 0, {
       #   updateSelectInput(session, "agg_by", choices = c("", df_summary_table()$aggregated_by))
@@ -889,6 +923,8 @@ cat("aggDxMod3\n")
                              df, input$class_var, "aggregated_index", input$use_count,
                              input$font_size)
 # cat("  p:", class(p),"\n");# print(p)
+        val_report[[paste0(report_prefix, "summary_p")]] <- p
+        
         downloadPlotModuleServer(
           "dnld_cv_plot", "classvar_by_agg_index", p,
           # gridExtra::grid.arrange(grobs = ps,
@@ -926,6 +962,9 @@ aggDxModUI4 <- function(id) {
   tagList(
     br(),
     h1("Aggregated index diagnosis - more"),
+    helpText("The weight of each aggregated index as the sum of the weights of its corresponding
+    original indexes of the same cluster. This can show which aggregated index was assigned the most
+    or the least weight, which is often related to the importance of the aggregated index."),
     span(textOutput(ns("error_m")), class = "text-warning"),
     h2("Classification variable distribution"),
     renderRctTableModuleUI(ns("weight_summary_show")),
@@ -951,7 +990,8 @@ aggDxModUI4 <- function(id) {
 #'        Index, cluster and traits (EVs).
 #' @return a table and a plot
 aggDxMod4 <- function(id, val, dt_ev_agg = reactive(NULL), dt_w_clean = reactive(NULL), 
-                      clusters = reactive(NULL), ...) {
+                      clusters = reactive(NULL),
+                      val_report, report_prefix = NA, ...) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -1039,6 +1079,8 @@ cat("aggDxMod4\n")
           return(data.frame(aggregated_by = group_var, out))
         }))
         
+        val_report[[paste0(report_prefix, "summary")]] <- df_summary_table
+        
         # select input aggregated_by
         updateSelectInput(session, "agg_by", choices = c("", df_summary_table$aggregated_by))
         
@@ -1081,8 +1123,10 @@ cat("aggDxMod4\n")
             # gridExtra::grid.arrange(grobs = ps,
             # nrow = min(2, length(unique(df$aggregated_index)))),
             reactive(width))
-                       
-            return(p) #gridExtra::grid.arrange(grobs = ps,
+        
+        val_report[[paste0(report_prefix, "summary_p")]] <- p
+        
+        return(p) #gridExtra::grid.arrange(grobs = ps,
             # nrow = min(2, length(unique(df$aggregated_index)))))
         }) })
       
