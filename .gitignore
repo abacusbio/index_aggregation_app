@@ -14,22 +14,11 @@ R/css/bootstrap.min_minty.css
 R/css/bootstrap_minty.css
 R/css/bootstrap_solar.css
 test outputs/half_indexes/df
-R/help/test_legacy.html
-R/help/test_legacy.Rmd
 R/figure/pressure-1.png
-R/preprocess.html
-R/preprocess.md
-R/preprocess_filter_ebv.html
-R/preprocess_filter_ebv.md
-R/index_viewer.html
-R/index_viewer.md
-R/preprocess_sumstat.html
-R/NULL.html
-R/preprocess_sumstat.md
-R/clustering_run.html
-R/clustering_run.md
 R/figure/unnamed-chunk-5-1.png
 R/figure/unnamed-chunk-6-1.png
-R/help/clustering_run.md
-R/help/clustering_run.html
+R/help/*.md
+R/help/*html
 .Rproj.user
+R/*.html
+R/*.md
