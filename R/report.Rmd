@@ -9,8 +9,11 @@ output:
   #   toc_depth: 3
   #   toc_float: true
   # word_document:
-  #   toc: yes https://community.rstudio.com/t/rmarkdown-into-word-change-a-title-in-toc/48137/4
-toc-title: Article Outline
+  #   toc: true # https://community.rstudio.com/t/rmarkdown-into-word-change-a-title-in-toc/48137/4
+  #   reference_docx: template_ab.docx # template_default_tableStyle.docx # C:/Users/lzhang/Documents/GitHub/index_aggregation_app/R/template_default_tableStyle.docx
+  # pdf_document:
+  #   toc: true
+toc-title: Table of Contents
 params:
   demo: 0
   file_name_ebv: NA
@@ -77,7 +80,13 @@ params:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+# how to change word doc formats:
+## https://rmarkdown.rstudio.com/articles_docx.html
+
+# kableExtra styling:
+# https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html#Group_rows_via_labeling
+options(kableExtra.auto_format = FALSE) # ensure tables in word doc show normally
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE) # , root.dir = "R/")
 
 library(dplyr)
 library(ggplot2)
@@ -102,7 +111,8 @@ indexes.
 ## Files
 
 ```{r input}
-
+# print(getwd()) # "C:/Users/lzhang/AppData/Local/Temp/RtmpOuA4e0" == tempDir()
+# print(knitr::opts_chunk$get("root.dir")) # NULL
 files <- c(params$file_name_ebv, params$file_name_ev, params$file_name_wt)
 
 if (params$demo > 0) {
@@ -112,7 +122,7 @@ if (params$demo > 0) {
 data.frame(Table = c("Breeding value
                      ", "Economic value", "Economic value weight"),
            File = files) %>% 
-  kbl() %>% 
+  knitr::kable() %>% # kableExtra::kbl() doesn't show table format in word doc
   kable_minimal(full_width = F, position = "left")
 ```
 
@@ -145,7 +155,7 @@ tibble::tibble(Table = c(rep("Breeding value",
                column = c(filter_col_ebv, filter_col_ev),
                level = unlist(list(filter_level_ebv, filter_level_ev), recursive = F)
 ) %>%
-   kbl(caption = "Table filters") %>% 
+  knitr::kable(caption = "Table filters") %>% 
   kable_minimal(full_width = F, position = "left")
 ```
 
@@ -155,7 +165,7 @@ tibble::tibble(Table = c(rep("Breeding value",
 
 ```{r sumstat_ebv}
 params$sumstat_ebv_table %>% 
-  kbl(caption = "Breeding value summary statistics", digits = params$sumstat_ebv_digit) %>% 
+  knitr::kable(caption = "Breeding value summary statistics", digits = params$sumstat_ebv_digit) %>% 
   kable_minimal()
 
 # height <- ifelse(length(params$sumstat_ebv_p) > 4, 12, 6)
@@ -192,7 +202,7 @@ if(class(params$sumstat_ebv_p_str)[1]=="list") {
 
 ```{r sumstat_ebv_str}
 params$sumstat_ebv_table_str %>% 
-  kbl(caption = "classification variables summary statistics", 
+  knitr::kable(caption = "classification variables summary statistics", 
       digits = params$sumstat_ebv_digit) %>%
   kable_minimal()
 ```
@@ -202,7 +212,7 @@ params$sumstat_ebv_table_str %>%
 
 ```{r sumstat_ev}
 params$sumstat_ev_table %>% 
-  kbl(caption = "Economic value summary statistics", digits = params$sumstat_ebv_digit) %>% 
+  knitr::kable(caption = "Economic value summary statistics", digits = params$sumstat_ebv_digit) %>% 
   kable_minimal()
 
 # height <- ifelse(length(params$sumstat_ebv_p) > 4, 12, 6)
@@ -239,7 +249,7 @@ if(class(params$sumstat_ev_p_str)[1]=="list") {
 
 ```{r sumstat_ev_str}
 params$sumstat_ev_table_str %>% 
-  kbl(caption = "classification variables summary statistics", 
+  knitr::kable(caption = "classification variables summary statistics", 
       digits = params$sumstat_ev_digit) %>%
   kable_minimal()
 ```
@@ -260,7 +270,7 @@ params$sumstat_index_p
 
 ```{r sumstat_index}
 params$sumstat_index %>% 
-  kbl(caption = "Original index summary statistics", 
+  knitr::kable(caption = "Original index summary statistics", 
       digits = params$sumstat_index_digit) %>%
   kable_minimal()
 ```
@@ -325,7 +335,7 @@ p_sil
 
 ```{r cl_sumstat}
 params$cl_cor %>%
-  kbl(caption = "Within Cluster correlation",
+  knitr::kable(caption = "Within Cluster correlation",
       digits = params$cl_cor_digit) %>%
   kable_minimal()
   
@@ -369,7 +379,7 @@ The *`r params$cl_choose_wt`* was used to weigh original indexes within their cl
 if(!is.null(params$new_index_wt)) {
  params$new_index_wt %>%
   head() %>%
-  kbl() %>%
+  knitr::kable() %>%
   kable_minimal(full_width = F, position = "left")
 }
 ```
@@ -378,7 +388,7 @@ if(!is.null(params$new_index_wt)) {
 
 ```{r new_wt1}
 params$new_index_wt %>%
-  kbl() %>%
+  knitr::kable() %>%
   kable_minimal(full_width = F, position = "left")
 ```
 
@@ -387,7 +397,7 @@ params$new_index_wt %>%
 
 ```{r new_ev}
 params$new_ew %>%
-  kbl(digits = params$new_ew_digit, caption = "New economic values") %>%
+  knitr::kable(digits = params$new_ew_digit, caption = "New economic values") %>%
   kable_minimal(full_width = F, position = "left")
 ```
 
@@ -401,7 +411,7 @@ $RW = EV \times SD(EBV)$
 
 ```{r new_rel_ew}
 params$new_relew %>%
-  kbl(digits = params$new_ew_digit, caption = "New relative economic weight") %>%
+  knitr::kable(digits = params$new_ew_digit, caption = "New relative economic weight") %>%
   kable_minimal(full_width = F, position = "left")
 ```
 
@@ -439,7 +449,7 @@ params$dx_cor_p
 
 ```{r dx_corr_table}
 params$dx_cor %>%
-  kbl(digits = 3, 
+  knitr::kable(digits = 3, 
       caption = "Correlation between original and aggregated indexes") %>%
   kable_minimal(full_width = F, position = "left")
 ```
@@ -459,7 +469,7 @@ params$dx_cor_p_selected
 
 ```{r dx_corr1_table}
 params$dx_cor_selected %>%
-  kbl(digits = 3, 
+  knitr::kable(digits = 3, 
       caption = "Correlation between selected original and aggregated indexes") %>%
   kable_minimal(full_width = F, position = "left")
 ```
@@ -485,7 +495,7 @@ params$dx2_top_n_p
 
 ```{r top_indi1}
 params$dx2_top_n_table %>%
-  kbl(digits = 3, 
+  knitr::kable(digits = 3, 
       caption = "The top n individual overlap between original and aggregaed indexes") %>%
   kable_minimal(full_width = F, position = "left")
 ```
@@ -509,7 +519,7 @@ params$dx3_summary_p
 
 ```{r classvar_pattern1}
 params$dx3_summary %>%
-  kbl(digits = 3, 
+  knitr::kable(digits = 3, 
       caption = paste0("Distribution of ", params$dx3_classvar, " across ", params$dx3_agg_by)) %>%
   kable_minimal(full_width = F, position = "left")
 ```
@@ -533,7 +543,7 @@ params$dx4_summary_p
 
 ```{r weight_pattern1}
 params$dx4_summary %>%
-  kbl(digits = 3, 
+  knitr::kable(digits = 3, 
       caption = paste0("Distribution of ", params$dx4_wtvar, " across ", params$dx4_agg_by)) %>%
   kable_minimal(full_width = F, position = "left")
 ```

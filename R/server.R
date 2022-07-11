@@ -324,8 +324,13 @@ server <- function(input, output, session) {
       # Copy the report file to a temporary directory before processing it, in
       # case we don't have write permissions to the current working dir (which
       # can happen when deployed).
-      tempReport <- file.path(tempdir(), "report.Rmd")
-      file.copy("report.Rmd", tempReport, overwrite = TRUE)
+      temp_dir <- tempdir() # knit from here. Need all input in there
+      temp_report <- file.path(temp_dir, "report.Rmd")
+      file.copy("report.Rmd", temp_report, overwrite = TRUE)
+      
+      temp_template <- file.path(temp_dir, "template_ab.docx")
+      file.copy("report_template/template_ab.docx", temp_template, overwrite = T)
+      # file.copy("report_template/template_default_tableStyle.docx", temp_report, overwrite = T)
       
       # Set up parameters to pass to Rmd document
       params <- list(
@@ -409,16 +414,19 @@ server <- function(input, output, session) {
       # Knit the document, passing in the `params` list, and eval it in a
       # child of the global environment (this isolates the code in the document
       # from the code in this app).
-      rmarkdown::render(tempReport,
-                        switch(input$report_format,
-                               Word = rmarkdown::word_document(toc = TRUE),
-                               HTML = rmarkdown::html_document(toc = T, toc_depth = 3,
-                                                               toc_float = T),
-                               PDF = rmarkdown::pdf_document()
-                        ),
-                        file,
-                        params = params,
-                        envir = new.env(parent = globalenv()) # use with params
+      rmarkdown::render(
+        temp_report,
+        switch(input$report_format,
+               Word = rmarkdown::word_document(toc = TRUE),
+                                             #  reference_docx = "template_ab.docx"),
+               HTML = rmarkdown::html_document(toc = T, toc_depth = 3,
+                                               toc_float = T),
+               PDF = rmarkdown::pdf_document(toc = T)
+               # Word = "word_document", HTML = "html_document", PDF = "pdf_document"
+        ),
+        file,
+        params = params,
+        envir = new.env(parent = globalenv()) # use with params
       )
     }
   ) # downloadHandler
