@@ -12,7 +12,8 @@ packages <- c(
   "cluster",
   "PMA",
   "factoextra",
-  "markdown" # deployment error complaining no markdown 
+  "markdown", # deployment error complaining no markdown 
+  "tinytex" # for pdf output report. tinytex::install_tinytex(). 
 )
 
 # Suppress package load messages for shiny tests.

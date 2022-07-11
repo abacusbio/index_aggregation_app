@@ -417,11 +417,11 @@ server <- function(input, output, session) {
       rmarkdown::render(
         temp_report,
         switch(input$report_format,
-               Word = rmarkdown::word_document(toc = TRUE),
-                                             #  reference_docx = "template_ab.docx"),
+               Word = rmarkdown::word_document(toc = TRUE,
+                                              reference_docx = "template_ab.docx"),
                HTML = rmarkdown::html_document(toc = T, toc_depth = 3,
-                                               toc_float = T),
-               PDF = rmarkdown::pdf_document(toc = T)
+                                               toc_float = T) # ,
+               # PDF = rmarkdown::pdf_document(toc = T) # https://community.rstudio.com/t/unable-to-knit-to-pdf-in-r-markdown/133451/4
                # Word = "word_document", HTML = "html_document", PDF = "pdf_document"
         ),
         file,
