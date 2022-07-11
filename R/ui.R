@@ -13,7 +13,7 @@ packages <- c(
   "PMA",
   "factoextra",
   "markdown", # deployment error complaining no markdown 
-  "tinytex" # for pdf output report. tinytex::install_tinytex(). 
+  "tinytex" # for pdf output report. tinytex::install_tinytex(); Sys.which('pdflatex')
 )
 
 # Suppress package load messages for shiny tests.
@@ -320,7 +320,7 @@ ui <- fluidPage(
                  sidebarPanel(
                    conditionalPanel(
                      condition = "input.plant_app == 'tab.report'",
-                     radioButtons("report_format", "Document format", c("Word", "HTML", "PDF"),
+                     radioButtons("report_format", "Document format", c("Word", "HTML"),# "PDF"),
                                   inline = TRUE)
                    ), width = 4),
                  
