@@ -4549,7 +4549,7 @@
   },
   "files": {
     "app.R": {
-      "checksum": "092fbb49496ac0f455b98192aa444ef5"
+      "checksum": "d974d00bfa946cc8b99a0edbb52be2e0"
     },
     "app_luna.R": {
       "checksum": "d075fa7fd0458d903984cf344269bc4f"
@@ -4741,13 +4741,19 @@
       "checksum": "3b99cf6923c9d4bf502232133a3b50c6"
     },
     "report.Rmd": {
-      "checksum": "8edaaba1c81acf02366a36d91649a9f3"
+      "checksum": "58a675d5060b0e6cd1a73c05753c4f08"
+    },
+    "report_template/template_ab.docx": {
+      "checksum": "df4266147be980476dc1752ea5b20e36"
+    },
+    "report_template/template_default_tableStyle.docx": {
+      "checksum": "1d78cd9efb72a6b7d15b321c9e8b8a67"
     },
     "server.R": {
-      "checksum": "038801fed7736ed28053216895be3097"
+      "checksum": "7940be84e9282439c13362b67c6b4940"
     },
     "ui.R": {
-      "checksum": "7ee6db03eafa7757ab9f81e26ed65c06"
+      "checksum": "0d630ba1da1fa5141703851da1898950"
     }
   },
   "users": null

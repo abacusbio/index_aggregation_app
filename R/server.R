@@ -316,10 +316,12 @@ server <- function(input, output, session) {
   # modulising this makes all parameters NULL reportMod("report")
   output$report <- downloadHandler(
     # For PDF output, change this to "report.pdf"
-    filename = paste0("report_index_aggregation_", # "report_index_aggregation.doc",
-                      Sys.Date(), ".",
-                      switch(input$report_format,
-                             Word = "docx", HTML = "html", PDF = "pdf")),
+    filename = function() {
+      paste0("report_index_aggregation_", # "report_index_aggregation.doc",
+             Sys.Date(), ".",
+             switch(input$report_format,
+                    HTML = "html", Word = "docx"))
+      }, # PDF = "pdf")),
     content = function(file) {
       # Copy the report file to a temporary directory before processing it, in
       # case we don't have write permissions to the current working dir (which
@@ -415,16 +417,17 @@ server <- function(input, output, session) {
       # child of the global environment (this isolates the code in the document
       # from the code in this app).
       rmarkdown::render(
-        temp_report,
+        input = temp_report,
+        output_format = #"all",
         switch(input$report_format,
-               Word = rmarkdown::word_document(toc = TRUE,
-                                              reference_docx = "template_ab.docx"),
-               HTML = rmarkdown::html_document(toc = T, toc_depth = 3,
-                                               toc_float = T) # ,
+               # Word = rmarkdown::word_document(toc = TRUE,
+                                              # reference_docx = "template_ab.docx"),
+               # HTML = rmarkdown::html_document(toc = T, toc_depth = 3,
+                                               # toc_float = T) # ,
                # PDF = rmarkdown::pdf_document(toc = T) # https://community.rstudio.com/t/unable-to-knit-to-pdf-in-r-markdown/133451/4
-               # Word = "word_document", HTML = "html_document", PDF = "pdf_document"
+               HTML = "html_document", Word = "word_document"# , PDF = "pdf_document"
         ),
-        file,
+        output_file = file,
         params = params,
         envir = new.env(parent = globalenv()) # use with params
       )

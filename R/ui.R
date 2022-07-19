@@ -320,7 +320,7 @@ ui <- fluidPage(
                  sidebarPanel(
                    conditionalPanel(
                      condition = "input.plant_app == 'tab.report'",
-                     radioButtons("report_format", "Document format", c("Word", "HTML"),# "PDF"),
+                     radioButtons("report_format", "Document format", c("HTML", "Word"),# "PDF"),
                                   inline = TRUE)
                    ), width = 4),
                  

@@ -2,18 +2,18 @@
 title: "Report of index aggregation"
 author: "Luna Zhang, AbacusBio"
 date: "`r Sys.Date()`"
-always_allow_html: true
-output: 
-  # html_document:
-  #   toc: true
-  #   toc_depth: 3
-  #   toc_float: true
-  # word_document:
-  #   toc: true # https://community.rstudio.com/t/rmarkdown-into-word-change-a-title-in-toc/48137/4
-  #   reference_docx: template_ab.docx # template_default_tableStyle.docx # C:/Users/lzhang/Documents/GitHub/index_aggregation_app/R/template_default_tableStyle.docx
+# always_allow_html: true
+output:
+  html_document: 
+    toc: true
+    toc_depth: 3
+    toc_float: true
+  word_document:
+    toc: true # 
+    reference_docx: template_ab.docx # template_default_tableStyle.docx #
   # pdf_document:
-  #   toc: true
-toc-title: Table of Contents
+    # toc: true
+toc-title: Table of Contents # https://community.rstudio.com/t/rmarkdown-into-word-change-a-title-in-toc/48137/4
 params:
   demo: 0
   file_name_ebv: NA

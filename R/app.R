@@ -1,16 +1,21 @@
 # renv::settings$external.libraries("C:/Program Files/Microsoft/R Open/R-4.0.2/library")
 # don't source()!!! do runApp("R")
-# rsconnect::writeManifest("R")
 
 # devtools::load_all()
 # install.packages("https://cran.r-project.org/src/....tar.gz", type = "source", repos = NULL)
+
+# for deployment #
 options(repos = c("MRO" = "https://mran.microsoft.com/snapshot/2020-07-16", # "added" = "https://mran.microsoft.com/snapshot/2019-04-15", # too old
                   "CRAN" = "https://cran.rstudio.com",
                   "added1" = "https://cran.r-project.org"))
 # options("repos")
+# rsconnect::writeManifest("R")
+
+# for package deletion #
 # old.packages() 
 # rsconnect::appDependencies()
 
+# for reactive log #
 # options(shiny.reactlog = T) # lzhang April172020
 # reactlogReset()
 # Run the application 
